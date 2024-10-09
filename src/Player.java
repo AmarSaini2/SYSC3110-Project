@@ -40,8 +40,9 @@ public class Player{
     public tile useTile(String letter){
         tile tempTile = new tile(letter);
         if(hand.contains(tempTile){
-            temptile = hand.remove(tempTile);
+            return = hand.remove(tempTile);
         }
-
+        System.out.println("Tile " + letter + "not in hand");
+        return null;
     }
 }
