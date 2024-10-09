@@ -31,7 +31,7 @@ public class wordbag {
         return returnString;
     }
 
-    public tile getTile(){
+    public tile get(){
         Random random = new Random();
         tile randomTile = tiles.get(random.nextInt(tiles.size()));
         tiles.remove(randomTile);

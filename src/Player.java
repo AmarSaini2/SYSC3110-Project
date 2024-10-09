@@ -37,12 +37,12 @@ public class Player{
         hand.add(bag.get());
     }
 
-    public tile useTile(String letter){
+    public void useTile(String letter){
         tile tempTile = new tile(letter);
-        if(hand.contains(tempTile){
-            return = hand.remove(tempTile);
+        if(hand.contains(tempTile)){
+            hand.remove(tempTile);
+        }else{
+            System.out.println("Tile " + letter + "not in hand");
         }
-        System.out.println("Tile " + letter + "not in hand");
-        return null;
     }
 }
