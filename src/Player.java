@@ -18,6 +18,8 @@ public class Player{
         this.points += points;
     }
 
+    public void removePoints(int points) {this.points -= points;}
+
     public String getName() {
         return name;
     }
