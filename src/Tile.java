@@ -1,10 +1,8 @@
-import java.util.Formatter;
-
-public class tile {
+public class Tile {
     private String letter;
     private int points;
 
-    tile(String letter){
+    Tile(String letter){
         this.letter = letter;
         switch(letter){
             case("a"), ("e"), ("i"), ("l"), ("n"), ("o"), ("r"), ("s"), ("t"), ("u"):

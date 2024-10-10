@@ -1,13 +1,13 @@
 import java.util.*;
 public class Player{
     private int points;
-    private ArrayList<tile> hand;
+    private ArrayList<Tile> hand;
     private String name;
 
     public Player(String name){
         points = 0;
         this.name = name;
-        hand = new ArrayList<tile>();
+        hand = new ArrayList<Tile>();
     }
 
     public int getPoints() {
@@ -38,7 +38,7 @@ public class Player{
     }
 
     public void useTile(String letter){
-        tile tempTile = new tile(letter);
+        Tile tempTile = new Tile(letter);
         if(hand.contains(tempTile)){
             hand.remove(tempTile);
         }else{
