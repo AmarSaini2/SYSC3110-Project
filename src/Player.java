@@ -1,4 +1,6 @@
+import java.nio.charset.CharacterCodingException;
 import java.util.*;
+import java.util.logging.Handler;
 public class Player{
     private int points;
     private ArrayList<Tile> hand;
@@ -29,7 +31,6 @@ public class Player{
     }
 
     public void setHand(Wordbag bag){
-        Random random = new Random();
         for(int i = 0; i < 7; i++){
             hand.add(bag.get());
         }
@@ -43,8 +44,27 @@ public class Player{
         Tile tempTile = new Tile(letter);
         if(hand.contains(tempTile)){
             hand.remove(tempTile);
-        }else{
-            System.out.println("Tile " + letter + "not in hand");
         }
+    }
+
+    public void printHand(){
+        String returnString = new String();
+        for(Tile tile: hand){
+            returnString += (tile.getID() + " ");
+        }
+        returnString += "\n";
+        for(Tile tile: hand){
+            returnString += (tile.getPoints() + " ");
+        }
+        System.out.println(returnString);
+    }
+
+    public boolean hasTile(String tileID){
+        for(Tile tile: hand){
+            if(tile.getID().equalsIgnoreCase(tileID)){
+                return true;
+            }
+        }
+        return false;
     }
 }
