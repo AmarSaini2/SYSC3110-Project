@@ -28,14 +28,14 @@ public class Player{
         this.name = name;
     }
 
-    public void setHand(wordbag bag){
+    public void setHand(Wordbag bag){
         Random random = new Random();
         for(int i = 0; i < 7; i++){
             hand.add(bag.get());
         }
     }
 
-    public void addTile(wordbag bag){
+    public void addTile(Wordbag bag){
         hand.add(bag.get());
     }
 

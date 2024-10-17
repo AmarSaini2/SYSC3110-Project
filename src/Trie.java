@@ -1,15 +1,15 @@
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
-import java.util.Set;
-import java.io.File;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Trie {
 
     private Node root;
     private Node current;
 
-    Trie(String filename){
+    Trie(){
         root = new Node('0');
         current = root;
         try {
@@ -18,7 +18,6 @@ public class Trie {
             while(reader.hasNextLine()){
                 String data = reader.nextLine().toLowerCase();
                 this.addString(data);
-                System.out.println("Adding: " + data);
             }
         }catch(FileNotFoundException e){
             System.out.println("Error");
