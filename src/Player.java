@@ -1,6 +1,7 @@
 import java.nio.charset.CharacterCodingException;
 import java.util.*;
 import java.util.logging.Handler;
+import javax.swing.plaf.basic.BasicGraphicsUtils;
 public class Player{
     private int points;
     private ArrayList<Tile> hand;
@@ -40,10 +41,16 @@ public class Player{
         hand.add(bag.get());
     }
 
+    public boolean handIsEmpty(Wordbag bag){
+        return bag.isEmpty();
+    }
+
     public void useTile(String letter){
-        Tile tempTile = new Tile(letter);
-        if(hand.contains(tempTile)){
-            hand.remove(tempTile);
+        for(Tile tile: hand){
+            if(tile.getID().equals(letter)){
+                hand.remove(tile);
+                break; // remove only the first instance of that tile from hand
+            }
         }
     }
 
@@ -66,5 +73,9 @@ public class Player{
             }
         }
         return false;
+    }
+
+    public boolean handIsEmpty(){
+        return hand.isEmpty();
     }
 }

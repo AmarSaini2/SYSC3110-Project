@@ -47,11 +47,64 @@ public class Board {
     }
 
     public boolean isAllowedCharacter(Coordinate coord, String input){
-        return(allowedCharacters.get(coord).contains(input));
+        List<String> allowedCharactersList = allowedCharacters.get(coord);
+        return allowedCharactersList.stream()
+            .map(String::toLowerCase) // Ensure all characters are in lowercase
+            .anyMatch(letter -> letter.equals(input.toLowerCase()));
     }
 
     public List<String> getAllowedCharacters(int row, int col){
         Coordinate coord = new Coordinate(row, col);
         return allowedCharacters.get(coord);
+    }
+
+    public void updateAllowedCharacters(Coordinate coord, String placedTile, Trie trie){
+        allowedCharacters.remove(coord); // Remove allowed character list for that tile
+
+        // Horizontal check
+        StringBuilder horizontalWord = new StringBuilder();
+        int row = coord.getRow();
+        int col = coord.getCol();
+    
+        // Check left
+        for (int j = col - 1; j >= 0 && !board[row][j].equals(" "); j--) {
+            horizontalWord.insert(0, board[row][j]);
+        }
+        
+        // Add the placed tile
+        horizontalWord.append(placedTile);
+        
+        // Check right
+        for (int j = col + 1; j < SIZE && !board[row][j].equals(" "); j++) {
+            horizontalWord.append(board[row][j]);
+        }
+    
+        // Update allowed characters to the right of the word
+        if (col + horizontalWord.length() < SIZE) {
+            Coordinate rightOfWord = new Coordinate(row, col + horizontalWord.length());
+            allowedCharacters.replace(rightOfWord, trie.nextLetters(horizontalWord.toString()));
+        }
+    
+        // Vertical check
+        StringBuilder verticalWord = new StringBuilder();
+    
+        // Check above
+        for (int i = row - 1; i >= 0 && !board[i][col].equals(" "); i--) {
+            verticalWord.insert(0, board[i][col]);
+        }
+    
+        // Add the placed tile
+        verticalWord.append(placedTile);
+    
+        // Check below
+        for (int i = row + 1; i < SIZE && !board[i][col].equals(" "); i++) {
+            verticalWord.append(board[i][col]);
+        }
+    
+        // Update allowed characters below the word
+        if (row + verticalWord.length() < SIZE) {
+            Coordinate belowWord = new Coordinate(row + verticalWord.length(), col);
+            allowedCharacters.replace(belowWord, trie.nextLetters(verticalWord.toString()));
+        }
     }
 }

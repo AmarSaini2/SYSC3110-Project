@@ -34,4 +34,8 @@ public class Wordbag {
         return randomTile;
     }
 
+    public boolean isEmpty(){
+        return tiles.isEmpty();
+    }
+
 }

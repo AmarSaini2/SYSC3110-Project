@@ -1,7 +1,7 @@
 import java.util.*;
 public class Coordinate{
-    int row;
-    int col;
+    private int row;
+    private int col;
 
     Coordinate(int row, int col){
         this.row = row;
@@ -25,5 +25,13 @@ public class Coordinate{
     @Override
     public int hashCode(){
         return Objects.hash(row,col);
+    }
+
+    public int getRow(){
+        return row;
+    }
+
+    public int getCol(){
+        return col;
     }
 }

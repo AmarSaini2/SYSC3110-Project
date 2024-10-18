@@ -1,8 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 
 public class Trie {
 
@@ -53,7 +51,7 @@ public class Trie {
         return true;
     }
 
-    public Set nextLetters(String input){
+    public ArrayList<String> nextLetters(String input){
         input = input.toLowerCase();
         char[] charArray = input.toCharArray();
         current = root;
@@ -64,7 +62,8 @@ public class Trie {
                 return null;//word is not in the dictionary
             }
         }
-        return current.getChildren();
+        ArrayList returnList = new ArrayList<>(Arrays.asList(current.getChildren().toString()));
+        return returnList;
     }
         private static class Node {
             private boolean isTerminal;
