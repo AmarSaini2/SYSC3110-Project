@@ -1,0 +1,9 @@
+#BlueJ class context
+comment0.target=Tilebag
+comment1.params=
+comment1.target=Tilebag()
+comment2.params=letter\ frequency
+comment2.target=void\ addTiles(char,\ int)
+comment3.params=
+comment3.target=Tile\ drawTile()
+numComments=4

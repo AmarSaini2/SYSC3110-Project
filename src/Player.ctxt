@@ -1,0 +1,17 @@
+#BlueJ class context
+comment0.target=Player
+comment1.params=tileBag
+comment1.target=Player(Tilebag)
+comment2.params=
+comment2.target=int\ getPlayerScore()
+comment3.params=score
+comment3.target=void\ updatePlayerScore(int)
+comment4.params=
+comment4.target=java.util.List\ getTiles()
+comment5.params=tile
+comment5.target=void\ removeTile(Tile)
+comment6.params=tilebag
+comment6.target=void\ drawNewTiles(Tilebag)
+comment7.params=
+comment7.target=java.lang.String\ toString()
+numComments=8

@@ -1,0 +1,13 @@
+#BlueJ class context
+comment0.target=ValidWords
+comment1.params=
+comment1.target=ValidWords()
+comment2.params=filename
+comment2.target=void\ loadWordsFromFile(java.lang.String)
+comment3.params=aString
+comment3.target=boolean\ isWord(java.lang.String)
+comment4.params=word
+comment4.target=boolean\ removeWord(java.lang.String)
+comment5.params=
+comment5.target=boolean\ isEmpty()
+numComments=6

@@ -1,0 +1,13 @@
+#BlueJ class context
+comment0.target=Square
+comment1.params=
+comment1.target=Square()
+comment2.params=tile
+comment2.target=void\ fillSquare(Tile)
+comment3.params=
+comment3.target=Tile\ getTile()
+comment4.params=
+comment4.target=boolean\ isFilled()
+comment5.params=
+comment5.target=java.lang.String\ toString()
+numComments=6
