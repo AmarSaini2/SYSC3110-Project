@@ -178,6 +178,9 @@ public class Game {
         if(tempBoard.checkValidity(trie)){
             board.swapWithTemp(tempBoard);//swap temp board in for main board
             currentPlayer.swapWithTemp(tempHand,bag);//swap temp hand for main hand, refresh hand to 7 tiles
+            while(currentPlayer.getHand().size() < 7){
+                currentPlayer.addTile(bag);
+            }
             //TODO: calculate/update points
             return true;
         }

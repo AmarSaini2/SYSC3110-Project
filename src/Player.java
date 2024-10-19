@@ -13,22 +13,8 @@ public class Player{
         hand = new ArrayList<Tile>();
     }
 
-    public int getPoints() {
-        return points;
-    }
-
-    public void addPoints(int points) {
-        this.points += points;
-    }
-
-    public void removePoints(int points) {this.points -= points;}
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public void setHand(Wordbag bag){
@@ -39,19 +25,6 @@ public class Player{
 
     public void addTile(Wordbag bag){
         hand.add(bag.get());
-    }
-
-    public boolean handIsEmpty(Wordbag bag){
-        return bag.isEmpty();
-    }
-
-    public void useTile(String letter){
-        for(Tile tile: hand){
-            if(tile.getID().equals(letter)){
-                hand.remove(tile);
-                break; // remove only the first instance of that tile from hand
-            }
-        }
     }
 
     public void printHand(){
@@ -66,14 +39,6 @@ public class Player{
         System.out.print("\n");
     }
 
-    public boolean hasTile(String tileID){
-        for(Tile tile: hand){
-            if(tile.getID().equalsIgnoreCase(tileID)){
-                return true;
-            }
-        }
-        return false;
-    }
 
     public boolean handIsEmpty(){
         return hand.isEmpty();

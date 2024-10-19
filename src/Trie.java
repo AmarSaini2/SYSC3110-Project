@@ -54,61 +54,6 @@ public class Trie {
         return false;
     }
 
-    public Set nextLetters(String input){//find the next possible letters given a prefix string
-        input = input.toLowerCase();
-        char[] charArray = input.toCharArray();
-        current = root;
-        for(char c: charArray){
-            if(current.getChildrenLetters().contains(c)){//iterate letter by letter to the end of the string
-                current = current.returnChild(c);
-            }else{
-                return null;//word is not in the dictionary
-            }
-        }
-        return current.getChildrenLetters();
-    }
-
-    public Set prevLetters(String input){//find the previous possible letters given a suffix string
-        input = input.toLowerCase();
-        char[] charArray = input.toCharArray();
-        current = root;
-        Set<Character> result = new HashSet<>();
-        for(Node child: current.getChildrenNodes()){
-            depthFirstSearch(charArray, 0, child, result, null);
-        }
-        return result;
-    }
-
-    private void depthFirstSearch(char[] charArray, int index, Node node, Set result, Node beginningOfWord){
-        //base case -> all characters matched
-        if(index == (charArray.length - 1) && node.getChar() == charArray[index]){
-            if(node.isTerminal()){//complete word found
-                if(beginningOfWord.parent != root && beginningOfWord != null){
-                    result.add(beginningOfWord.parent.getChar());//add parent char to list
-                }
-            }
-            return;
-        }
-
-        if(node.getChar() == charArray[index]){//node matches current placement in chain
-            if(index == 0){
-                beginningOfWord = node;//set beginningofWord node
-            }
-            for(Node child : node.getChildrenNodes()){
-                depthFirstSearch(charArray, index + 1, child, result, beginningOfWord);
-            }
-        }else{
-            if(!node.getChildrenNodes().isEmpty()){//node doesnt match chain but has children
-                for(Node child: node.getChildrenNodes()){
-                    depthFirstSearch(charArray, 0, child, result, beginningOfWord);
-                }
-            }
-        }
-
-
-
-    }
-
 
         private static class Node {
             private boolean isTerminal;
@@ -122,9 +67,6 @@ public class Trie {
                 this.parent = parent;
             }
 
-            public char getChar(){
-                return this.c;
-            }
 
             public void setTerminal() {
                 this.isTerminal = true;
@@ -142,16 +84,8 @@ public class Trie {
                 return this.children.keySet();
             }
 
-            public Collection<Node> getChildrenNodes(){
-                return this.children.values();
-            }
-
             public void addChild(Node child) {
                 this.children.put(child.c, child);
-            }
-
-            public Node getParent(){
-                return this.parent;
             }
 
         }
