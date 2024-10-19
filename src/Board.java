@@ -13,6 +13,15 @@ public class Board {
         initializeAllowedCharacters();
     }
 
+    public Board(Board inputBoard){
+        this.board = new String[SIZE][SIZE];
+        for(int i = 0; i < SIZE; i++){
+            for(int j = 0; j < SIZE; j++){
+                this.board[i][j] = inputBoard.board[i][j];
+            }
+        }
+    }
+
     private void initializeAllowedCharacters(){
         for(int i = 0; i < SIZE; i++){
             for(int j = 0; j < SIZE; j++){
@@ -82,7 +91,7 @@ public class Board {
         // Update allowed characters to the right of the word
         if (col + horizontalWord.length() < SIZE) {
             Coordinate rightOfWord = new Coordinate(row, col + horizontalWord.length());
-            allowedCharacters.replace(rightOfWord, trie.nextLetters(horizontalWord.toString()));
+            allowedCharacters.replace(rightOfWord, trie.nextLetters(horizontalWord.toString()).stream().toList());
         }
     
         // Vertical check
@@ -104,7 +113,46 @@ public class Board {
         // Update allowed characters below the word
         if (row + verticalWord.length() < SIZE) {
             Coordinate belowWord = new Coordinate(row + verticalWord.length(), col);
-            allowedCharacters.replace(belowWord, trie.nextLetters(verticalWord.toString()));
+            allowedCharacters.replace(belowWord, trie.nextLetters(verticalWord.toString()).stream().toList());
         }
+    }
+
+    public void updateAllowedCharacters(Coordinate coord, Tile tile){
+        allowedCharacters.remove(coord, tile.getID()); // remove just placed tile from allowed character list for that coordinate
+
+    }
+
+    public void swapWithTemp(Board temp){
+        board = temp.board;
+    }
+
+    public boolean checkValidity(Trie trie) {
+        for (int i = 0; i < SIZE; i++) {//for every row, check that the words are valid
+            StringBuilder rowString = new StringBuilder();
+            for (int j = 0; j < SIZE; j++) {
+                rowString.append(board[i][j]);
+            }
+            String[] rowStringArray = rowString.toString().split("blank|\\s+");
+            for (String s : rowStringArray) {
+                System.out.println(s);
+                if (!trie.hasWord(s.trim())) {
+                    return false;
+                }
+            }
+        }
+        for (int i = 0; i < SIZE; i++) {//for every column, check that the words are valid
+            StringBuilder columnString = new StringBuilder();
+            for (int j = 0; j < SIZE; j++) {
+                columnString.append(board[i][j]);
+            }
+            String[] rowStringArray = columnString.toString().split("blank|\\s+");
+            for (String s : rowStringArray) {
+                System.out.println(s);
+                if (!trie.hasWord(s.trim())) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

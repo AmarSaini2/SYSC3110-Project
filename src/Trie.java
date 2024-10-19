@@ -8,7 +8,7 @@ public class Trie {
     private Node current;
 
     Trie(){
-        root = new Node('0');
+        root = new Node('0', null);
         current = root;
         try {
             File input = new File("src/wordDict.txt");
@@ -29,8 +29,8 @@ public class Trie {
         current = root;
         for (char c : charArray){
             //if current letter is a child of current node, move current node pointer to current letter and move on
-            if(!current.getChildren().contains(c)){
-                current.addChild(new Node(c));
+            if(!current.getChildrenLetters().contains(c)){
+                current.addChild(new Node(c, current));
             }
             current = current.returnChild(c);//move pointer forward if the letter has already been added/just got added above
         }
@@ -42,36 +42,88 @@ public class Trie {
         s = s.toLowerCase();
         char[] charArray = s.toCharArray();
         for(char c: charArray){
-            if(current.getChildren().contains(c)){
+            if(current.getChildrenLetters().contains(c)){
                 current = current.returnChild(c);
             }else{
                 return false;
             }
         }
-        return true;
+        if(current.isTerminal()){
+            return true;//returns if the word is found and is a full word, not just a substring of a word
+        }
+        return false;
     }
 
-    public ArrayList<String> nextLetters(String input){
+    public Set nextLetters(String input){//find the next possible letters given a prefix string
         input = input.toLowerCase();
         char[] charArray = input.toCharArray();
         current = root;
         for(char c: charArray){
-            if(current.getChildren().contains(c)){//iterate letter by letter to the end of the string
+            if(current.getChildrenLetters().contains(c)){//iterate letter by letter to the end of the string
                 current = current.returnChild(c);
             }else{
                 return null;//word is not in the dictionary
             }
         }
-        ArrayList returnList = new ArrayList<>(Arrays.asList(current.getChildren().toString()));
-        return returnList;
+        return current.getChildrenLetters();
     }
+
+    public Set prevLetters(String input){//find the previous possible letters given a suffix string
+        input = input.toLowerCase();
+        char[] charArray = input.toCharArray();
+        current = root;
+        Set<Character> result = new HashSet<>();
+        for(Node child: current.getChildrenNodes()){
+            depthFirstSearch(charArray, 0, child, result, null);
+        }
+        return result;
+    }
+
+    private void depthFirstSearch(char[] charArray, int index, Node node, Set result, Node beginningOfWord){
+        //base case -> all characters matched
+        if(index == (charArray.length - 1) && node.getChar() == charArray[index]){
+            if(node.isTerminal()){//complete word found
+                if(beginningOfWord.parent != root && beginningOfWord != null){
+                    result.add(beginningOfWord.parent.getChar());//add parent char to list
+                }
+            }
+            return;
+        }
+
+        if(node.getChar() == charArray[index]){//node matches current placement in chain
+            if(index == 0){
+                beginningOfWord = node;//set beginningofWord node
+            }
+            for(Node child : node.getChildrenNodes()){
+                depthFirstSearch(charArray, index + 1, child, result, beginningOfWord);
+            }
+        }else{
+            if(!node.getChildrenNodes().isEmpty()){//node doesnt match chain but has children
+                for(Node child: node.getChildrenNodes()){
+                    depthFirstSearch(charArray, 0, child, result, beginningOfWord);
+                }
+            }
+        }
+
+
+
+    }
+
+
         private static class Node {
             private boolean isTerminal;
             private char c;
-            public HashMap<Character, Node> children = new HashMap<>();
+            private HashMap<Character, Node> children = new HashMap<>();
 
-            Node(char c) {
+            public Node parent;
+
+            Node(char c, Node parent) {
                 this.c = c;
+                this.parent = parent;
+            }
+
+            public char getChar(){
+                return this.c;
             }
 
             public void setTerminal() {
@@ -86,12 +138,20 @@ public class Trie {
                 return children.get(c);
             }
 
-            public Set getChildren(){
+            public Set<Character> getChildrenLetters(){
                 return this.children.keySet();
+            }
+
+            public Collection<Node> getChildrenNodes(){
+                return this.children.values();
             }
 
             public void addChild(Node child) {
                 this.children.put(child.c, child);
+            }
+
+            public Node getParent(){
+                return this.parent;
             }
 
         }

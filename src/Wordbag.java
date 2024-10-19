@@ -11,22 +11,6 @@ public class Wordbag {
         }
     }
 
-    public String listTiles(){//group tiles together and print x number of each tile
-        String returnString = "Available Letters: \n";
-        Map<String, Integer> tileCounts = new HashMap<>();
-
-        for(Tile tile: tiles){
-            String name = tile.getID();
-            tileCounts.put(name, tileCounts.getOrDefault(name, 0) + 1);
-        }
-
-        for(Map.Entry<String, Integer> entry: tileCounts.entrySet()){
-            returnString += entry.getValue() + "->" + entry.getKey() + "\t";
-        }
-
-        return returnString;
-    }
-
     public Tile get(){
         Random random = new Random();
         Tile randomTile = tiles.get(random.nextInt(tiles.size()));

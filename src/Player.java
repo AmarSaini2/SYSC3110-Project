@@ -55,15 +55,15 @@ public class Player{
     }
 
     public void printHand(){
-        String returnString = new String();
-        for(Tile tile: hand){
-            returnString += (tile.getID() + " ");
+        for(Tile tile : hand){
+            System.out.printf("%6s", tile.getID());
         }
-        returnString += "\n";
+        System.out.print("\n");
+
         for(Tile tile: hand){
-            returnString += (tile.getPoints() + " ");
+            System.out.printf("%6d", tile.getPoints());
         }
-        System.out.println(returnString);
+        System.out.print("\n");
     }
 
     public boolean hasTile(String tileID){
@@ -77,5 +77,28 @@ public class Player{
 
     public boolean handIsEmpty(){
         return hand.isEmpty();
+    }
+
+    public ArrayList<Tile> getHand(){
+        return hand;
+    }
+
+    public void swapWithTemp(ArrayList<Tile> tempHand, Wordbag bag){
+        this.hand = tempHand;
+        while(hand.size() < 7){
+            hand.add(bag.get());
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) { //check if the two references are to the same spot in memory
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) { //rejects null/not Tile objects
+            return false;
+        }
+        Player that = (Player) obj; //lets two instances of identical coordinate values to be considered equal
+        return this.name.equals(that.name) && this.points == that.points;
     }
 }

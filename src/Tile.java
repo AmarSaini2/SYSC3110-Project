@@ -39,4 +39,17 @@ public class Tile {
     public int getPoints(){
         return this.points;
     }
+
+    @Override
+    public boolean equals(Object obj){
+        if(this == obj){ //check if the two references are to the same spot in memory
+            return true;
+        }
+        if(obj == null || getClass() != obj.getClass()){ //rejects null/not Tile objects
+            return false;
+        }
+        Tile that = (Tile) obj; //lets two instances of identical coordinate values to be considered equal
+        return letter.equals(that.letter) && points == that.points;
+
+    }
 }
