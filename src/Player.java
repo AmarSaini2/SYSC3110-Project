@@ -55,6 +55,14 @@ public class Player{
         }
     }
 
+    public void addPoints(int points){
+        this.points += points;
+    }
+
+    public int getPoints(){
+        return this.points;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) { //check if the two references are to the same spot in memory

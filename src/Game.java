@@ -35,6 +35,14 @@ public class Game {
             }
         }
         System.out.println("Game over!");
+        if(game.p1.getPoints() > game.p2.getPoints()){
+            System.out.println("Player 1 wins!");
+        }else if(game.p2.getPoints() > game.p1.getPoints()){
+            System.out.println("Player 2 Wins!");
+        }else{
+            System.out.println("Tie!");
+        }
+        System.out.println("Points:\n" + game.p1.getName() + ": " + game.p1.getPoints() + "points\n" + game.p2.getName() + ": " + game.p2.getPoints() + " points");
     }
 
     public static String getPlayerName(){
@@ -97,7 +105,7 @@ public class Game {
 
         while (true) {
             tempBoard.display();
-            System.out.println("Choose a letter to place or type 'submit' to submit word:");
+            System.out.println("Choose a letter to place:");
 
             for (Tile tile : tempHand) {
                 System.out.printf("%6s", tile.getID());
@@ -115,14 +123,6 @@ public class Game {
                 try {
                     tileName = in.next();
                     pickedTile = new Tile(tileName);
-                    if (tileName.equalsIgnoreCase("submit")) {
-                        if (submitWord(currentPlayer, tempBoard, tempHand)) {
-                            return true;//return true for successful playerTurn
-                        } else {
-                            System.out.println("Invalid word placed");
-                            return false; //return false for failed playerTurn
-                        }
-                    }
                     if (tempHand.contains(pickedTile)) {
                         break;
                     } else {
@@ -154,7 +154,10 @@ public class Game {
                         tempBoard.placeLetter(row, col, tileName);
                         tempHand.remove(pickedTile);
                         if (tempHand.isEmpty()) {
-                            if (submitWord(currentPlayer, tempBoard, tempHand)) {
+                            if (submitWord(currentPlayer, tempBoard, tempHand, row, col, direction)) {
+                                currentPlayer.addPoints(50); // 50 bonus points for clearing whole hand
+                                System.out.println("Bonus 50 points for playing whole hand!");
+                                System.out.println(currentPlayer.getName() + " has " + currentPlayer.getPoints() + " points");
                                 return true; //return true for successful playerTurn
                             } else {
                                 System.out.println("Invalid word placed");
@@ -170,10 +173,34 @@ public class Game {
                     in.next();
                 }
             }
+
+            System.out.println("Would you like to submit your word or keep placing tiles? (y/n)");
+            while(true){
+                try{
+                    String userInput = in.next();
+                    if(userInput.equalsIgnoreCase("y")) {
+                        if (submitWord(currentPlayer, tempBoard, tempHand, row, col, direction)) {
+                            System.out.println(currentPlayer.getName() + " has " + currentPlayer.getPoints() + " points");
+                            return true;
+                        } else {
+                            System.out.println("Invalid word placed");
+                            in.next();
+                        }
+                    }else if(userInput.equalsIgnoreCase("n")){
+                        break;//break loop and keep placing tiles
+                    }else{
+                        System.out.println("Invalid input");//user entered something other than y or n
+                        in.next();
+                    }
+                }catch(InputMismatchException e){
+                    System.out.println("Invalid input.");
+                    in.next();
+                }
+            }
         }
     }
 
-    public boolean submitWord(Player currentPlayer, Board tempBoard, ArrayList<Tile> tempHand){
+    public boolean submitWord(Player currentPlayer, Board tempBoard, ArrayList<Tile> tempHand, int row, int col, String direction){
         //check whether tempBoard is valid, update board, update hand, update points, goto next player's turn
         if(tempBoard.checkValidity(trie)){
             board.swapWithTemp(tempBoard);//swap temp board in for main board
@@ -181,7 +208,7 @@ public class Game {
             while(currentPlayer.getHand().size() < 7){
                 currentPlayer.addTile(bag);
             }
-            //TODO: calculate/update points
+            currentPlayer.addPoints(board.calculatePoints(row, col, direction));//calculate and update points
             return true;
         }
         return false;
