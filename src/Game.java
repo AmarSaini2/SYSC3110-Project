@@ -59,7 +59,10 @@ public class Game {
     public boolean playerTurn(Player currentPlayer){
         //player turn order: pick horizontal or vertical, place tiles until either submit is entered or hand is empty, submit turn for review -> GOTO submit();
         //A temp copy of the board is made to display as the player places tiles before submitting. A temp copy of the hand will be used for the same purpose
-        ArrayList<Tile> tempHand = currentPlayer.getHand();
+        ArrayList<Tile> tempHand = new ArrayList<>();
+        for(Tile tile : currentPlayer.getHand()){
+            tempHand.add(new Tile(tile.getID()));//have to loop this way to make a deep copy of the current hand
+        }
         Board tempBoard = new Board(board);
         int firstRowOrCol;//tracker to lock player to row/column
         tempBoard.display();
@@ -95,11 +98,13 @@ public class Game {
                 firstRowOrCol = in.nextInt();
                 if(firstRowOrCol < 0 || firstRowOrCol > 15){
                     System.out.println("Invalid input");
+                    in.next();
                 }else{
                     break;
                 }
             }catch(InputMismatchException e){
                 System.out.println("Invalid input");
+                in.next();
             }
         }
 
@@ -174,17 +179,18 @@ public class Game {
                 }
             }
 
+            String userInput;
             System.out.println("Would you like to submit your word or keep placing tiles? (y/n)");
             while(true){
                 try{
-                    String userInput = in.next();
+                    userInput = in.next();
                     if(userInput.equalsIgnoreCase("y")) {
                         if (submitWord(currentPlayer, tempBoard, tempHand, row, col, direction)) {
                             System.out.println(currentPlayer.getName() + " has " + currentPlayer.getPoints() + " points");
                             return true;
                         } else {
                             System.out.println("Invalid word placed");
-                            in.next();
+                            return false;
                         }
                     }else if(userInput.equalsIgnoreCase("n")){
                         break;//break loop and keep placing tiles
@@ -210,7 +216,8 @@ public class Game {
             }
             currentPlayer.addPoints(board.calculatePoints(row, col, direction));//calculate and update points
             return true;
+        }else{
+            return false;
         }
-        return false;
     }
 }
