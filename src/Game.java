@@ -70,10 +70,10 @@ public class Game {
 
         String direction;
         while(true){//get placement direction
-            System.out.println("Choose a direction to place your word in (h/v):");
+            System.out.println("Choose a direction to place your word in (h/v) or enter \"pass\" to skip your turn:");
             try{
                 direction = in.next();
-                if(!(direction.equalsIgnoreCase("h") || direction.equalsIgnoreCase("v"))){
+                if(!(direction.equalsIgnoreCase("h") || direction.equalsIgnoreCase("v") || direction.equalsIgnoreCase("pass"))){
                     System.out.println("Invalid input");
                     continue;
                 }else{
@@ -88,8 +88,12 @@ public class Game {
         while(true){//get first row or column (depending on direction selection)
             if(direction.equals("h")){
                 System.out.println("Enter the row you would like to place letters across");
-            }else{
+            }else if (direction.equals("v")){
                 System.out.println("Enter the column you would like to place letters down");
+            }
+            else{
+                System.out.println("Turn passed, would you like to replace tiles?");
+                return true;
             }
             try{
                 firstRowOrCol = in.nextInt();
@@ -100,8 +104,8 @@ public class Game {
                     break;
                 }
             }catch(InputMismatchException e){
-                System.out.println("Invalid input");
-                continue;
+                System.out.println("Invalid input: turn reset");
+                return false;
             }
         }
 
