@@ -23,6 +23,10 @@ public class Player{
         }
     }
 
+    public void setHand(ArrayList<Tile> hand){
+        this.hand = hand;
+    }
+
     public void addTile(Wordbag bag){
         hand.add(bag.get());
     }
@@ -45,7 +49,7 @@ public class Player{
     }
 
     public ArrayList<Tile> getHand(){
-        return hand;
+        return this.hand;
     }
 
     public void swapWithTemp(ArrayList<Tile> tempHand, Wordbag bag){

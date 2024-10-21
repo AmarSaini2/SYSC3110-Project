@@ -67,18 +67,15 @@ public class Game {
 
         currentPlayer.printHand();
 
-        System.out.println("Choose a direction to place your word in (h/v). You may also type 'pass' to skip your turn:");
+        System.out.println("Choose a direction to place your word in (h/v):");
         String direction;
         while(true){//get placement direction
             try{
                 direction = in.next();
-                if(!(direction.equalsIgnoreCase("h") || direction.equalsIgnoreCase("v") || direction.equalsIgnoreCase("pass"))){
+                if(!(direction.equalsIgnoreCase("h") || direction.equalsIgnoreCase("v"))){
                     System.out.println("Invalid input");
                     in.next();
                 }else{
-                    if(direction.equalsIgnoreCase("pass")){
-                        return true;
-                    }
                     break;
                 }
             }catch(InputMismatchException e){
