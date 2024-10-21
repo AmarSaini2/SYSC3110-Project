@@ -56,7 +56,6 @@ public class Board {
             }
             String[] rowStringArray = rowString.toString().split("blank|\\s+");
             for (String s : rowStringArray) {
-                System.out.println(s);
                 if (!trie.hasWord(s.trim())) {
                     return false;
                 }
@@ -69,7 +68,6 @@ public class Board {
             }
             String[] rowStringArray = columnString.toString().split("blank|\\s+");
             for (String s : rowStringArray) {
-                System.out.println(s);
                 if (!trie.hasWord(s.trim())) {
                     return false;
                 }
@@ -168,11 +166,9 @@ public class Board {
 
         for (String word : stringArray) {//for each string in stringArray, make tiles out of the characters and sum up their points
             char[] charArray = word.toCharArray();
-            System.out.println(word);
             for (char c : charArray) {
                 Tile tile = new Tile(String.valueOf(c));
                 points += tile.getPoints();
-                System.out.println("Tile id : " + tile.getID() + " Points: " + tile.getPoints());
             }
         }
         return points;
