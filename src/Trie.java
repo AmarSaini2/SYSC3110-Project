@@ -48,10 +48,12 @@ public class Trie {
                 return false;
             }
         }
+
         if(current.isTerminal()){
             return true;//returns if the word is found and is a full word, not just a substring of a word
+        }else{
+            return false;
         }
-        return false;
     }
 
 

@@ -49,26 +49,32 @@ public class Board {
     }
 
     public boolean checkValidity(Trie trie) {
-        for (int i = 0; i < SIZE; i++) {//for every row, check that the words are valid
+        for (int row = 0; row < SIZE; row++) {//for every row, check that the words are valid
             StringBuilder rowString = new StringBuilder();
-            for (int j = 0; j < SIZE; j++) {
-                rowString.append(board[i][j]);
+            for (int col = 0; col < SIZE; col++) {
+                rowString.append(board[row][col]);
             }
-            String[] rowStringArray = rowString.toString().split("blank|\\s+");
+            String[] rowStringArray = rowString.toString().split(" ");
             for (String s : rowStringArray) {
+                if(s.trim().length() < 2){//skip if the "word" made is 1 character
+                    continue;
+                }
                 if (!trie.hasWord(s.trim())) {
                     return false;
                 }
             }
         }
-        for (int i = 0; i < SIZE; i++) {//for every column, check that the words are valid
+        for (int col = 0; col < SIZE; col++) {//for every column, check that the words are valid
             StringBuilder columnString = new StringBuilder();
-            for (int j = 0; j < SIZE; j++) {
-                columnString.append(board[i][j]);
+            for (int row = 0; row < SIZE; row++) {
+                columnString.append(board[row][col]);
             }
-            String[] rowStringArray = columnString.toString().split("blank|\\s+");
+            String[] rowStringArray = columnString.toString().split(" ");
             for (String s : rowStringArray) {
-                if (!trie.hasWord(s.trim())) {
+                if(s.trim().length() < 2){// skip 1 letter strings -> not words
+                    continue;
+                }
+                if(!trie.hasWord(s.trim())){
                     return false;
                 }
             }
