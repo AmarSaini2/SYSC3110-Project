@@ -17,7 +17,7 @@ The game ensures all words placed are valid, that new words placed intersect wit
 ### Installing
 1. **Clone the repository:**
      '''bash
-     git clone urlll
+     git clone <https://github.com/AmarSaini2/SYSC3110-Project>
      '''
 2. **Open the project in your preferred IDE**
 3. **Build/Run the game:**
@@ -45,6 +45,20 @@ The game ensures all words placed are valid, that new words placed intersect wit
 ## Winning the game:
 - The game ends when there are no more valid words to play, and the player with the highest score wins.
 
+## Known Issues
+- Certain edge cases in word validation might not be handled correctly.
+- Game does not support more than 2 players currently.
+- End of game logic is still being worked on and only currently checks for if players have remaining valid words to play for the game to end.
+
+## Roadmap
+- Next Iteration: Enhance error handling and implement a GUI interface for the gameplay.
+- Additional Features: Supporting more than 2 players and expanding the end of game logic.
+
+## Authors 
+- **Amar Saini:** Responsible for Game Logic Implementation
+- **Kaiya Sparks:** Responsible for README file and Game Logic Implementation
+- **Riya Rawat:** Responsible for UML class diagram
+- **Tyler Doherty:** Responsible for Testing Gameplay Mechanics and Identify Bugs and Inconsistencies
 ## License
 This project is licensed under the [MIT License]
 
