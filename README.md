@@ -16,9 +16,9 @@ The game ensures all words placed are valid, that new words placed intersect wit
   
 ### Installing
 1. **Clone the repository:**
-     '''bash
+     ```bash
      git clone <https://github.com/AmarSaini2/SYSC3110-Project>
-     '''
+     ```
 2. **Open the project in your preferred IDE**
 3. **Build/Run the game:**
    - Run the main class 'Game.java'.
