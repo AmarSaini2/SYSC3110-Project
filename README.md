@@ -40,6 +40,7 @@ The game ensures all words placed are valid, that new words placed intersect wit
 - Certain edge cases in word validation might not be handled correctly.
 - Game does not support more than 2 players currently.
 - End of game logic is still being worked on and only currently checks for if players have remaining valid words to play for the game to end.
+- The game does not utilize blank tiles or premium squares yet.
 
 ## Roadmap
 - Next Iteration: Enhance error handling and implement a GUI interface for the gameplay.
