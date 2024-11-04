@@ -4,47 +4,70 @@ import java.util.*;
 public class Game {
     static Scanner in = new Scanner(System.in);
 
-    Player p1,p2;
+
+    private ArrayList<Player> players;
     Wordbag bag;
     Board board;
     Trie trie;
+    private int consecutivePasses;
+    private int currentPlayerIndex;
+    private boolean gameOver;
+    private ScrabbleView view;
+    private int numPlayers;
+    private Tile tile;
+    int row;
+    int col;
+    private Board tempBoard;
+    private ArrayList<String> usedWords;
+    private boolean startofTurn;
+    ArrayList<Tile> tempHand;
 
-    Game(String playerName1, String playerName2){
-        this.p1 = new Player(playerName1);
-        this.p2 = new Player(playerName2);
+    public Game(){
+
         this.bag = new Wordbag();
         this.board = new Board();
-        this.p1.setHand(this.bag);
-        this.p2.setHand(this.bag);
         trie = new Trie();
+        players= new ArrayList<>();
+        gameOver = false;
+        usedWords = new ArrayList<>();
+
+    }
+    public void addView(ScrabbleView view){
+        this.view = view;
+    }
+    public String printStart(){
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Welcome to the game of scrabble!\n");
+        sb.append("To start, select a number of players: (2-4)");
+        return sb.toString();
     }
 
-    public static void main(String[] args) {
-        System.out.println("Welcome to Scrabble!\nPlayer 1, please enter your name:");
-        String p1Name = getPlayerName();
-        System.out.println("Player 2, please enter your name:");
-        String p2Name = getPlayerName();
-        Game game = new Game(p1Name, p2Name);
-        System.out.println("Welcome " + game.p1.getName() + " and " + game.p2.getName());
-        turnLoop:
-        while(!game.p1.handIsEmpty() && !game.p2.handIsEmpty()){//if either player still has tiles, keep playing
-            while(!game.playerTurn(game.p1)){// until player plays a valid turn, loop back to player
-                game.playerTurn(game.p1);
-            }
-            while(!game.playerTurn(game.p2)){
-                game.playerTurn(game.p2);
-            }
-        }
-        System.out.println("Game over!");
-        if(game.p1.getPoints() > game.p2.getPoints()){
-            System.out.println("Player 1 wins!");
-        }else if(game.p2.getPoints() > game.p1.getPoints()){
-            System.out.println("Player 2 Wins!");
-        }else{
-            System.out.println("Tie!");
-        }
-        System.out.println("Points:\n" + game.p1.getName() + ": " + game.p1.getPoints() + "points\n" + game.p2.getName() + ": " + game.p2.getPoints() + " points");
+    public String startGame(){
+        StringBuilder sb = new StringBuilder();
+        sb.append(printStart());
+        return sb.toString();
     }
+    public void intializePlayer(String name){
+        Player player = new Player(name);
+        player.setHand(bag);
+        players.add(player);
+
+    }
+
+
+    public String handleEndOfGame(){
+        StringBuilder sb = new StringBuilder();
+        if(isGameOver()){
+            gameOver = true;
+            sb.append("The game is over.\n");
+            sb.append(endGameSummary());
+            return sb.toString();
+            }
+
+        return "";
+    }
+
 
     public static String getPlayerName(){
         while (true) { 
@@ -56,24 +79,62 @@ public class Game {
             }   
         }
     }
+    public String playersTurn(){
+        StringBuilder sb = new StringBuilder();
+        if(currentPlayerIndex >= players.size()){
+            currentPlayerIndex = 0;
+        }
+        Player currentPlayer = players.get(currentPlayerIndex);
+        startofTurn = true;
+        sb.append("Player: "+ currentPlayer.getName()+" \n");
+        sb.append("1. Play a word\n");
+        sb.append("2. Pass your turn\n");
+        return sb.toString();
+    }
+    public ArrayList<Tile> playerRack(){
+        Player currentPlayer = players.get(currentPlayerIndex);
+        //System.out.println(currentPlayer.getName());
+        return currentPlayer.getHand();
+    }
+    public void handlePlayerChoice(int choice){
+        Player currentPlayer = players.get(currentPlayerIndex);
+        if(choice == 1){
+            view.playTurn();
+            consecutivePasses = 0;
+        }else if(choice == 2){
+            currentPlayerIndex =(currentPlayerIndex+1)%players.size();
+            consecutivePasses++;
 
+        }}
+    public Player currentPlayerTurn(){
+        Player currentPlayer = players.get(currentPlayerIndex);
+        if(startofTurn){
+            tempHand = new ArrayList<Tile>(currentPlayer.getHand());
+            tempBoard = new Board(board);
+            startofTurn = false;
+        }
+
+        for(Tile tile:tempHand){
+            System.out.println(tile.getID());
+        }
+        return currentPlayer;
+    }
     public boolean playerTurn(Player currentPlayer){
         //player turn order: pick horizontal or vertical, place tiles until either submit is entered or hand is empty, submit turn for review -> GOTO submit();
         //A temp copy of the board is made to display as the player places tiles before submitting. A temp copy of the hand will be used for the same purpose
-        ArrayList<Tile> tempHand = new ArrayList<Tile>(currentPlayer.getHand());
-        Board tempBoard = new Board(board);
-        int firstRowOrCol;//tracker to lock player to row/column
-        tempBoard.display();
-        System.out.println("\n" + currentPlayer.getName() + "'s turn:");
 
-        currentPlayer.printHand();
 
-        String direction;
+
+        //int firstRowOrCol;//tracker to lock player to row/column
+        //tempBoard.display();
+        //currentPlayer.printHand();
+
+        /*String direction;
         while(true){//get placement direction
-            System.out.println("Choose a direction to place your word in (h/v) or enter \"pass\" to skip your turn:");
+            System.out.println("Choose a direction to place your word in (h/v):");
             try{
                 direction = in.next();
-                if(!(direction.equalsIgnoreCase("h") || direction.equalsIgnoreCase("v") || direction.equalsIgnoreCase("pass"))){
+                if(!(direction.equalsIgnoreCase("h") || direction.equalsIgnoreCase("v"))){
                     System.out.println("Invalid input");
                     continue;
                 }else{
@@ -83,18 +144,15 @@ public class Game {
                 System.out.println("Invalid input");
                 continue;
             }
-        }
+        }*/
 
-        while(true){//get first row or column (depending on direction selection)
+        /*while(true){//get first row or column (depending on direction selection)
             if(direction.equals("h")){
                 System.out.println("Enter the row you would like to place letters across");
             }else if (direction.equals("v")){
                 System.out.println("Enter the column you would like to place letters down");
             }
-            else{
-                System.out.println("Turn passed, would you like to replace tiles?");
-                return true;
-            }
+
             try{
                 firstRowOrCol = in.nextInt();
                 if(firstRowOrCol < 0 || firstRowOrCol > 15){
@@ -107,11 +165,17 @@ public class Game {
                 System.out.println("Invalid input: turn reset");
                 return false;
             }
-        }
+        }*/
 
-        while (true) {
-            tempBoard.display();
-            System.out.println("Choose a letter to place:");
+
+        Tile pickedTile = tile;
+        if(row == 7 && col == 7 ){
+            tempBoard.placeLetter(row, col, tile.getID());
+        }
+        System.out.println(tile.getID());
+        tempHand.remove(pickedTile);
+        /*while (true) {
+            //tempBoard.display();
 
             for (Tile tile : tempHand) {
                 System.out.printf("%6s", tile.getID());
@@ -127,8 +191,8 @@ public class Game {
             Tile pickedTile;
             while (true) {//get picked tile + check if tile is in hand
                 try {
-                    tileName = in.next();
-                    pickedTile = new Tile(tileName);
+
+                    pickedTile = tile;
                     if (tempHand.contains(pickedTile)) {
                         break;
                     } else {
@@ -140,11 +204,8 @@ public class Game {
                 }
             }
 
-            if (direction.equals("h")) {
-                System.out.println("Please input a column to place " + tileName + " in");
-            } else {
-                System.out.println("Please input a row to place " + tileName + " in");
-            }
+
+
 
             //program loop for entering a letter
             int row, col;
@@ -206,20 +267,72 @@ public class Game {
                     continue;
                 }
             }
-        }
+        }*/
+        return true;
     }
 
-    public boolean submitWord(Player currentPlayer, Board tempBoard, ArrayList<Tile> tempHand, int row, int col, String direction){
+    public void tilePlaced(Tile tile){
+        this.tile =  tile;
+        Player currentPlayer = null;
+        if(startofTurn){
+            currentPlayer = currentPlayerTurn();
+        }
+        playerTurn(currentPlayer);
+    }
+
+    public void setRowCol(int row, int col){
+        this.row = row;
+        this.col = col;
+    }
+    public boolean submitWord(Player currentPlayer, Board tempBoard){
         //check whether tempBoard is valid, update board, update hand, update points, goto next player's turn
         if(tempBoard.checkValidity(trie)){
-            board.swapWithTemp(tempBoard);//swap temp board in for main board
-            currentPlayer.swapWithTemp(tempHand,bag);//swap temp hand for main hand, refresh hand to 7 tiles
-            while(currentPlayer.getHand().size() < 7){
-                currentPlayer.addTile(bag);
+            //board.swapWithTemp(tempBoard);//swap temp board in for main board
+            for(Tile tile:tempHand){
+                System.out.println(tile.getID());
             }
-            currentPlayer.addPoints(board.calculatePoints(row, col, direction));//calculate and update points
+            currentPlayer.swapWithTemp(tempHand,bag);//swap temp hand for main hand, refresh hand to 7 tiles
+
+            currentPlayer.drawNewTiles(bag);
+            //currentPlayer.addPoints(board.calculatePoints(row, col, direction));//calculate and update points
             return true;
         }
+
         return false;
     }
+    public boolean isGameOver(){
+        if(bag.isEmpty()){
+            for(Player player:players){
+                if(player.getHand().isEmpty()){
+                    return true;
+                }
+            }
+        }
+        return consecutivePasses >= players.size();
+    }
+    public Board getTempBoard(){
+        return tempBoard;
+    }
+    private String endGameSummary(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("Final Scores: \n");
+        for(Player player: players){
+            sb.append(player.getName() + " - Final Score: "+ player.getPoints()+"\n");
+        }
+        Player winner = Collections.max(players, Comparator.comparing(Player::getPoints));
+        sb.append(new StringBuilder().append("The winner is: ").append(winner.getName()).append(" with a score of ").append(winner.getPoints()).toString()+"\n");
+        return sb.toString();
+    }
+    public Player getPlayer(){
+        return players.get(currentPlayerIndex);
+    }
+    public void updatePlayerIndex(){
+        if(currentPlayerIndex >= players.size()){
+            currentPlayerIndex = 0;
+            return;
+        }
+        currentPlayerIndex++;
+
+    }
+
 }

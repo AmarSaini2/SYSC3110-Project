@@ -6,6 +6,7 @@ public class Player{
     private int points;
     private ArrayList<Tile> hand;
     private String name;
+    private int NUM_TILES = 7;
 
     public Player(String name){
         points = 0;
@@ -66,6 +67,22 @@ public class Player{
     public int getPoints(){
         return this.points;
     }
+    public void drawNewTiles(Wordbag tilebag){
+        int replace = NUM_TILES - hand.size();
+        if(tilebag.getBagSize()< replace && tilebag.getBagSize() > 0){
+            System.out.println("Only had +"+tilebag.getBagSize()+" , these are the remaining tiles.");
+            for(int i =0; i< tilebag.getBagSize();i++){
+                hand.add(tilebag.drawTile());
+            }
+            return;
+        }else if(tilebag.getBagSize()==0){
+            System.out.println("All tiles have been drawn.");
+            return;
+        }
+        for(int i =0; i<replace;i++){
+            hand.add(tilebag.drawTile());
+        }
+    }
 
     @Override
     public boolean equals(Object obj) {
@@ -77,5 +94,14 @@ public class Player{
         }
         Player that = (Player) obj; //lets two instances of identical coordinate values to be considered equal
         return this.name.equals(that.name) && this.points == that.points;
+    }
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("Rack: ");
+        for(Tile tile: hand){
+            sb.append(" " + tile.getID());
+
+        }
+        return sb.toString();
     }
 }

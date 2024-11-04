@@ -5,25 +5,25 @@ public class Tile {
     Tile(String letter){
         this.letter = letter;
         switch(letter){
-            case("a"), ("e"), ("i"), ("l"), ("n"), ("o"), ("r"), ("s"), ("t"), ("u"):
+            case("A"), ("E"), ("I"), ("L"), ("N"), ("O"), ("R"), ("S"), ("T"), ("U"):
                 this.points = 1;
                 break;
-            case("b"), ("c"), ("m"), ("p"):
+            case("B"), ("C"), ("M"), ("P"):
                 this.points = 3;
                 break;
-            case("d"), ("g"):
+            case("D"), ("G"):
                 this.points = 2;
                 break;
-            case("f"), ("h"), ("v"), ("w"), ("y"):
+            case("F"), ("H"), ("V"), ("W"), ("Y"):
                 this.points = 4;
                 break;
-            case("j"), ("x"):
+            case("J"), ("X"):
                 this.points = 8;
                 break;
-            case("k"):
+            case("K"):
                 this.points = 5;
                 break;
-            case("q"), ("z"):
+            case("Q"), ("Z"):
                 this.points = 10;
                 break;
             case("blank"):

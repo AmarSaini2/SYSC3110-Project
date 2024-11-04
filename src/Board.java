@@ -37,7 +37,12 @@ public class Board {
 
     public void placeLetter(int row, int col, String input) {
         board[row][col] = input;
-        display();
+
+    }
+    public String removeLetter(int row,int col){
+        String letter = board[row][col];
+        board[row][col] = " ";
+        return letter;
     }
 
     public boolean isEmptyLocation(int row, int col){
