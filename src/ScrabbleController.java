@@ -155,17 +155,18 @@ public class ScrabbleController implements ActionListener {
         JButton tile= (JButton) e.getSource();
         lastClicked = tile;
         tile.setEnabled(false);
+        String letter = tile.getText();
+        tilePlaced = new Tile(letter);
+        model.tilePlaced(tilePlaced);
+        hand.add(tilePlaced);
+        playerPoints += tilePlaced.getPoints();
         if(firstTurn){
             firstTurn = false;
             tilePlaced = null;
             currentView.updateBoard(0,0,lastClicked.getText());
 
         }
-        String letter = tile.getText();
-        tilePlaced = new Tile(letter);
-        model.tilePlaced(tilePlaced);
-        hand.add(tilePlaced);
-        playerPoints += tilePlaced.getPoints();
+
 
 
     }
