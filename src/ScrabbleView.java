@@ -21,7 +21,7 @@ public class ScrabbleView extends JFrame {
     JPanel inputPanel;
     private int CENTER = 7;
     private static final int SIZE = 15;
-    private Board tempBoard;
+
     private Board playerTempBoard;
     JPanel rack;
     ArrayList<Tile> playerHand;
@@ -281,7 +281,7 @@ public class ScrabbleView extends JFrame {
     }
     public void playTurn(){
 
-        clearMessageArea();
+
         playerTempBoard = new Board();
         updateMessageArea("\n" + model.getPlayer().getName() + "'s turn:\n");
         updateMessageArea("Choose a letter to place:");
@@ -297,20 +297,24 @@ public class ScrabbleView extends JFrame {
     public void placeStartLetter(String letter){
         board[CENTER][CENTER].setEnabled(false);
         board[CENTER][CENTER].setText(letter);
-        model.setRowCol(CENTER,CENTER);
+        board[CENTER][CENTER].setBackground(Color.pink);
+        //model.setRowCol(CENTER,CENTER);
+        model.updateTempBoard(CENTER,CENTER,letter);
+        playerTempBoard.placeLetter(CENTER,CENTER,letter);
         updateMessageArea("Pick next letter to play!");
         firstTile = false;
     }
-    private void placeSubsequentTiles(int row, int col,String letter){
+    private void placeSubsequentTiles(int row, int col, String letter){
         model.setRowCol(-1,-1);
 
-
+        board[row][col].setEnabled(false);
         board[row][col].setText(letter);
-        tempBoard.placeLetter(row,col,letter);
+        board[row][col].setBackground(Color.pink);
+        model.updateTempBoard(row,col,letter);
         playerTempBoard.placeLetter(row,col,letter);
     }
     public void updateBoard(int row, int col,String letter){
-        tempBoard = model.getTempBoard();
+
 
         if(firstTile){
             enableAllTiles();
@@ -337,6 +341,8 @@ public class ScrabbleView extends JFrame {
                 if(boardTileId.equals(tile.getID())){
                     String removeTileId = playerTempBoard.removeLetter(row,col);
                     if(removeTileId.equals(tile.getID())){
+                        board[row][col].setText(" ");
+                        board[row][col].setEnabled(true);
                         System.out.println("Removing tile: "+ tile.getID()+"\n");
                     }
                 }

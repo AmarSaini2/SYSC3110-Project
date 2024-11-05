@@ -63,20 +63,20 @@ public class Game {
             sb.append("The game is over.\n");
             sb.append(endGameSummary());
             return sb.toString();
-            }
+        }
 
         return "";
     }
 
 
     public static String getPlayerName(){
-        while (true) { 
+        while (true) {
             try {
                 return in.next();
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input. Please enter a name");
                 in.next();
-            }   
+            }
         }
     }
     public String playersTurn(){
@@ -284,7 +284,10 @@ public class Game {
         this.row = row;
         this.col = col;
     }
-    public boolean submitWord(Player currentPlayer, Board tempBoard){
+    public void updateTempBoard(int row, int col, String letter){
+        tempBoard.placeLetter(row,col,letter);
+    }
+    public boolean submitWord(Player currentPlayer){
         //check whether tempBoard is valid, update board, update hand, update points, goto next player's turn
         if(tempBoard.checkValidity(trie)){
             //board.swapWithTemp(tempBoard);//swap temp board in for main board

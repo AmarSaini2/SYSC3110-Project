@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
@@ -34,51 +35,50 @@ public class ScrabbleController implements ActionListener {
     public void actionPerformed(ActionEvent e){
         String command = e.getActionCommand();
         String[] parts = command.split(" ");
-        System.out.println("   kskaks");
-        if(parts.length == 2 && isNumeric(parts[0])){
 
+        if(parts.length == 2 && isNumeric(parts[0])){
             handleLetterPlace(e);
             return;
         }else{
 
 
-        switch(command){
+            switch(command){
 
-            case "NEW":
-                startNewGame(e);
-                break;
-            case "EXIT":
-                exitGame(e);
-                break;
-            case "Players2":
-                handleNumPlayers(e,2);
-                break;
-            case "Players3":
-                handleNumPlayers(e,3);
-                break;
-            case "Players4":
-                handleNumPlayers(e,4);
-                break;
-            case "PLAY":
-                playTurn(e);
-                break;
-            case "PASS":
-                passTurn(e);
-                break;
-            case "PASSTURN":
-                passTurnIn(e);
-                break;
-            case "LETTER":
-                playingTiles(e);
-                break;
-            case "SUBMIT":
-                submitWord(e);
-                break;
-            case "RESET":
-                resetRack(e);
-                break;
-
-        }}
+                case "NEW":
+                    startNewGame(e);
+                    break;
+                case "EXIT":
+                    exitGame(e);
+                    break;
+                case "Players2":
+                    handleNumPlayers(e,2);
+                    break;
+                case "Players3":
+                    handleNumPlayers(e,3);
+                    break;
+                case "Players4":
+                    handleNumPlayers(e,4);
+                    break;
+                case "PLAY":
+                    playTurn(e);
+                    break;
+                case "PASS":
+                    passTurn(e);
+                    break;
+                case "PASSTURN":
+                    passTurnIn(e);
+                    break;
+                case "LETTER":
+                    playingTiles(e);
+                    break;
+                case "SUBMIT":
+                    submitWord(e);
+                    break;
+                case "RESET":
+                    resetRack(e);
+                    break;
+            }
+        }
     }
     public void handleLetterPlace(ActionEvent e){
         JButton clicked = (JButton) e.getSource();
@@ -120,7 +120,6 @@ public class ScrabbleController implements ActionListener {
         currentView.playerNameInput(numPlayers);
     }
     public void playTurn(ActionEvent e){
-        currentView.clearMessageArea();
         model.handlePlayerChoice(1);
         hand = new ArrayList<>();
     }
@@ -146,6 +145,7 @@ public class ScrabbleController implements ActionListener {
             return;
         }
         currentView.resetBoard(hand, play);
+        hand = new ArrayList<>();
         currentView.updateMessageArea("Turn Passed!");
         currentView.updateMessageArea("Next Player's Turn");
 
@@ -155,27 +155,28 @@ public class ScrabbleController implements ActionListener {
         JButton tile= (JButton) e.getSource();
         lastClicked = tile;
         tile.setEnabled(false);
+        String letter = tile.getText();
+        tilePlaced = new Tile(letter);
+        model.tilePlaced(tilePlaced);
+        hand.add(tilePlaced);
+        playerPoints += tilePlaced.getPoints();
         if(firstTurn){
             firstTurn = false;
             tilePlaced = null;
             currentView.updateBoard(0,0,lastClicked.getText());
 
         }
-        String letter = tile.getText();
-        tilePlaced = new Tile(letter);
-        model.tilePlaced(tilePlaced);
-        hand.add(tilePlaced);
-        playerPoints += tilePlaced.getPoints();
+
 
 
     }
     public void submitWord(ActionEvent e){
         JButton submit = (JButton) e.getSource();
         submit.setEnabled(false);
+        submit.setBackground(Color.pink);
         play++;
-        if(model.submitWord(model.getPlayer(),model.getTempBoard())){
+        if(model.submitWord(model.getPlayer())){
             model.getPlayer().addPoints(playerPoints);
-            currentView.clearMessageArea();
             currentView.updateMessageArea("Turn Over, Word Successfully Placed");
             currentView.updateMessageArea("Player "+model.getPlayer().getName()+" has "+ model.getPlayer().getPoints()+ " points!");
             currentView.updateMessageArea("Next Player's turn");
@@ -193,9 +194,12 @@ public class ScrabbleController implements ActionListener {
     public void resetRack(ActionEvent e){
         JButton reset = (JButton) e.getSource();
         reset.setEnabled(false);
+        Tile tile = new Tile(lastClicked.getText());
         if(lastClicked != null){
             lastClicked.setEnabled(true);
-            playerPoints -= tilePlaced.getPoints();
+            playerPoints -= tile.getPoints();
+            currentView.resetBoard(hand,play);
+            hand= new ArrayList<>();
         }
 
     }
