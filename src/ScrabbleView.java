@@ -343,6 +343,7 @@ public class ScrabbleView extends JFrame {
                     if(removeTileId.equals(tile.getID())){
                         board[row][col].setText(" ");
                         board[row][col].setEnabled(true);
+                        board[row][col].setBackground(Color.ORANGE);
                         System.out.println("Removing tile: "+ tile.getID()+"\n");
                     }
                 }
@@ -359,7 +360,6 @@ public class ScrabbleView extends JFrame {
     }
 
     public static void main(String[] args) {
-
 
         new ScrabbleView();
 

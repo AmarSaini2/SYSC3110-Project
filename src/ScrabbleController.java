@@ -16,6 +16,7 @@ public class ScrabbleController implements ActionListener {
     private JButton lastClicked;
     private int playerPoints;
     private int play;
+    private ArrayList<JButton> turnTiles;
 
 
     public ScrabbleController(Game model, ScrabbleView view){
@@ -120,6 +121,7 @@ public class ScrabbleController implements ActionListener {
         currentView.playerNameInput(numPlayers);
     }
     public void playTurn(ActionEvent e){
+        turnTiles = new ArrayList<>();
         model.handlePlayerChoice(1);
         hand = new ArrayList<>();
     }
@@ -155,6 +157,7 @@ public class ScrabbleController implements ActionListener {
         JButton tile= (JButton) e.getSource();
         lastClicked = tile;
         tile.setEnabled(false);
+        turnTiles.add(tile);
         String letter = tile.getText();
         tilePlaced = new Tile(letter);
         model.tilePlaced(tilePlaced);
@@ -193,14 +196,17 @@ public class ScrabbleController implements ActionListener {
     }
     public void resetRack(ActionEvent e){
         JButton reset = (JButton) e.getSource();
-        reset.setEnabled(false);
-        Tile tile = new Tile(lastClicked.getText());
-        if(lastClicked != null){
-            lastClicked.setEnabled(true);
-            playerPoints -= tile.getPoints();
-            currentView.resetBoard(hand,play);
-            hand= new ArrayList<>();
+        if(lastClicked == null){
+            JOptionPane.showMessageDialog(null, "You must first play a tile to reset");
+            return;
         }
+        for(JButton tt: turnTiles){
+            Tile tile = new Tile(tt.getText());
+            tt.setEnabled(true);
+            playerPoints -= tile.getPoints();
+        }
+        currentView.resetBoard(hand,play);
+        hand= new ArrayList<>();
 
     }
 
