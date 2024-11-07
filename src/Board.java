@@ -67,6 +67,7 @@ public class Board {
                 if (!trie.hasWord(s.trim())) {
                     return false;
                 }
+
             }
         }
         for (int col = 0; col < SIZE; col++) {//for every column, check that the words are valid

@@ -291,9 +291,7 @@ public class Game {
         //check whether tempBoard is valid, update board, update hand, update points, goto next player's turn
         if(tempBoard.checkValidity(trie)){
             //board.swapWithTemp(tempBoard);//swap temp board in for main board
-            for(Tile tile:tempHand){
-                System.out.println(tile.getID());
-            }
+
             currentPlayer.swapWithTemp(tempHand,bag);//swap temp hand for main hand, refresh hand to 7 tiles
 
             currentPlayer.drawNewTiles(bag);

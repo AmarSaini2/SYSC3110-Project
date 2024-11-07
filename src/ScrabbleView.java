@@ -345,6 +345,7 @@ public class ScrabbleView extends JFrame {
         }
         if(!board[CENTER][CENTER].getText().equals("") && numberofplays ==0){
             board[CENTER][CENTER].setText("");
+            firstTile = true;
         }
 
     }
@@ -357,7 +358,7 @@ public class ScrabbleView extends JFrame {
                     if(removeTileId.equals(tile.getID())){
                         board[row][col].setText(" ");
                         board[row][col].setEnabled(true);
-                        System.out.println("Removing tile: "+ tile.getID()+"\n");
+                        board[row][col].setBackground(Color.ORANGE);
                     }
                 }
 

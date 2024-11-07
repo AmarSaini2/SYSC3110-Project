@@ -6,7 +6,8 @@ import java.awt.event.MouseListener;
 import java.awt.image.AreaAveragingScaleFilter;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-
+/* Need to make sure in passturnin, gameover pass count updated
+* */
 public class ScrabbleController implements ActionListener {
     Game model;
     private ScrabbleView currentView;
@@ -164,10 +165,11 @@ public class ScrabbleController implements ActionListener {
         hand.add(tilePlaced);
         playerPoints += tilePlaced.getPoints();
         if(firstTurn){
-            firstTurn = false;
+
             tilePlaced = null;
             currentView.updateBoard(0,0,lastClicked.getText());
             selectedButtons.add(tile);
+            firstTurn = false;
 
         }else{
             selectedButtons.add(tile);
@@ -182,14 +184,45 @@ public class ScrabbleController implements ActionListener {
         submit.setEnabled(false);
         submit.setBackground(Color.pink);
         play++;
-        if(model.submitWord(model.getPlayer())){
-            model.getPlayer().addPoints(playerPoints);
-            currentView.updateMessageArea("Turn Over, Word Successfully Placed");
-            currentView.updateMessageArea("Player "+model.getPlayer().getName()+" has "+ model.getPlayer().getPoints()+ " points!");
-            currentView.updateMessageArea("Next Player's turn");
-            playerPoints= 0;
+        if((hand.size() > 1)&& firstTurn){
+            if(model.submitWord(model.getPlayer())){
+                model.getPlayer().addPoints(playerPoints);
+                currentView.updateMessageArea("Turn Over, Word Successfully Placed");
+                currentView.updateMessageArea("Player "+model.getPlayer().getName()+" has "+ model.getPlayer().getPoints()+ " points!");
+                currentView.updateMessageArea("Next Player's turn");
+                playerPoints= 0;
+            }else{
+
+                currentView.resetBoard(hand, play);
+                currentView.updateMessageArea("Turn over! Invalid word!");
+                currentView.updateMessageArea("Player " + model.getPlayer().getName() + " has "+ model.getPlayer().getPoints()+ " points!");
+                currentView.updateMessageArea("Next Player's turn!");
+                playerPoints = 0;
+            }
+        }else if (!firstTurn){
+            if(model.submitWord(model.getPlayer())){
+                model.getPlayer().addPoints(playerPoints);
+                currentView.updateMessageArea("Turn Over, Word Successfully Placed");
+                currentView.updateMessageArea("Player "+model.getPlayer().getName()+" has "+ model.getPlayer().getPoints()+ " points!");
+                currentView.updateMessageArea("Next Player's turn");
+                playerPoints= 0;
+            }else{
+                currentView.resetBoard(hand, play);
+                currentView.updateMessageArea("Turn over! Invalid word!");
+                currentView.updateMessageArea("Player " + model.getPlayer().getName() + " has "+ model.getPlayer().getPoints()+ " points!");
+                currentView.updateMessageArea("Next Player's turn!");
+                playerPoints = 0;
+            }
+        }else{
+            currentView.resetBoard(hand, play);
+            currentView.updateMessageArea("Turn over! Invalid word!");
+            currentView.updateMessageArea("Player " + model.getPlayer().getName() + " has "+ model.getPlayer().getPoints()+ " points!");
+            currentView.updateMessageArea("Next Player's turn!");
+            playerPoints = 0;
         }
+
         model.updatePlayerIndex();
+
         if(model.isGameOver()){
             currentView.endofGameFrame("ENDGAME");
             return;
@@ -201,13 +234,17 @@ public class ScrabbleController implements ActionListener {
     public void resetRack(ActionEvent e){
         JButton reset = (JButton) e.getSource();
         reset.setEnabled(false);
-        Tile tile = new Tile(lastClicked.getText());
-        if(lastClicked != null){
-            lastClicked.setEnabled(true);
-            playerPoints -= tile.getPoints();
-            currentView.resetBoard(hand,play);
-            hand= new ArrayList<>();
+        if(!firstTurn && play == 0){
+            firstTurn = true;
         }
+        for(JButton button: selectedButtons){
+            Tile tile = new Tile(button.getText());
+            button.setEnabled(true);
+            playerPoints -= tile.getPoints();
+        }
+        currentView.resetBoard(hand,play);
+        hand=new ArrayList<>();
+        selectedButtons = new ArrayList<>();
 
     }
 
