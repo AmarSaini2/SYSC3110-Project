@@ -16,12 +16,13 @@ public class ScrabbleController implements ActionListener {
     private JButton lastClicked;
     private int playerPoints;
     private int play;
-
+    private ArrayList<JButton> selectedButtons;
 
     public ScrabbleController(Game model, ScrabbleView view){
         this.model = model;
         currentView = view;
         play = 0;
+
     }
     private boolean isNumeric(String str){
         try {
@@ -100,6 +101,7 @@ public class ScrabbleController implements ActionListener {
 
 
             tilePlaced = null;
+            currentView.updateRackPlay(selectedButtons,true);
 
         } catch (NumberFormatException ex) {
             currentView.updateMessageArea("Invalid row or column format!");
@@ -122,6 +124,7 @@ public class ScrabbleController implements ActionListener {
     public void playTurn(ActionEvent e){
         model.handlePlayerChoice(1);
         hand = new ArrayList<>();
+        selectedButtons = new ArrayList<>();
     }
     public void passTurn(ActionEvent e){
         model.handlePlayerChoice(2);
@@ -164,7 +167,11 @@ public class ScrabbleController implements ActionListener {
             firstTurn = false;
             tilePlaced = null;
             currentView.updateBoard(0,0,lastClicked.getText());
+            selectedButtons.add(tile);
 
+        }else{
+            selectedButtons.add(tile);
+            currentView.updateRackPlay(selectedButtons,false);
         }
 
 

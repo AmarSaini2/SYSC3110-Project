@@ -51,9 +51,19 @@ public class ScrabbleView extends JFrame {
         model.addView(this);
         SC = new ScrabbleController(model, this);
         setMenu(this,SC);
+        JButton button;
         for(int row = 0; row<SIZE;row++){
             for(int col = 0;col < SIZE; col++){
-                JButton button = new JButton("");
+                /*if(row == CENTER && col == CENTER){
+                    ImageIcon icon = new ImageIcon("star.png");
+                    Image img = icon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+                    icon = new ImageIcon(img);
+                    button = new JButton(icon);
+
+                }else{
+                    button = new JButton("");
+                }*/
+                button = new JButton("");
                 button.setEnabled(false);
                 button.setBackground(Color.ORANGE);
                 button.setForeground(Color.white);
@@ -64,6 +74,7 @@ public class ScrabbleView extends JFrame {
                 boardPanel.add(button);
             }
         }
+
         messageArea = new JTextArea(5,30);
         messageArea.setFont(new Font("Arial",Font.PLAIN,12));
 
@@ -171,6 +182,7 @@ public class ScrabbleView extends JFrame {
 
                 }
                 break;
+
 
         }
         mainPanel.revalidate();
@@ -283,6 +295,7 @@ public class ScrabbleView extends JFrame {
 
 
         playerTempBoard = new Board();
+
         updateMessageArea("\n" + model.getPlayer().getName() + "'s turn:\n");
         updateMessageArea("Choose a letter to place:");
         updateButtonVisibility("PLAYTURN");
@@ -314,6 +327,7 @@ public class ScrabbleView extends JFrame {
         playerTempBoard.placeLetter(row,col,letter);
     }
     public void updateBoard(int row, int col,String letter){
+
 
 
         if(firstTile){
@@ -356,6 +370,19 @@ public class ScrabbleView extends JFrame {
         updateMessageArea(model.handleEndOfGame());
 
 
+    }
+    public void updateRackPlay(ArrayList<JButton> buttons, boolean enable){
+        if(!enable){
+            for(JButton button: playerRack){
+                button.setEnabled(false);
+            }
+        }else{
+            for(JButton button:playerRack){
+                if(!buttons.contains(button)){
+                    button.setEnabled(true);
+                }
+            }
+        }
     }
 
     public static void main(String[] args) {
