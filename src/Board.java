@@ -1,10 +1,15 @@
 import java.util.*;
 public class Board {
     private String[][] board;
+    private ArrayList<Coordinate> placedTileList;
+    private enum Direction{VERTICAL, HORIZONTAL, INVALID}
+    public Direction placedTileDirection;
     private final int SIZE = 15;
 
     public Board(){
         this.board = new String[SIZE][SIZE];
+        this.placedTileList = new ArrayList<>();
+        placedTileDirection = Direction.INVALID;
         for(String[] row: board){
             Arrays.fill(row, " ");
         }
@@ -12,6 +17,11 @@ public class Board {
 
     public Board(Board inputBoard){
         this.board = new String[SIZE][SIZE];
+        placedTileDirection = inputBoard.placedTileDirection;
+        this.placedTileList = new ArrayList<>();
+        for(Coordinate coord : inputBoard.placedTileList){
+            placedTileList.add(new Coordinate(coord.row, coord.col));
+        }
         for(int i = 0; i < SIZE; i++){
             for(int j = 0; j < SIZE; j++){
                 this.board[i][j] = inputBoard.board[i][j];
@@ -54,17 +64,30 @@ public class Board {
     }
 
     public boolean checkValidity(Trie trie) {
+        ArrayList<String> isoLetters = new ArrayList<>();
+        determineDirection();
+        if(placedTileDirection == Direction.INVALID){
+            System.out.println("invalid direction");
+            return false;
+        }
+
         for (int row = 0; row < SIZE; row++) {//for every row, check that the words are valid
             StringBuilder rowString = new StringBuilder();
             for (int col = 0; col < SIZE; col++) {
                 rowString.append(board[row][col]);
             }
-            String[] rowStringArray = rowString.toString().split(" ");
+            String[] rowStringArray = rowString.toString().trim().split(" ");
             for (String s : rowStringArray) {
-                if(s.trim().length() < 2){//skip if the "word" made is 1 character
+                if(s.length() == 0){
                     continue;
                 }
-                if (!trie.hasWord(s.trim())) {
+                if(s.length() == 1){//skip if the "word" made is 1 character
+                    isoLetters.add(s);
+                    //System.out.println("Letter added: " + s);
+                    continue;
+                }
+                if (!trie.hasWord(s)) {
+                    System.out.println("word not found");
                     return false;
                 }
 
@@ -75,12 +98,19 @@ public class Board {
             for (int row = 0; row < SIZE; row++) {
                 columnString.append(board[row][col]);
             }
-            String[] rowStringArray = columnString.toString().split(" ");
+            String[] rowStringArray = columnString.toString().trim().split(" ");
             for (String s : rowStringArray) {
-                if(s.trim().length() < 2){// skip 1 letter strings -> not words
+                if(s.length() == 0){
                     continue;
                 }
-                if(!trie.hasWord(s.trim())){
+                if(s.length() == 1){// skip 1 letter strings -> not words
+                    if(isoLetters.contains(s)){//isolated letter found
+                        System.out.println("Iso letter found: " + s);
+                        return false;
+                    }
+                    continue;
+                }
+                if(!trie.hasWord(s)){
                     return false;
                 }
             }
@@ -188,5 +218,42 @@ public class Board {
             }
         }
         return points;
+    }
+
+    public void determineDirection(){
+        if(this.placedTileList.isEmpty()){
+            return;
+        }
+        Boolean sameRow = true;
+        Boolean sameCol = true;
+        int row = placedTileList.getFirst().row;
+        int col = placedTileList.getFirst().col;
+
+        for(Coordinate coord: placedTileList){
+            if(coord.row != row){
+                sameRow = false;
+            }
+            if(coord.col != col){
+                sameCol = false;
+            }
+        }
+
+        if(sameRow == true && sameCol == false){
+            placedTileDirection = Direction.HORIZONTAL;
+        }else if(sameCol == true && sameRow == false){
+            placedTileDirection = Direction.VERTICAL;
+        }else{
+            placedTileDirection = Direction.INVALID;
+        }
+    }
+
+    public void addCoordinate(Coordinate c){
+        placedTileList.add(c);
+    }
+
+    public void clearPlacedTileList(){
+        for(Coordinate coord: placedTileList){
+                placedTileList.remove(coord);
+        }
     }
 }

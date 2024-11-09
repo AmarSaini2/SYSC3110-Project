@@ -1,11 +1,8 @@
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseListener;
-import java.awt.image.AreaAveragingScaleFilter;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import javax.swing.*;
 /* Need to make sure in passturnin, gameover pass count updated
 * */
 public class ScrabbleController implements ActionListener {
@@ -126,6 +123,7 @@ public class ScrabbleController implements ActionListener {
         model.handlePlayerChoice(1);
         hand = new ArrayList<>();
         selectedButtons = new ArrayList<>();
+        
     }
     public void passTurn(ActionEvent e){
         model.handlePlayerChoice(2);
@@ -184,6 +182,7 @@ public class ScrabbleController implements ActionListener {
         submit.setEnabled(false);
         submit.setBackground(Color.pink);
         play++;
+
         if((hand.size() > 1)&& firstTurn){
             if(model.submitWord(model.getPlayer())){
                 model.getPlayer().addPoints(playerPoints);
@@ -192,12 +191,8 @@ public class ScrabbleController implements ActionListener {
                 currentView.updateMessageArea("Next Player's turn");
                 playerPoints= 0;
             }else{
-
-                currentView.resetBoard(hand, play);
-                currentView.updateMessageArea("Turn over! Invalid word!");
-                currentView.updateMessageArea("Player " + model.getPlayer().getName() + " has "+ model.getPlayer().getPoints()+ " points!");
-                currentView.updateMessageArea("Next Player's turn!");
-                playerPoints = 0;
+                restartTurn();
+                return;
             }
         }else if (!firstTurn){
             if(model.submitWord(model.getPlayer())){
@@ -207,18 +202,19 @@ public class ScrabbleController implements ActionListener {
                 currentView.updateMessageArea("Next Player's turn");
                 playerPoints= 0;
             }else{
-                currentView.resetBoard(hand, play);
-                currentView.updateMessageArea("Turn over! Invalid word!");
-                currentView.updateMessageArea("Player " + model.getPlayer().getName() + " has "+ model.getPlayer().getPoints()+ " points!");
-                currentView.updateMessageArea("Next Player's turn!");
-                playerPoints = 0;
+                restartTurn();
+                return;
             }
         }else{
+            restartTurn();
+            return;
+            /*
             currentView.resetBoard(hand, play);
             currentView.updateMessageArea("Turn over! Invalid word!");
             currentView.updateMessageArea("Player " + model.getPlayer().getName() + " has "+ model.getPlayer().getPoints()+ " points!");
             currentView.updateMessageArea("Next Player's turn!");
             playerPoints = 0;
+            */
         }
 
         model.updatePlayerIndex();
@@ -231,6 +227,15 @@ public class ScrabbleController implements ActionListener {
 
 
     }
+
+    public void restartTurn(){
+        currentView.resetBoard(hand, play);
+        currentView.playerTurn("PLAYERTURN");
+        model.board.clearPlacedTileList();
+        hand = new ArrayList<>();
+        selectedButtons = new ArrayList<>();
+    }
+
     public void resetRack(ActionEvent e){
         JButton reset = (JButton) e.getSource();
         reset.setEnabled(false);
@@ -245,6 +250,7 @@ public class ScrabbleController implements ActionListener {
         currentView.resetBoard(hand,play);
         hand=new ArrayList<>();
         selectedButtons = new ArrayList<>();
+        model.board.clearPlacedTileList();
 
     }
 

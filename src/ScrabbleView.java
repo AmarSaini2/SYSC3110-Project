@@ -1,6 +1,6 @@
-import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import javax.swing.*;
 
 public class ScrabbleView extends JFrame {
     Game model;
@@ -204,7 +204,10 @@ public class ScrabbleView extends JFrame {
     }
     public void playerNameInput(int numPlayers){
         for(int i = 0; i < numPlayers; i++){
-            String name = "P" + (i+1) + ": " + JOptionPane.showInputDialog(null,"Enter name for Player "+ (i +1)+ ":", "Player Name", JOptionPane.PLAIN_MESSAGE);
+            String name = JOptionPane.showInputDialog(null,"Enter name for Player "+ (i +1)+ ":", "Player Name", JOptionPane.PLAIN_MESSAGE);
+            if(name.isEmpty()){
+                name = "Player " + (i+1);
+            }
             model.intializePlayer(name);
         }
 
@@ -307,37 +310,6 @@ public class ScrabbleView extends JFrame {
             }
         }
     }
-
-    public void disableAppropriateTile(){
-        //disabling all tile
-        for(int row = 0; row<SIZE;row++){
-            for(int col =0; col<SIZE;col++){
-                board[row][col].setEnabled(false);
-            }
-        }
-        //enabling tiles that are adjacent to word tiles if they are within the index
-        for(int row = 0; row<SIZE;row++){
-            for(int col =0; col<SIZE;col++){
-                if(!board[row][col].getText().equals(" "))
-                    if(row >= 1){
-                        board[row-1][col].setEnabled(true);}
-                    if(row < SIZE - 1){
-                        board[row+1][col].setEnabled(true);}
-                    if(col >= 1){
-                        board[row][col-1].setEnabled(true);}
-                    if(col < SIZE - 1){
-                        board[row][col+1].setEnabled(true);}
-                }
-            }
-        //disabling all tiles with words in them in case of overlapping tile
-        for(int row = 0; row<SIZE;row++){
-            for(int col =0; col<SIZE;col++){
-                if(!board[row][col].getText().equals(" "))
-                    board[row][col].setEnabled(false);
-            }
-        }
-    }
-
     public void placeStartLetter(String letter){
         board[CENTER][CENTER].setEnabled(false);
         board[CENTER][CENTER].setText(letter);

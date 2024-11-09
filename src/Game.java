@@ -1,4 +1,3 @@
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class Game {
@@ -74,7 +73,7 @@ public class Game {
             try {
                 return in.next();
             } catch (InputMismatchException e) {
-                System.out.println("Invalid input. Please enter a name");
+                //System.out.println("Invalid input. Please enter a name");
                 in.next();
             }
         }
@@ -111,11 +110,12 @@ public class Game {
         if(startofTurn){
             tempHand = new ArrayList<Tile>(currentPlayer.getHand());
             tempBoard = new Board(board);
+            tempBoard.clearPlacedTileList();
             startofTurn = false;
         }
 
         for(Tile tile:tempHand){
-            System.out.println(tile.getID());
+            //System.out.println(tile.getID());
         }
         return currentPlayer;
     }
@@ -172,7 +172,7 @@ public class Game {
         if(row == 7 && col == 7 ){
             tempBoard.placeLetter(row, col, tile.getID());
         }
-        System.out.println(tile.getID());
+        //System.out.println(tile.getID());
         tempHand.remove(pickedTile);
         /*while (true) {
             //tempBoard.display();
@@ -286,6 +286,7 @@ public class Game {
     }
     public void updateTempBoard(int row, int col, String letter){
         tempBoard.placeLetter(row,col,letter);
+        tempBoard.addCoordinate(new Coordinate(row, col));
     }
     public boolean submitWord(Player currentPlayer){
         //check whether tempBoard is valid, update board, update hand, update points, goto next player's turn
