@@ -88,6 +88,10 @@ public class Board {
         return true;
     }
 
+
+
+
+
     public int calculatePoints(int row, int col, String direction) {
         int verticalStart = row, verticalEnd = row;
         int horizontalStart = col, horizontalEnd = col;
