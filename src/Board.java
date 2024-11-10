@@ -64,7 +64,6 @@ public class Board {
     }
 
     public boolean checkValidity(Trie trie) {
-        ArrayList<String> isoLetters = new ArrayList<>();
         determineDirection();
         if(placedTileDirection == Direction.INVALID){
             System.out.println("invalid direction");
@@ -78,12 +77,7 @@ public class Board {
             }
             String[] rowStringArray = rowString.toString().trim().split(" ");
             for (String s : rowStringArray) {
-                if(s.length() == 0){
-                    continue;
-                }
-                if(s.length() == 1){//skip if the "word" made is 1 character
-                    isoLetters.add(s);
-                    //System.out.println("Letter added: " + s);
+                if(s.length() < 2){
                     continue;
                 }
                 if (!trie.hasWord(s)) {
@@ -100,14 +94,7 @@ public class Board {
             }
             String[] rowStringArray = columnString.toString().trim().split(" ");
             for (String s : rowStringArray) {
-                if(s.length() == 0){
-                    continue;
-                }
-                if(s.length() == 1){// skip 1 letter strings -> not words
-                    if(isoLetters.contains(s)){//isolated letter found
-                        System.out.println("Iso letter found: " + s);
-                        return false;
-                    }
+                if(s.length() < 2){
                     continue;
                 }
                 if(!trie.hasWord(s)){
@@ -115,6 +102,45 @@ public class Board {
                 }
             }
         }
+
+        Coordinate start = new Coordinate(SIZE, SIZE);
+        Coordinate end = new Coordinate (0,0);
+        for(Coordinate coord: placedTileList){
+            if(placedTileDirection == Direction.HORIZONTAL){
+                if(coord.col < start.col){
+                    start = coord;
+                }
+                if(coord.col > end.col){
+                    end = coord;
+                }
+            }
+            if(placedTileDirection == Direction.VERTICAL){
+                if(coord.row < start.row){
+                    start = coord;
+                }
+                if(coord.row > end.row){
+                    end = coord;
+                }
+            }    
+        }
+
+        if(placedTileDirection == Direction.HORIZONTAL){
+            for(int i = start.col; i < end.col; i++){
+                if(board[start.row][i].equals(" ")){
+                    return false;
+                }
+            }
+        }
+        if(placedTileDirection == Direction.VERTICAL){
+            for(int i = start.row; i < end.row; i++){
+                if(board[i][start.col].equals(" ")){
+                    return false;
+                }
+            }
+        }
+        
+        
+
         return true;
     }
 
