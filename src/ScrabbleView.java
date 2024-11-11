@@ -310,6 +310,41 @@ public class ScrabbleView extends JFrame {
             }
         }
     }
+
+    public void disableAppropriateTile(){
+        //disabling all tile
+        for(int row = 0; row<SIZE;row++){
+            for(int col =0; col<SIZE;col++){
+                board[row][col].setEnabled(false);
+                board[row][col].setBackground(Color.pink);
+            }
+        }
+        //enabling tiles that are adjacent to word tiles if they are within the index
+        for(int row = 1; row<SIZE-1;row++){
+            for(int col =1; col<SIZE-1;col++) {
+                if (!board[row][col].getText().equals("")) {
+                    board[row - 1][col].setEnabled(true);
+                    board[row - 1][col].setBackground(Color.orange);
+                    board[row + 1][col].setEnabled(true);
+                    board[row + 1][col].setBackground(Color.orange);
+                    board[row][col - 1].setEnabled(true);
+                    board[row][col - 1].setBackground(Color.orange);
+                    board[row][col + 1].setEnabled(true);
+                    board[row][col + 1].setBackground(Color.orange);
+                }
+            }
+            }
+        //disabling all tiles with words in them in case of overlapping tile
+        for(int row = 0; row<SIZE;row++){
+            for(int col =0; col<SIZE;col++){
+                if(!board[row][col].getText().equals("")) {
+                    board[row][col].setEnabled(false);
+                    board[row][col].setBackground(Color.pink);
+                }
+            }
+        }
+    }
+
     public void placeStartLetter(String letter){
         board[CENTER][CENTER].setEnabled(false);
         board[CENTER][CENTER].setText(letter);
@@ -359,7 +394,7 @@ public class ScrabbleView extends JFrame {
                 if(boardTileId.equals(tile.getID())){
                     String removeTileId = playerTempBoard.removeLetter(row,col);
                     if(removeTileId.equals(tile.getID())){
-                        board[row][col].setText(" ");
+                        board[row][col].setText("");
                         board[row][col].setEnabled(true);
                         board[row][col].setBackground(Color.ORANGE);
                     }

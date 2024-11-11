@@ -172,7 +172,9 @@ public class ScrabbleController implements ActionListener {
         }else{
             selectedButtons.add(tile);
             currentView.updateRackPlay(selectedButtons,false);
+            //currentView.disableAppropriateTile();
         }
+
 
 
 
