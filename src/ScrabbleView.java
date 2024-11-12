@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.util.ArrayList;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 /**
  * The ScrabbleView class represents the View component of the MVC pattern for the Scrabble game.
  * It is responsible for displaying the game board, player racks, option menu, and other game elements
