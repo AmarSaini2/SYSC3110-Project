@@ -1,7 +1,15 @@
 import java.awt.*;
 import java.util.ArrayList;
 import javax.swing.*;
-
+/**
+ * The ScrabbleView class represents the View component of the MVC pattern for the Scrabble game.
+ * It is responsible for displaying the game board, player racks, option menu, and other game elements
+ * in a graphical user interface (GUI).
+ *
+ * The ScrabbleView class does not handle game logic directly; instead, it updates the UI in response to changes in the
+ * game model and communicates user actions to the controller.
+ *
+ */
 public class ScrabbleView extends JFrame {
     Game model;
     ScrabbleController SC;
@@ -19,13 +27,18 @@ public class ScrabbleView extends JFrame {
     JPanel mainPanel;
     JScrollPane buttonPanel;
     JPanel inputPanel;
+    JTable scorePanel;
+    DefaultTableModel tableModel;
     private int CENTER = 7;
     private static final int SIZE = 15;
 
     //private Board playerTempBoard;
     JPanel rack;
     ArrayList<Tile> playerHand;
-
+    **
+     * Constructs a new ScrabbleView and initializes the layout, including the game board,
+     * tile rack, score display, and other interactive components.
+     */
     public ScrabbleView(){
         super("Scrabble");
         setSize(800,600);
@@ -77,14 +90,22 @@ public class ScrabbleView extends JFrame {
 
         messageArea = new JTextArea(5,30);
         messageArea.setFont(new Font("Arial",Font.PLAIN,12));
-
-
         messageArea.setEditable(false);
+         
         JScrollPane scrollPane = new JScrollPane(messageArea);
+        String[] columnNames = {"Player","Score"};
+        tableModel = new DefaultTableModel(columnNames,0);
+        scorePanel = new JTable(tableModel);
+        JScrollPane tableScrollPane = new JScrollPane(scorePanel);
+
+        JPanel infoPanel = new JPanel(new BorderLayout());
+        infoPanel.setPreferredSize(new Dimension(400, 150));
+        infoPanel.add(scrollPane, BorderLayout.WEST);
+        infoPanel.add(tableScrollPane, BorderLayout.EAST);
         gameStartFrame();
 
         inputPanel = new JPanel(new BorderLayout());
-        inputPanel.add(scrollPane, BorderLayout.NORTH);
+        inputPanel.add(infoPanel, BorderLayout.NORTH);
         inputPanel.add(buttonPanel, BorderLayout.SOUTH);
 
 
@@ -99,6 +120,13 @@ public class ScrabbleView extends JFrame {
         setVisible(true);
 
     }
+    /**
+     * Create menu bar, menu and menu items for game options.
+     * Two options: Create new game and Exit game.
+     *
+     * @param frame
+     *
+     */
     private void setMenu(JFrame frame, ScrabbleController control){
         JMenuBar menuBar = new JMenuBar();
         frame.setJMenuBar(menuBar);
@@ -115,12 +143,25 @@ public class ScrabbleView extends JFrame {
 
 
     }
+    /**
+     * Update the message area with current game status information.
+     *
+     * @param message the updated message
+     */
     public  void updateMessageArea(String message){
         messageArea.append(message + "\n");
     }
+    /**
+     * Clear the message area.
+     */
     public void clearMessageArea(){
         messageArea.setText("");
     }
+    /**
+     * Start the game through the model, and update the visibility of the buttons and message area.
+     *
+     * @param section The section to be updated for the buttons.
+     */
     private void startGame(String section){
         updateButtonVisibility(section);
         String startGame = model.startGame();
@@ -128,7 +169,11 @@ public class ScrabbleView extends JFrame {
 
 
     }
-
+    /**
+     * Update the visibility of buttons depending on the state of the game.
+     *
+     * @param section The section of the game to be updated to.
+     */
     public void updateButtonVisibility(String section){
         switch (section){
             case "GAMESTART":
@@ -188,6 +233,9 @@ public class ScrabbleView extends JFrame {
         mainPanel.revalidate();
         mainPanel.repaint();
     }
+    /**
+     * Starting game frame to initialize amount of players.
+     */
     private void gameStartFrame(){
         numPlayers = new JButton[3];
         for(int i = 0; i<3; i++){
@@ -202,6 +250,11 @@ public class ScrabbleView extends JFrame {
         }
         buttonPanel = new JScrollPane(numPlayerPanel);
     }
+    /**
+     * Obtain the player names for the game.
+     *
+     * @param numPlayers the number of players wanting to play.
+     */
     public void playerNameInput(int numPlayers){
         for(int i = 0; i < numPlayers; i++){
             String name = JOptionPane.showInputDialog(null,"Enter name for Player "+ (i +1)+ ":", "Player Name", JOptionPane.PLAIN_MESSAGE);
@@ -214,6 +267,11 @@ public class ScrabbleView extends JFrame {
         clearMessageArea();
         playerTurn("PLAYERTURN");
     }
+    /**
+     * Handles user interface for a player's turn and interacts with the model.
+     *
+     * @param section the section to update button status
+     */
     public void playerTurn(String section){
         String play = model.playersTurn();
         playTurn = new JButton("Play a word");
@@ -232,6 +290,9 @@ public class ScrabbleView extends JFrame {
         updateMessageArea(play);
         updateButtonVisibility(section);
     }
+    /**
+     * Set up the player rack of buttons for the user to interact with.
+     */
     public void setPlayerRack(){
         clearRack();
 
@@ -275,6 +336,9 @@ public class ScrabbleView extends JFrame {
 
 
     }
+    /**
+     * Clear the rack after a player's turn and reset it.
+     */
     public void clearRack(){
         if (playerRack != null) {
             for (JButton button : playerRack) {
@@ -294,6 +358,9 @@ public class ScrabbleView extends JFrame {
 
         }
     }
+    /**
+     * Updates the view to reflect the beginning of a player's turn status.
+     */
     public void playTurn(){
 
 
@@ -303,6 +370,9 @@ public class ScrabbleView extends JFrame {
         updateMessageArea("Choose a letter to place:");
         updateButtonVisibility("PLAYTURN");
     }
+    /**
+     * Enable all tiles on the Scrabble board.
+     */
     private void enableAllTiles(){
         for(int row = 0; row<SIZE;row++){
             for(int col =0; col<SIZE;col++){
@@ -310,7 +380,9 @@ public class ScrabbleView extends JFrame {
             }
         }
     }
-
+    /**
+     * Disable tiles that cannot be clicked during a player's turn when placing word on the board.
+     */
     public void disableAppropriateTile(){
         //disabling all tile
         for(int row = 0; row<SIZE;row++){
@@ -344,7 +416,11 @@ public class ScrabbleView extends JFrame {
             }
         }
     }
-
+    /**
+     * Place starting letter on the board in the middle.
+     *
+     * @param letter the first letter to be placed
+     */
     public void placeStartLetter(String letter){
         board[CENTER][CENTER].setEnabled(false);
         board[CENTER][CENTER].setText(letter);
@@ -355,6 +431,13 @@ public class ScrabbleView extends JFrame {
         updateMessageArea("Pick next letter to play!");
         firstTile = false;
     }
+    /**
+     * Place the next tile(s) after the first one is placed.
+     *
+     * @param row the row for the tile to be placed in
+     * @param col the column for the tile to be placed in
+     * @param letter the letter to be placed
+     */
     private void placeSubsequentTiles(int row, int col, String letter){
         model.setRowCol(-1,-1);
 
@@ -364,6 +447,13 @@ public class ScrabbleView extends JFrame {
         model.updateTempBoard(row,col,letter);
         //playerTempBoard.placeLetter(row,col,letter);
     }
+    /**
+     * Update the board according to the letter and place on the board the player wants it.
+     *
+     * @param row the row for the tile to be placed in
+     * @param col the column for the tile to be placed in
+     * @param letter the letter to be placed
+     */
     public void updateBoard(int row, int col,String letter){
 
 
@@ -377,6 +467,12 @@ public class ScrabbleView extends JFrame {
             placeSubsequentTiles(row, col, letter);
         }
     }
+    /**
+     * Reset the board panel.
+     *
+     * @param hand player tiles to not be counted
+     * @param numberofplays the number of plays on the board
+     */
     public void resetBoard(ArrayList<Tile> hand, int numberofplays){
         for(Tile tile: hand){
             removeTileFromBoard(tile);
@@ -387,6 +483,11 @@ public class ScrabbleView extends JFrame {
         }
 
     }
+    /**
+     * Remove a specific tile from the board.
+     *
+     * @param tile the tile to be removed
+     */
     private void removeTileFromBoard(Tile tile){
         for(int row = 0; row<SIZE;row++){
             for(int col =0; col<SIZE;col++){
@@ -404,12 +505,23 @@ public class ScrabbleView extends JFrame {
             }
         }
     }
+    /**
+     * The end of game frame to be displayed.
+     *
+     * @param section the section to update button visibility
+     */
     public void endofGameFrame(String section){
         updateButtonVisibility(section);
         updateMessageArea(model.handleEndOfGame());
 
 
     }
+     /**
+     * Change the rack button visibility depending on if a player has clicked a tile.
+     *
+     * @param buttons the buttons to be updated
+     * @param enable true to enable the buttons, false to disable
+     */
     public void updateRackPlay(ArrayList<JButton> buttons, boolean enable){
         if(!enable){
             for(JButton button: playerRack){
@@ -421,6 +533,16 @@ public class ScrabbleView extends JFrame {
                     button.setEnabled(true);
                 }
             }
+        }
+    }
+    /**
+     * Update the player score table.
+     */
+    public void updatePlayerChart(){
+        ArrayList<Player> players = model.getPlayers();
+        tableModel.setRowCount(0);
+        for(Player player: players){
+            tableModel.addRow(new Object[]{player.getName(),player.getPoints()});
         }
     }
 
