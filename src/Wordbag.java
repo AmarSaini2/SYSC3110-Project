@@ -3,7 +3,7 @@ import java.util.*;
 public class Wordbag {
     private List<Tile> tiles;
 
-    Wordbag(){
+    public Wordbag(){
         this.tiles = new ArrayList<>();
         addTiles("A",9);
         addTiles("B",2);
