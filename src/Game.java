@@ -291,12 +291,11 @@ public class Game {
     public boolean submitWord(Player currentPlayer){
         //check whether tempBoard is valid, update board, update hand, update points, goto next player's turn
         if(tempBoard.checkValidity(trie)){
-            //board.swapWithTemp(tempBoard);//swap temp board in for main board
-
+            currentPlayer.addPoints(tempBoard.calculatePoints());
+            board.swapWithTemp(tempBoard);//swap temp board in for main board
             currentPlayer.swapWithTemp(tempHand,bag);//swap temp hand for main hand, refresh hand to 7 tiles
 
             currentPlayer.drawNewTiles(bag);
-            //currentPlayer.addPoints(board.calculatePoints(row, col, direction));//calculate and update points
             return true;
         }
 

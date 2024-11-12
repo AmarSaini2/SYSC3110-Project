@@ -161,7 +161,7 @@ public class ScrabbleController implements ActionListener {
         tilePlaced = new Tile(letter);
         model.tilePlaced(tilePlaced);
         hand.add(tilePlaced);
-        playerPoints += tilePlaced.getPoints();
+        //playerPoints += tilePlaced.getPoints();
         if(firstTurn){
 
             tilePlaced = null;
@@ -172,7 +172,7 @@ public class ScrabbleController implements ActionListener {
         }else{
             selectedButtons.add(tile);
             currentView.updateRackPlay(selectedButtons,false);
-            //currentView.disableAppropriateTile();
+            currentView.disableAppropriateTile();
         }
 
 
@@ -187,7 +187,8 @@ public class ScrabbleController implements ActionListener {
 
         if((hand.size() > 1)&& firstTurn){
             if(model.submitWord(model.getPlayer())){
-                model.getPlayer().addPoints(playerPoints);
+                //model.getPlayer().addPoints(playerPoints);
+                model.getPlayer().addPoints(model.board.calculatePoints());
                 currentView.updateMessageArea("Turn Over, Word Successfully Placed");
                 currentView.updateMessageArea("Player "+model.getPlayer().getName()+" has "+ model.getPlayer().getPoints()+ " points!");
                 currentView.updateMessageArea("Next Player's turn");
@@ -198,7 +199,7 @@ public class ScrabbleController implements ActionListener {
             }
         }else if (!firstTurn){
             if(model.submitWord(model.getPlayer())){
-                model.getPlayer().addPoints(playerPoints);
+                //model.getPlayer().addPoints(playerPoints);
                 currentView.updateMessageArea("Turn Over, Word Successfully Placed");
                 currentView.updateMessageArea("Player "+model.getPlayer().getName()+" has "+ model.getPlayer().getPoints()+ " points!");
                 currentView.updateMessageArea("Next Player's turn");

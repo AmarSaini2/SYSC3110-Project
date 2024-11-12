@@ -65,42 +65,9 @@ public class Board {
 
     public boolean checkValidity(Trie trie) {
         determineDirection();
-        if(placedTileDirection == Direction.INVALID){
-            System.out.println("invalid direction");
+        if(placedTileList.isEmpty()){
+            System.out.println("No tiles placed");
             return false;
-        }
-
-        for (int row = 0; row < SIZE; row++) {//for every row, check that the words are valid
-            StringBuilder rowString = new StringBuilder();
-            for (int col = 0; col < SIZE; col++) {
-                rowString.append(board[row][col]);
-            }
-            String[] rowStringArray = rowString.toString().trim().split(" ");
-            for (String s : rowStringArray) {
-                if(s.length() < 2){
-                    continue;
-                }
-                if (!trie.hasWord(s)) {
-                    System.out.println("word not found");
-                    return false;
-                }
-
-            }
-        }
-        for (int col = 0; col < SIZE; col++) {//for every column, check that the words are valid
-            StringBuilder columnString = new StringBuilder();
-            for (int row = 0; row < SIZE; row++) {
-                columnString.append(board[row][col]);
-            }
-            String[] rowStringArray = columnString.toString().trim().split(" ");
-            for (String s : rowStringArray) {
-                if(s.length() < 2){
-                    continue;
-                }
-                if(!trie.hasWord(s)){
-                    return false;
-                }
-            }
         }
 
         Coordinate start = new Coordinate(SIZE, SIZE);
@@ -124,16 +91,43 @@ public class Board {
             }    
         }
 
-        if(placedTileDirection == Direction.HORIZONTAL){
-            for(int i = start.col; i < end.col; i++){
-                if(board[start.row][i].equals(" ")){
+        Coordinate delta = new Coordinate(end.row - start.row, end.col - start.col);
+        
+        if(delta.row == delta.col && placedTileList.size() > 1){
+            System.out.println("delta error");
+            System.out.println(delta.row + ", " + delta.col);
+            return false;  
+        }
+
+        for (int row = 0; row < SIZE; row++) {//for every row, check that the words are valid
+            StringBuilder rowString = new StringBuilder();
+            for (int col = 0; col < SIZE; col++) {
+                rowString.append(board[row][col]);
+            }
+            String[] rowStringArray = rowString.toString().trim().split(" ");
+            for (String s : rowStringArray) {
+                if(s.length() < 2){
+                    continue;
+                }
+                if (!trie.hasWord(s)) {
+                    System.out.println("word not found: " + s);
                     return false;
                 }
+
             }
         }
-        if(placedTileDirection == Direction.VERTICAL){
-            for(int i = start.row; i < end.row; i++){
-                if(board[i][start.col].equals(" ")){
+        for (int col = 0; col < SIZE; col++) {//for every column, check that the words are valid
+            StringBuilder columnString = new StringBuilder();
+            for (int row = 0; row < SIZE; row++) {
+                columnString.append(board[row][col]);
+            }
+            String[] rowStringArray = columnString.toString().trim().split(" ");
+            for (String s : rowStringArray) {
+                if(s.length() < 2){
+                    continue;
+                }
+                if(!trie.hasWord(s)){
+                    System.out.println("word not found: " + s);
                     return false;
                 }
             }
@@ -148,7 +142,9 @@ public class Board {
 
 
 
-    public int calculatePoints(int row, int col, String direction) {
+    public int calculatePoints() {
+        int row = placedTileList.getLast().row;
+        int col = placedTileList.getLast().col;
         int verticalStart = row, verticalEnd = row;
         int horizontalStart = col, horizontalEnd = col;
         int points = 0;
@@ -156,7 +152,7 @@ public class Board {
         StringBuilder vWord = new StringBuilder();
         StringBuilder hWord = new StringBuilder();
 
-        if(direction.equals("h")){//iterate through horizontal string and calculate all vertical auxillary strings made
+        if(placedTileDirection.equals(Direction.HORIZONTAL)){//iterate through horizontal string and calculate all vertical auxillary strings made
 
             int countLeft = col;
             while (countLeft >= 0 && !board[row][countLeft].equals(" ")) {//find start of horizontal word by checking left from last placed tile
@@ -237,12 +233,14 @@ public class Board {
         }
 
         for (String word : stringArray) {//for each string in stringArray, make tiles out of the characters and sum up their points
+            System.out.println(word);
             char[] charArray = word.toCharArray();
             for (char c : charArray) {
                 Tile tile = new Tile(String.valueOf(c));
                 points += tile.getPoints();
             }
         }
+        System.out.println("points:" + points);
         return points;
     }
 
