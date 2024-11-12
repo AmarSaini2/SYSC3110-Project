@@ -1,11 +1,23 @@
 import java.util.*;
+/**
+ * The Board class represents the Scrabble game board where players place tiles to form words.
+ * The board is a 2D grid structure, typically 15x15, which holds the tiles played by each player.
+ *
+ * The Board class provides methods to place tiles on the board, check word validity and placement.
+ *
+ * This class is responsible for validating that placed words intersect with existing words and adhere to Scrabble rules.
+ *
+ */
 public class Board {
     private String[][] board;
     private ArrayList<Coordinate> placedTileList;
     private enum Direction{VERTICAL, HORIZONTAL, INVALID}
     public Direction placedTileDirection;
     private final int SIZE = 15;
-
+    /**
+     * Constructs a new Board with a default size of 15x15 and initializes an empty list of placed tiles.
+     *
+     */
     public Board(){
         this.board = new String[SIZE][SIZE];
         this.placedTileList = new ArrayList<>();
@@ -14,7 +26,12 @@ public class Board {
             Arrays.fill(row, " ");
         }
     }
-
+    /**
+     * Constructs a new Board from an inputBoard and initializes the grid with the input information
+     * found.
+     *
+     * @param inputBoard the board to be inputted
+     */
     public Board(Board inputBoard){
         this.board = new String[SIZE][SIZE];
         placedTileDirection = inputBoard.placedTileDirection;
@@ -44,11 +61,24 @@ public class Board {
             System.out.println();
         }
     }
-
+    /**
+     * Place the letter of a tile on the board at the specified row and column.
+     *
+     * @param row the row of the letter to be placed
+     * @param col the column of the letter to be placed
+     * @param input the letter to be placed
+     */
     public void placeLetter(int row, int col, String input) {
         board[row][col] = input;
 
     }
+    /**
+     * Remove a letter from a specified row and column.
+     *
+     * @param row the row of letter to be removed
+     * @param col the column of letter to be removed
+     * @return the letter removed
+     */
     public String removeLetter(int row,int col){
         String letter = board[row][col];
         board[row][col] = " ";
@@ -62,7 +92,12 @@ public class Board {
     public void swapWithTemp(Board temp){
         board = temp.board;
     }
-
+    /**
+     * Check the validity of a word.
+     *
+     * @param trie word check tree structure
+     * @return true, if valid word. false, otherwise
+     */
     public boolean checkValidity(Trie trie) {
         determineDirection();
         if(placedTileList.isEmpty()){
@@ -243,7 +278,9 @@ public class Board {
         System.out.println("points:" + points);
         return points;
     }
-
+    /**
+     * Helper method to determine the direction of word being played.
+     */
     public void determineDirection(){
         if(this.placedTileList.isEmpty()){
             return;
@@ -270,10 +307,16 @@ public class Board {
             placedTileDirection = Direction.INVALID;
         }
     }
-
+    /**
+     * Add a coordinate to the placedTileList.
+     * @param c coordinate
+     */
     public void addCoordinate(Coordinate c){
         placedTileList.add(c);
     }
+     /**
+     * Clear the placed tile list.
+     */
 
     public void clearPlacedTileList(){
         for(Coordinate coord: placedTileList){
