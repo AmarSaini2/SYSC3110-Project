@@ -35,7 +35,7 @@ public class ScrabbleView extends JFrame {
     //private Board playerTempBoard;
     JPanel rack;
     ArrayList<Tile> playerHand;
-    **
+    /**
      * Constructs a new ScrabbleView and initializes the layout, including the game board,
      * tile rack, score display, and other interactive components.
      */
