@@ -1,5 +1,14 @@
 import java.util.*;
-
+/**
+ * The Game class represents the main logic for a Scrabble game.
+ * It handles the initialization of the game board, player management, tile bag, word validation, scoring, and game flow.
+ *
+ * Players take turn placing words on the board, drawing tiles from the tile bag, and interacting with the game through a
+ * graphical user interface (GUI). The game ensures that all word placements are valid and that words intersect with existing words
+ * according to Scrabble rules.
+ *
+ *
+ */
 public class Game {
     static Scanner in = new Scanner(System.in);
 
@@ -20,7 +29,11 @@ public class Game {
     private ArrayList<String> usedWords;
     private boolean startofTurn;
     ArrayList<Tile> tempHand;
-
+     /**
+     * Constructs a new game.
+     * It initializes a tile bag, a board, trie structure, players list and gameOver status.
+     * 
+     */
     public Game(){
 
         this.bag = new Wordbag();
@@ -31,29 +44,39 @@ public class Game {
         usedWords = new ArrayList<>();
 
     }
+    public ArrayList<Player> getPlayers(){
+        return players;
+    }
     public void addView(ScrabbleView view){
         this.view = view;
     }
-    public String printStart(){
+    /**
+     * Print the start of game message to players.
+     *
+     * @return starting game message
+     */
+    public String startGame(){
         StringBuilder sb = new StringBuilder();
 
         sb.append("Welcome to the game of scrabble!\n");
         sb.append("To start, select a number of players: (2-4)");
         return sb.toString();
     }
-
-    public String startGame(){
-        StringBuilder sb = new StringBuilder();
-        sb.append(printStart());
-        return sb.toString();
-    }
+    /**
+     * Create a player based on the name given. Player's hand will be given seven tiles and
+     * added to the list of players.
+     * @param name the name of the player to be added
+     */
     public void intializePlayer(String name){
         Player player = new Player(name);
         player.setHand(bag);
         players.add(player);
 
     }
-
+    /**
+     * Create a string for the end of game status.
+     * @return end of game summary
+     */
 
     public String handleEndOfGame(){
         StringBuilder sb = new StringBuilder();
@@ -78,6 +101,10 @@ public class Game {
             }
         }
     }
+    /**
+     * Create a string for the current players game options.
+     * @return current player turn options
+     */
     public String playersTurn(){
         StringBuilder sb = new StringBuilder();
         if(currentPlayerIndex >= players.size()){
@@ -90,11 +117,21 @@ public class Game {
         sb.append("2. Pass your turn\n");
         return sb.toString();
     }
+    /**
+     * Returns the current players' rack of tiles.
+     * @return list of tiles
+     */
     public ArrayList<Tile> playerRack(){
         Player currentPlayer = players.get(currentPlayerIndex);
         //System.out.println(currentPlayer.getName());
         return currentPlayer.getHand();
     }
+    /**
+     * Executes the current player's choice for their turn. If choice 1, the player will begin playing.
+     * If choice 2, the player's turn will be passed.
+     *
+     * @param choice The player's choice of passing or playing
+     */
     public void handlePlayerChoice(int choice){
         Player currentPlayer = players.get(currentPlayerIndex);
         if(choice == 1){
@@ -105,6 +142,11 @@ public class Game {
             consecutivePasses++;
 
         }}
+    /**
+     * Returns the current player whose turn it is. Initializes a player with a new hand and tempboard
+     * for their turn.
+     * @return current player
+     */
     public Player currentPlayerTurn(){
         Player currentPlayer = players.get(currentPlayerIndex);
         if(startofTurn){
@@ -270,7 +312,11 @@ public class Game {
         }*/
         return true;
     }
-
+    /**
+     * Tile placed on the board is set and beginning of player turn conditions are set.
+     *
+     * @param tile tile to be placed onto the temp board.
+     */
     public void tilePlaced(Tile tile){
         this.tile =  tile;
         Player currentPlayer = null;
@@ -284,10 +330,24 @@ public class Game {
         this.row = row;
         this.col = col;
     }
+    /**
+     * Updates the temporary board that documents the current players moves.
+     *
+     * @param row row of tile to be placed
+     * @param col column of tile to be placed
+     * @param letter letter for the tile to be placed
+     */
     public void updateTempBoard(int row, int col, String letter){
         tempBoard.placeLetter(row,col,letter);
         tempBoard.addCoordinate(new Coordinate(row, col));
     }
+    /**
+     * When a player is done placing their word, it will handle if the word is valid
+     * or not and return either true or false. It also handles drawing new tiles if the word
+     * is valid.
+     * @param currentPlayer current player that submitted the word.
+     * @return true if word is valid, false if word is invalid
+     */
     public boolean submitWord(Player currentPlayer){
         //check whether tempBoard is valid, update board, update hand, update points, goto next player's turn
         if(tempBoard.checkValidity(trie)){
@@ -314,6 +374,10 @@ public class Game {
     public Board getTempBoard(){
         return tempBoard;
     }
+    /**
+     * Create a string of the end of game status, specifically the player scores and the winner.
+     * @return the string of end of game summary
+     */
     private String endGameSummary(){
         StringBuilder sb = new StringBuilder();
         sb.append("Final Scores: \n");
@@ -324,9 +388,16 @@ public class Game {
         sb.append(new StringBuilder().append("The winner is: ").append(winner.getName()).append(" with a score of ").append(winner.getPoints()).toString()+"\n");
         return sb.toString();
     }
+    /**
+     * Return the current player.
+     * @return current player
+     */
     public Player getPlayer(){
         return players.get(currentPlayerIndex);
     }
+    /**
+     * Update the current player index.
+     */
     public void updatePlayerIndex(){
         if(currentPlayerIndex >= players.size()){
             currentPlayerIndex = 0;
