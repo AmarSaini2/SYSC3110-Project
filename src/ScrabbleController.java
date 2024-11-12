@@ -3,8 +3,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.*;
-/* Need to make sure in passturnin, gameover pass count updated
-* */
+/**
+ * The ScrabbleController class represents the Controller component of the MVC pattern for the Scrabble game.
+ * It is responsible for handling the user interactions with ScrabbleView, such as managing player interactions, and
+ * forwarding these interactions to the game model.
+ *
+ * The ScrabbleController acts as an intermediary between the view and the model. It listens to user actions from the
+ * view, processes these actions, and updates the model and view accordingly.
+ *
+ */
 public class ScrabbleController implements ActionListener {
     Game model;
     private ScrabbleView currentView;
@@ -15,13 +22,24 @@ public class ScrabbleController implements ActionListener {
     private int playerPoints;
     private int play;
     private ArrayList<JButton> selectedButtons;
-
+    /**
+     * Constructs a new ScrabbleController with the specified model and view.
+     *
+     * @param model the game model that stores the game state and logic
+     * @param view the game view that displays the game to the players
+     */
     public ScrabbleController(Game model, ScrabbleView view){
         this.model = model;
         currentView = view;
         play = 0;
 
     }
+    /**
+     * Helper method to determine the button pressed on the board.
+     *
+     * @param str the string action command
+     * @return true, if action command has numbers. false, if not
+     */
     private boolean isNumeric(String str){
         try {
             Integer.parseInt(str);
@@ -30,6 +48,13 @@ public class ScrabbleController implements ActionListener {
             return false;
         }
     }
+    /**
+     * ActionListener for buttons pressed on the board.
+     * It checks if it is a button on the board, else it handles it based
+     * on the action command set to it.
+     *
+     * @param e the event to be processed
+     */
     @Override
     public void actionPerformed(ActionEvent e){
         String command = e.getActionCommand();
@@ -79,6 +104,11 @@ public class ScrabbleController implements ActionListener {
             }
         }
     }
+    /**
+     * Handles placing a letter on the ScrabbleView board.
+     *
+     * @param e the event to be processed
+     */
     public void handleLetterPlace(ActionEvent e){
         JButton clicked = (JButton) e.getSource();
         String[] parts = e.getActionCommand().split(" ");
@@ -106,25 +136,52 @@ public class ScrabbleController implements ActionListener {
         }
 
     }
-
+    /**
+     * When a user presses the menu option to start a new game, a new view is made.
+     *
+     * @param e the event to be processed
+     */
     public void startNewGame(ActionEvent e){
         currentView.dispose();
         currentView = new ScrabbleView();
 
     }
+    /**
+     * When a user presses the menu option to exit the game, it will close the current game.
+     *
+     * @param e the event to be processed
+     */
     public void exitGame(ActionEvent e){
         System.exit(0);
     }
+    /**
+     * Handles the number of players inputted and updates the view to prompt for names.
+     *
+     * @param e the action to be processed
+     * @param numPlayers the number of players
+     */
     public void handleNumPlayers(ActionEvent e, int numPlayers){
         currentView.updateButtonVisibility("NAMEINPUT");
         currentView.playerNameInput(numPlayers);
     }
+    /**
+     * Handles when a player chooses to play and communicates with the model to
+     * begin the players turn.
+     *
+     * @param e the action to be processed
+     */
     public void playTurn(ActionEvent e){
         model.handlePlayerChoice(1);
         hand = new ArrayList<>();
         selectedButtons = new ArrayList<>();
         
     }
+    /**
+     * Handles when a player chooses to pass their turn and communicates with the model
+     * and view to update the board accordingly
+     *
+     * @param e the action to be processed
+     */
     public void passTurn(ActionEvent e){
         model.handlePlayerChoice(2);
         if (model.isGameOver()){
@@ -140,6 +197,12 @@ public class ScrabbleController implements ActionListener {
         currentView.playerTurn("PLAYERTURN");
 
     }
+    /**
+     * Handles when a player chooses to pass their turn after they have hit play.
+     * It communicates with the view to reset the conditions to before the current player started
+     * playing.
+     * @param e the action to be processed
+     */
     public void passTurnIn(ActionEvent e){
         model.handlePlayerChoice(2);
         if (model.isGameOver()){
@@ -153,6 +216,11 @@ public class ScrabbleController implements ActionListener {
 
         currentView.playerTurn("PLAYERTURN");
     }
+    /**
+     * Handles when a player clicks on a tile on their rack.
+     *
+     * @param e the action to be processed
+     */
     public void playingTiles(ActionEvent e){
         JButton tile= (JButton) e.getSource();
         lastClicked = tile;
@@ -179,6 +247,12 @@ public class ScrabbleController implements ActionListener {
 
 
     }
+    /**
+     * Handles when a player clicks on "Submit Word" and will communicate with the model
+     * to check if word formed is valid and will handle the conditions if not.
+     *
+     * @param e the action to be processed
+     */
     public void submitWord(ActionEvent e){
         JButton submit = (JButton) e.getSource();
         submit.setEnabled(false);
@@ -230,15 +304,24 @@ public class ScrabbleController implements ActionListener {
 
 
     }
-
+    /**
+     * Helper method for submitWord, handles resetting the board after an invalid word
+     * is played.
+     */
     public void restartTurn(){
         currentView.resetBoard(hand, play);
+        model.updatePlayerIndex();
         currentView.playerTurn("PLAYERTURN");
         model.board.clearPlacedTileList();
         hand = new ArrayList<>();
         selectedButtons = new ArrayList<>();
     }
-
+    /**
+     * Handles when a player clicks on resetting their rack after starting to play.
+     * It will communicate with the model and view to adjust to before the current player start placing tiles.
+     *
+     * @param e the action to be processed
+     */
     public void resetRack(ActionEvent e){
         JButton reset = (JButton) e.getSource();
         reset.setEnabled(false);
