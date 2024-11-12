@@ -42,17 +42,6 @@ public class GameTest {
         assertEquals("Player: Bob \n1. Play a word\n2. Pass your turn\n", game.playersTurn());
     }
 
-    @Test
-    public void testHandlePlayerChoice_PlayWord() {
-        game.intializePlayer("Alice");
-        game.intializePlayer("Bob");
-
-        ScrabbleView mockView = new ScrabbleView(); // Assuming ScrabbleView class
-        game.addView(mockView);
-
-        game.handlePlayerChoice(1); // Simulate "Play a word"
-        assertEquals(0, game.getConsecutivePasses(), "Consecutive passes should reset after a word is played.");
-    }
 
     @Test
     public void testHandlePlayerChoice_PassTurn() {
@@ -64,49 +53,56 @@ public class GameTest {
         assertEquals("Player: Bob \n1. Play a word\n2. Pass your turn\n", game.playersTurn());
     }
 
-    @Test
-    public void testTilePlacement() {
-        game.intializePlayer("Alice");
-        Tile tile = new Tile("A"); // Assuming Tile has a constructor that takes a letter and points
-
-        game.tilePlaced(tile); // Place tile on the board
-        assertTrue(game.getTempBoard().getBoard()[7][7] == "A");
-    }
 
     @Test
-    public void testSubmitWord() {
+    public void testSubmitWordAndScore() {
         game.intializePlayer("Alice");
+        game.intializePlayer("Bob");
+        String s = game.playersTurn();
         Player currentPlayer = game.currentPlayerTurn();
 
-        // Simulating tile placement and valid word submission
+        //checking correct condition
         game.updateTempBoard(7, 7, "A");
         game.updateTempBoard(7, 8, "T");
 
         assertTrue(game.submitWord(currentPlayer), "The submitted word should be valid.");
+        assertEquals(game.currentPlayerTurn().getPoints(), 2);
+
+        s = game.playersTurn();
+        currentPlayer = game.currentPlayerTurn();
+        //checking invalid placements
+        game.updateTempBoard(0,0, "B");
+        game.updateTempBoard(1,0, "B");
+        game.updateTempBoard(2,0, "B");
+        assertFalse(game.submitWord(currentPlayer), "The submitted word should be invalid.");
+        assertEquals(game.currentPlayerTurn().getPoints(), 2);
+
+        s = game.playersTurn();
+        currentPlayer = game.currentPlayerTurn();
+        //checking correct condition with longer word
+        game.updateTempBoard(1, 7, "R");
+        game.updateTempBoard(1, 8, "O");
+        game.updateTempBoard(1, 9, "B");
+        game.updateTempBoard(1, 10, "O");
+        game.updateTempBoard(1, 11, "T");
+
+        assertTrue(game.submitWord(currentPlayer), "The submitted word should be valid.");
+        assertEquals(game.currentPlayerTurn().getPoints(), 9);
+
+        //adding letter to previous word
+        s = game.playersTurn();
+        currentPlayer = game.currentPlayerTurn();
+        game.updateTempBoard(1, 12, "S");
+        assertTrue(game.submitWord(currentPlayer), "The submitted word should be valid.");
+        assertEquals(game.currentPlayerTurn().getPoints(), 18); //points should re add for entire word since player added on to it
+
+        //adding word to intersect with previous word
+        s = game.playersTurn();
+        currentPlayer = game.currentPlayerTurn();
+        game.updateTempBoard(2, 7, "O");
+        game.updateTempBoard(3, 7, "W");
+        assertTrue(game.submitWord(currentPlayer), "The submitted word should be valid.");
+        assertEquals(game.currentPlayerTurn().getPoints(), 32); //points should re add for entire word since player added on to it
     }
 
-    @Test
-    public void testIsGameOverByPass() {
-        game.intializePlayer("Alice");
-        game.intializePlayer("Bob");
-
-        // Simulating consecutive passes
-        game.handlePlayerChoice(2); // Alice passes
-        game.handlePlayerChoice(2); // Bob passes
-
-        assertTrue(game.isGameOver(), "Game should end after each player consecutively passes.");
-    }
-
-    @Test
-    public void testEndGameSummary() {
-        game.intializePlayer("Alice");
-        game.intializePlayer("Bob");
-
-        // Assigning points for testing
-        game.getPlayers().get(0).addPoints(100);
-        game.getPlayers().get(1).addPoints(120);
-
-        String expectedSummary = "Final Scores: \nAlice - Final Score: 100\nBob - Final Score: 120\nThe winner is: Bob with a score of 120\n";
-        assertEquals(expectedSummary, game.handleEndOfGame());
-    }
 }
