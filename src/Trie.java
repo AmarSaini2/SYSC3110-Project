@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.*;
 
 public class Trie {
@@ -11,14 +12,22 @@ public class Trie {
         root = new Node('0', null);
         current = root;
         try {
-            File input = new File("src/wordDict.txt");
-            Scanner reader = new Scanner(input);
-            while(reader.hasNextLine()){
+            // Use ClassLoader to get the resource as an InputStream
+            InputStream inputStream = getClass().getClassLoader().getResourceAsStream("wordDict.txt");
+
+            if (inputStream == null) {
+                throw new FileNotFoundException("wordDict.txt not found in JAR");
+            }
+
+            // Wrap InputStream in a Scanner to read lines
+            Scanner reader = new Scanner(inputStream);
+            while (reader.hasNextLine()) {
                 String data = reader.nextLine().toLowerCase();
                 this.addString(data);
             }
-        }catch(FileNotFoundException e){
-            System.out.println("Error");
+            reader.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: wordDict.txt not found");
             e.printStackTrace();
         }
     }
