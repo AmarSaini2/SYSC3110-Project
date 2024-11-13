@@ -48,6 +48,7 @@ The interface also provides feedback on the player's actions, such as whether a 
 - Clicking on a board tile outside the horizontal or vertical alignment of the word being placed still allows placement, which should be restricted.
 - The end-of-game logic is still being worked on and only currently checks for if players have remaining valid words  to play or if all players have consecutively passed their turns for the game to end.
 - The game does not utilize blank tiles or premium squares yet.
+- Resetting the rack works, but previous letter might remain on the rack when playing.
 
 ## Roadmap
 - Next Iteration: Further improve error handling, ensuring that invalid word placements, incorrect tile selections and other errors can no longer occur without proper handling.  
