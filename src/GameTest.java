@@ -15,7 +15,6 @@ public class GameTest {
         controller = new ScrabbleController(game, view);
     }
 
-    @org.junit.Test
     @Test
     public void testStartGame() {
         String expectedOutput = "Welcome to the game of scrabble!\nTo start, select a number of players: (2-4)";
