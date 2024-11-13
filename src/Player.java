@@ -2,22 +2,43 @@ import java.nio.charset.CharacterCodingException;
 import java.util.*;
 import java.util.logging.Handler;
 import javax.swing.plaf.basic.BasicGraphicsUtils;
+/**
+ * The Player class represents a single player in a Scrabble game.
+ * Each player has a unique name, a rack of tiles they can use to form words, and a score to keep track of points.
+ *
+ * The Player class provides methods to manage a player's tiles, update their score, and retrieve player information,
+ * such as their name and current score.
+ *
+ */
 public class Player{
     private int points;
     private ArrayList<Tile> hand;
     private String name;
     private int NUM_TILES = 7;
-
+    /**
+     * Constructs a new Player  with the specified name.
+     * Initializes an empty list of tiles for the player's rack and sets initial score to zero.
+     *
+     * @param name the name of the player
+     */
     public Player(String name){
         points = 0;
         this.name = name;
         hand = new ArrayList<Tile>();
     }
-
+    /**
+     * Return the name of the player.
+     *
+     * @return name of player
+     */
     public String getName() {
         return name;
     }
-
+    /**
+     * Sets the player's hand with the specific tile bag.
+     *
+     * @param bag the current game tile bag
+     */
     public void setHand(Wordbag bag){
         for(int i = 0; i < 7; i++){
             hand.add(bag.get());
@@ -31,7 +52,11 @@ public class Player{
     public void addTile(Wordbag bag){
         hand.add(bag.get());
     }
-
+    /**
+     * Swaps the temporary hand of tiles not played with hand.
+     * @param tempHand tiles not played
+     * @param bag tile bag to draw from
+     */
     public void printHand(){
         for(Tile tile : hand){
             System.out.printf("%6s", tile.getID());
@@ -44,7 +69,7 @@ public class Player{
         System.out.print("\n");
     }
 
-
+    
     public boolean handIsEmpty(){
         return hand.isEmpty();
     }
@@ -59,7 +84,11 @@ public class Player{
             hand.add(bag.get());
         }
     }
-
+    /**
+     * Add the points of tiles played to player's score.
+     *
+     * @param points tile points to be added
+     */
     public void addPoints(int points){
         this.points += points;
     }
@@ -67,6 +96,12 @@ public class Player{
     public int getPoints(){
         return this.points;
     }
+    /**
+     * Draw new tiles from the tile bag of the current game.
+     * Handles if there isn't enough tiles to draw back upto 7 for.
+     *
+     * @param tilebag the tile bag to draw from
+     */
     public void drawNewTiles(Wordbag tilebag){
         int replace = NUM_TILES - hand.size();
         if(tilebag.getBagSize()< replace && tilebag.getBagSize() > 0){
