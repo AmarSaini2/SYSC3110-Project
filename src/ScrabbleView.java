@@ -33,7 +33,7 @@ public class ScrabbleView extends JFrame {
     private int CENTER = 7;
     private static final int SIZE = 15;
 
-    //private Board playerTempBoard;
+    private Board playerTempBoard;
     JPanel rack;
     ArrayList<Tile> playerHand;
     /**
@@ -211,6 +211,20 @@ public class ScrabbleView extends JFrame {
                 passWord.setVisible(true);
                 passWord.setEnabled(true);
                 break;
+            case "RESTART":
+                for(JButton button: playerRack){
+                    button.setEnabled(true);
+                }
+                playerTempBoard = new Board();
+                break;
+            case "TURNOVER":
+                for(int row = 0; row<SIZE;row++){
+                    for(int col =0; col<SIZE;col++){
+                        board[row][col].setEnabled(false);
+                        board[row][col].setBackground(Color.pink);
+                    }
+                }
+                break;
             case "ENDGAME":
                 playTurn.setVisible(false);
                 passTurn.setVisible(false);
@@ -365,7 +379,7 @@ public class ScrabbleView extends JFrame {
     public void playTurn(){
 
 
-        //playerTempBoard = new Board();
+        playerTempBoard = new Board();
 
         updateMessageArea("\n" + model.getPlayer().getName() + "'s turn:\n");
         updateMessageArea("Choose a letter to place:");
@@ -428,7 +442,7 @@ public class ScrabbleView extends JFrame {
         board[CENTER][CENTER].setBackground(Color.pink);
         //model.setRowCol(CENTER,CENTER);
         model.updateTempBoard(CENTER,CENTER,letter);
-        //playerTempBoard.placeLetter(CENTER,CENTER,letter);
+        playerTempBoard.placeLetter(CENTER,CENTER,letter);
         updateMessageArea("Pick next letter to play!");
         firstTile = false;
     }
@@ -446,7 +460,7 @@ public class ScrabbleView extends JFrame {
         board[row][col].setText(letter);
         board[row][col].setBackground(Color.pink);
         model.updateTempBoard(row,col,letter);
-        //playerTempBoard.placeLetter(row,col,letter);
+        playerTempBoard.placeLetter(row,col,letter);
     }
     /**
      * Update the board according to the letter and place on the board the player wants it.
@@ -478,7 +492,7 @@ public class ScrabbleView extends JFrame {
         for(Tile tile: hand){
             removeTileFromBoard(tile);
         }
-        if(!board[CENTER][CENTER].getText().equals("") && numberofplays ==0){
+        if(board[CENTER][CENTER].getText().equals("") && numberofplays ==0){
             board[CENTER][CENTER].setText("");
             firstTile = true;
         }
@@ -490,15 +504,17 @@ public class ScrabbleView extends JFrame {
      * @param tile the tile to be removed
      */
     private void removeTileFromBoard(Tile tile){
+
         for(int row = 0; row<SIZE;row++){
             for(int col =0; col<SIZE;col++){
                 String boardTileId = board[row][col].getText();
                 if(boardTileId.equals(tile.getID())){
-                    String removeTileId = model.getTempBoard().removeLetter(row,col);
+                    String removeTileId = playerTempBoard.removeLetter(row,col);
                     if(removeTileId.equals(tile.getID())){
                         board[row][col].setText("");
                         board[row][col].setEnabled(true);
                         board[row][col].setBackground(Color.ORANGE);
+
                     }
                 }
 

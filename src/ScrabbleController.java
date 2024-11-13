@@ -211,6 +211,7 @@ public class ScrabbleController implements ActionListener {
         }
         currentView.resetBoard(hand, play);
         hand = new ArrayList<>();
+        tilePlaced = null;
         currentView.updateMessageArea("Turn Passed!");
         currentView.updateMessageArea("Next Player's Turn");
 
@@ -300,6 +301,8 @@ public class ScrabbleController implements ActionListener {
             currentView.endofGameFrame("ENDGAME");
             return;
         }
+        currentView.updatePlayerChart();
+        currentView.updateButtonVisibility("TURNOVER");
         currentView.playerTurn("PLAYERTURN");
 
 
@@ -311,8 +314,10 @@ public class ScrabbleController implements ActionListener {
     public void restartTurn(){
         currentView.resetBoard(hand, play);
         model.updatePlayerIndex();
+        currentView.updateButtonVisibility("TURNOVER");
         currentView.playerTurn("PLAYERTURN");
         model.board.clearPlacedTileList();
+        tilePlaced = null;
         hand = new ArrayList<>();
         selectedButtons = new ArrayList<>();
     }
@@ -333,10 +338,13 @@ public class ScrabbleController implements ActionListener {
             button.setEnabled(true);
             playerPoints -= tile.getPoints();
         }
+        currentView.updateButtonVisibility("RESTART");
         currentView.resetBoard(hand,play);
         hand=new ArrayList<>();
+        tilePlaced = null;
         selectedButtons = new ArrayList<>();
         model.board.clearPlacedTileList();
+        currentView.updateButtonVisibility("TURNOVER");
 
     }
 
