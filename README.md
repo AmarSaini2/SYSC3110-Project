@@ -44,7 +44,7 @@ The interface also provides feedback on the player's actions, such as whether a 
 - The game ends when there are no more valid words to play, or if all players pass their turn in a row, and the player with the highest score wins.
 
 ## Known Issues
-- After clicking "Reset Rack", the game does not correctly handle a player trying to play a new word.
+- Player points are not being calculated correctly based on game rules. Currently each player will gain points for all words placed on the board even if they did not play it.
 - Clicking on a board tile outside the horizontal or vertical alignment of the word being placed still allows placement, which should be restricted.
 - The end-of-game logic is still being worked on and only currently checks for if players have remaining valid words  to play or if all players have consecutively passed their turns for the game to end.
 - The game does not utilize blank tiles or premium squares yet.

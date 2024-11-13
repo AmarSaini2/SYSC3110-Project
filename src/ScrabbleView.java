@@ -215,7 +215,7 @@ public class ScrabbleView extends JFrame {
                 for(JButton button: playerRack){
                     button.setEnabled(true);
                 }
-                playerTempBoard = new Board();
+                
                 break;
             case "TURNOVER":
                 for(int row = 0; row<SIZE;row++){
@@ -496,6 +496,7 @@ public class ScrabbleView extends JFrame {
             board[CENTER][CENTER].setText("");
             firstTile = true;
         }
+        playerTempBoard = new Board();
 
     }
     /**
