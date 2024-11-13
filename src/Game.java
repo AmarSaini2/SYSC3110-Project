@@ -406,5 +406,8 @@ public class Game {
         currentPlayerIndex++;
 
     }
+    public int getConsecutivePasses(){
+        return consecutivePasses;
+    }
 
 }
