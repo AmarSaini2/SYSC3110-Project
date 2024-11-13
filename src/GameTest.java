@@ -1,0 +1,108 @@
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import java.util.ArrayList;
+
+public class GameTest {
+    private Game game;
+    private ScrabbleView view;
+    private ScrabbleController controller;
+
+    @BeforeEach
+    public void setUp() {
+        game = new Game();
+        view = new ScrabbleView();
+        controller = new ScrabbleController(game, view);
+    }
+
+    @org.junit.Test
+    @Test
+    public void testStartGame() {
+        String expectedOutput = "Welcome to the game of scrabble!\nTo start, select a number of players: (2-4)";
+        assertEquals(expectedOutput, game.startGame());
+    }
+
+    @Test
+    public void testPlayerInitialization() {
+        game.intializePlayer("Alice");
+        game.intializePlayer("Bob");
+
+        assertEquals(2, game.getPlayers().size(), "The game should have 2 players.");
+        assertEquals("Alice", game.getPlayers().get(0).getName());
+        assertEquals("Bob", game.getPlayers().get(1).getName());
+    }
+
+    @Test
+    public void testPlayersTurn() {
+        game.intializePlayer("Alice");
+        game.intializePlayer("Bob");
+
+        assertEquals("Player: Alice \n1. Play a word\n2. Pass your turn\n", game.playersTurn());
+        game.handlePlayerChoice(2); // Pass Alice's turn
+        assertEquals("Player: Bob \n1. Play a word\n2. Pass your turn\n", game.playersTurn());
+    }
+
+
+    @Test
+    public void testHandlePlayerChoice_PassTurn() {
+        game.intializePlayer("Alice");
+        game.intializePlayer("Bob");
+
+        game.handlePlayerChoice(2); // Simulate "Pass turn"
+        assertEquals(1, game.getConsecutivePasses(), "Consecutive passes should increment when turn is passed.");
+        assertEquals("Player: Bob \n1. Play a word\n2. Pass your turn\n", game.playersTurn());
+    }
+
+
+    @Test
+    public void testSubmitWordAndScore() {
+        game.intializePlayer("Alice");
+        game.intializePlayer("Bob");
+        String s = game.playersTurn();
+        Player currentPlayer = game.currentPlayerTurn();
+
+        //checking correct condition
+        game.updateTempBoard(7, 7, "A");
+        game.updateTempBoard(7, 8, "T");
+
+        assertTrue(game.submitWord(currentPlayer), "The submitted word should be valid.");
+        assertEquals(game.currentPlayerTurn().getPoints(), 2);
+
+        s = game.playersTurn();
+        currentPlayer = game.currentPlayerTurn();
+        //checking invalid placements
+        game.updateTempBoard(0,0, "B");
+        game.updateTempBoard(1,0, "B");
+        game.updateTempBoard(2,0, "B");
+        assertFalse(game.submitWord(currentPlayer), "The submitted word should be invalid.");
+        assertEquals(game.currentPlayerTurn().getPoints(), 2);
+
+        s = game.playersTurn();
+        currentPlayer = game.currentPlayerTurn();
+        //checking correct condition with longer word
+        game.updateTempBoard(1, 7, "R");
+        game.updateTempBoard(1, 8, "O");
+        game.updateTempBoard(1, 9, "B");
+        game.updateTempBoard(1, 10, "O");
+        game.updateTempBoard(1, 11, "T");
+
+        assertTrue(game.submitWord(currentPlayer), "The submitted word should be valid.");
+        assertEquals(game.currentPlayerTurn().getPoints(), 9);
+
+        //adding letter to previous word
+        s = game.playersTurn();
+        currentPlayer = game.currentPlayerTurn();
+        game.updateTempBoard(1, 12, "S");
+        assertTrue(game.submitWord(currentPlayer), "The submitted word should be valid.");
+        assertEquals(game.currentPlayerTurn().getPoints(), 18); //points should re add for entire word since player added on to it
+
+        //adding word to intersect with previous word
+        s = game.playersTurn();
+        currentPlayer = game.currentPlayerTurn();
+        game.updateTempBoard(2, 7, "O");
+        game.updateTempBoard(3, 7, "W");
+        assertTrue(game.submitWord(currentPlayer), "The submitted word should be valid.");
+        assertEquals(game.currentPlayerTurn().getPoints(), 32); //points should re add for entire word since player added on to it
+    }
+
+}
