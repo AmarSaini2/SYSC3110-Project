@@ -39,10 +39,11 @@ public class Tile {
             case("Q"), ("Z"):
                 this.points = 10;
                 break;
-            case("blank"):
-                this.points = 0;
-                break;
         }
+    }
+    Tile(String letter, int points){
+        this.letter = letter;
+        this.points = points;
     }
     /**
      * Returns the letter represented by this tile.

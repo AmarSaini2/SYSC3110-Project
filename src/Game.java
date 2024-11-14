@@ -409,5 +409,4 @@ public class Game {
     public int getConsecutivePasses(){
         return consecutivePasses;
     }
-
 }

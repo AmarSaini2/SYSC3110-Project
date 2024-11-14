@@ -226,8 +226,20 @@ public class ScrabbleController implements ActionListener {
         JButton tile= (JButton) e.getSource();
         lastClicked = tile;
         tile.setEnabled(false);
-        String letter = tile.getText();
-        tilePlaced = new Tile(letter);
+        String letter;
+        if(tile.getText().equals(" ")){//blank tile clicked
+            while(true){
+                letter = JOptionPane.showInputDialog("What letter would you like to place as your blank tile?");
+                if(letter.length() == 1){
+                    tilePlaced = new Tile(letter.toUpperCase(), 0);
+                    break;
+                }
+            }
+        }else{
+            letter = tile.getText();
+            tilePlaced = new Tile(letter);
+        }
+
         model.tilePlaced(tilePlaced);
         hand.add(tilePlaced);
         //playerPoints += tilePlaced.getPoints();
