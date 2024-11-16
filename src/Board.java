@@ -277,14 +277,14 @@ public class Board {
         }
 
         for (String word : stringArray) {//for each string in stringArray, make tiles out of the characters and sum up their points
-            System.out.println(word);
+            //System.out.println(word);
             char[] charArray = word.toCharArray();
             for (char c : charArray) {
                 Tile tile = new Tile(String.valueOf(c));
                 points += tile.getPoints();
             }
         }
-        System.out.println("points:" + points);
+        //System.out.println("points:" + points);
         return points;
     }
     /**

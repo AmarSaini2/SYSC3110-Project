@@ -357,7 +357,7 @@ public class ScrabbleView extends JFrame {
     public void clearRack(){
         if (playerRack != null) {
             for (JButton button : playerRack) {
-                //System.out.println(button.getText());
+
                 inputPanel.remove(button); // Remove the old buttons from the input panel
             }
             if(submit != null){
