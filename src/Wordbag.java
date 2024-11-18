@@ -42,6 +42,7 @@ public class Wordbag {
         addTiles("X",1);
         addTiles("Y",2);
         addTiles("Z",1);
+        addTiles(" ", 2);
 
 
     }

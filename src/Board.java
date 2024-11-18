@@ -203,6 +203,10 @@ public class Board {
             for (int i = horizontalStart; i <= horizontalEnd; i++) {//Iterate across the horizontal word. For each letter, calculate its vertical word
                 hWord.append(board[row][i]);//add current letter to the horizontal word builder
 
+                Coordinate coord = new Coordinate(row, i);
+                if(!placedTileList.contains(coord)){//if the tile was not newly placed this turn, don't check if it makes an additional word
+                    continue;
+                }
                 int countUp = row;
                 while (countUp >= 0 && !board[countUp][i].equals(" ")) {//find start of vertical word by checking upwards from current tile
                     verticalStart = countUp;
@@ -243,6 +247,11 @@ public class Board {
             for (int i = verticalStart; i <= verticalEnd; i++) {//Iterate down the vertical word. For each letter, calculate its horizontal word
                 vWord.append(board[i][col]);//add current letter to the vertical word builder
 
+                Coordinate coord = new Coordinate(i, col);
+                if(!placedTileList.contains(coord)){//if the tile was not newly placed this turn, don't check if it makes an additional word
+                    continue;
+                }
+
                 int countLeft = col;
                 while (countLeft >= 0 && !board[i][countLeft].equals(" ")) {//find start of horizontal word by checking left from current tile
                     horizontalStart = countLeft;
@@ -268,14 +277,14 @@ public class Board {
         }
 
         for (String word : stringArray) {//for each string in stringArray, make tiles out of the characters and sum up their points
-            System.out.println(word);
+            //System.out.println(word);
             char[] charArray = word.toCharArray();
             for (char c : charArray) {
                 Tile tile = new Tile(String.valueOf(c));
                 points += tile.getPoints();
             }
         }
-        System.out.println("points:" + points);
+        //System.out.println("points:" + points);
         return points;
     }
     /**

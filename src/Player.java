@@ -105,13 +105,13 @@ public class Player{
     public void drawNewTiles(Wordbag tilebag){
         int replace = NUM_TILES - hand.size();
         if(tilebag.getBagSize()< replace && tilebag.getBagSize() > 0){
-            System.out.println("Only had +"+tilebag.getBagSize()+" , these are the remaining tiles.");
+            //System.out.println("Only had +"+tilebag.getBagSize()+" , these are the remaining tiles.");
             for(int i =0; i< tilebag.getBagSize();i++){
                 hand.add(tilebag.drawTile());
             }
             return;
         }else if(tilebag.getBagSize()==0){
-            System.out.println("All tiles have been drawn.");
+            //System.out.println("All tiles have been drawn.");
             return;
         }
         for(int i =0; i<replace;i++){

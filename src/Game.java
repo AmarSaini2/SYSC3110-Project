@@ -96,7 +96,7 @@ public class Game {
             try {
                 return in.next();
             } catch (InputMismatchException e) {
-                //System.out.println("Invalid input. Please enter a name");
+
                 in.next();
             }
         }
@@ -167,47 +167,7 @@ public class Game {
 
 
 
-        //int firstRowOrCol;//tracker to lock player to row/column
-        //tempBoard.display();
-        //currentPlayer.printHand();
 
-        /*String direction;
-        while(true){//get placement direction
-            System.out.println("Choose a direction to place your word in (h/v):");
-            try{
-                direction = in.next();
-                if(!(direction.equalsIgnoreCase("h") || direction.equalsIgnoreCase("v"))){
-                    System.out.println("Invalid input");
-                    continue;
-                }else{
-                    break;
-                }
-            }catch(InputMismatchException e){
-                System.out.println("Invalid input");
-                continue;
-            }
-        }*/
-
-        /*while(true){//get first row or column (depending on direction selection)
-            if(direction.equals("h")){
-                System.out.println("Enter the row you would like to place letters across");
-            }else if (direction.equals("v")){
-                System.out.println("Enter the column you would like to place letters down");
-            }
-
-            try{
-                firstRowOrCol = in.nextInt();
-                if(firstRowOrCol < 0 || firstRowOrCol > 15){
-                    System.out.println("Invalid input: must be between 0 and 15");
-                    continue;
-                }else{
-                    break;
-                }
-            }catch(InputMismatchException e){
-                System.out.println("Invalid input: turn reset");
-                return false;
-            }
-        }*/
 
 
         Tile pickedTile = tile;
@@ -216,100 +176,7 @@ public class Game {
         }
         //System.out.println(tile.getID());
         tempHand.remove(pickedTile);
-        /*while (true) {
-            //tempBoard.display();
 
-            for (Tile tile : tempHand) {
-                System.out.printf("%6s", tile.getID());
-            }
-            System.out.print("\n");
-
-            for (Tile tile : tempHand) {
-                System.out.printf("%6d", tile.getPoints());
-            }
-            System.out.print("\n");
-
-            String tileName;
-            Tile pickedTile;
-            while (true) {//get picked tile + check if tile is in hand
-                try {
-
-                    pickedTile = tile;
-                    if (tempHand.contains(pickedTile)) {
-                        break;
-                    } else {
-                        System.out.println("Tile not in hand");
-                    }
-                } catch (InputMismatchException e) {
-                    System.out.println("Invalid input.");
-                    continue;
-                }
-            }
-
-
-
-
-            //program loop for entering a letter
-            int row, col;
-            while (true) {
-                try {
-                    if (direction.equals("h")) {
-                        col = in.nextInt();
-                        row = firstRowOrCol;
-                    } else {
-                        row = in.nextInt();
-                        col = firstRowOrCol;
-                    }
-                    if (tempBoard.isEmptyLocation(row, col)) {
-                        tempBoard.placeLetter(row, col, tileName);
-                        tempHand.remove(pickedTile);
-                        if (tempHand.isEmpty()) {
-                            if (submitWord(currentPlayer, tempBoard, tempHand, row, col, direction)) {
-                                currentPlayer.addPoints(50); // 50 bonus points for clearing whole hand
-                                System.out.println("Bonus 50 points for playing whole hand!");
-                                System.out.println(currentPlayer.getName() + " has " + currentPlayer.getPoints() + " points");
-                                return true; //return true for successful playerTurn
-                            } else {
-                                System.out.println("Invalid word placed");
-                                return false; //return false for failed playerTurn
-                            }
-                        }
-                        break;
-                    } else {
-                        System.out.println("Cannot place on an occupied spot");
-                        tempBoard.display();
-                    }
-                } catch (InputMismatchException e) {
-                    System.out.println("Invalid input.");
-                    return false;
-                }
-            }
-
-
-            while(true){
-                System.out.println("Would you like to submit your word (y) or keep placing tiles?(n)");
-                try{
-                    String userInput = in.next();
-                    if(userInput.equalsIgnoreCase("y")) {
-                        if (submitWord(currentPlayer, tempBoard, tempHand, row, col, direction)) {
-                            System.out.println(currentPlayer.getName() + " has " + currentPlayer.getPoints() + " points");
-                            return true;
-                        } else {
-                            System.out.println("Invalid word placed");
-                            return false;
-                        }
-                    }else if(userInput.equalsIgnoreCase("n")){
-                        break;//break loop and keep placing tiles
-                    }else{
-                        System.out.println("Invalid input");//user entered something other than y or n
-                        continue;
-                    }
-                }catch(InputMismatchException e){
-                    System.out.println("Invalid input.");
-                    continue;
-                }
-            }
-        }*/
         return true;
     }
     /**
@@ -406,5 +273,7 @@ public class Game {
         currentPlayerIndex++;
 
     }
-
+    public int getConsecutivePasses(){
+        return consecutivePasses;
+    }
 }
