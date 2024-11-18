@@ -15,6 +15,16 @@ public class Player{
     private ArrayList<Tile> hand;
     private String name;
     private int NUM_TILES = 7;
+
+    /**
+     * Constructs a new Player  without a specified name.
+     * Initializes an empty list of tiles for the player's rack and sets initial score to zero
+     */
+    public Player(){
+        points = 0;
+        this.name = name;
+        hand = new ArrayList<Tile>();
+    }
     /**
      * Constructs a new Player  with the specified name.
      * Initializes an empty list of tiles for the player's rack and sets initial score to zero.
