@@ -7,4 +7,16 @@ public class Coordinate {
         this.col = y;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Coordinate)) return false;
+        Coordinate other = (Coordinate) obj;
+        return this.row == other.row && this.col == other.col;
+    }
+
+    @Override
+    public int hashCode(){
+        return 31 * this.row * this.col;
+    }
 }

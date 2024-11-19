@@ -11,6 +11,7 @@ import java.util.*;
 public class Board {
     private String[][] board;
     private ArrayList<Coordinate> placedTileList;
+    private HashMap<Coordinate, String> premiumTileList;
     private enum Direction{VERTICAL, HORIZONTAL, INVALID}
     public Direction placedTileDirection;
     private final int SIZE = 15;
@@ -21,6 +22,8 @@ public class Board {
     public Board(){
         this.board = new String[SIZE][SIZE];
         this.placedTileList = new ArrayList<>();
+        this.premiumTileList = new HashMap<>();
+        initializeBoard();
         placedTileDirection = Direction.INVALID;
         for(String[] row: board){
             Arrays.fill(row, " ");
@@ -36,6 +39,7 @@ public class Board {
         this.board = new String[SIZE][SIZE];
         placedTileDirection = inputBoard.placedTileDirection;
         this.placedTileList = new ArrayList<>();
+        this.premiumTileList = inputBoard.getPremiumTileList();
         for(Coordinate coord : inputBoard.placedTileList){
             placedTileList.add(new Coordinate(coord.row, coord.col));
         }
@@ -44,6 +48,61 @@ public class Board {
                 this.board[i][j] = inputBoard.board[i][j];
             }
         }
+    }
+
+    public void initializeBoard(){
+        // Triple Word Score (TWS)
+        premiumTileList.put(new Coordinate(0, 0), "TWS");
+        premiumTileList.put(new Coordinate(0, 7), "TWS");
+        premiumTileList.put(new Coordinate(0, 14), "TWS");
+        premiumTileList.put(new Coordinate(7, 0), "TWS");
+        premiumTileList.put(new Coordinate(7, 14), "TWS");
+        premiumTileList.put(new Coordinate(14, 0), "TWS");
+        premiumTileList.put(new Coordinate(14, 7), "TWS");
+        premiumTileList.put(new Coordinate(14, 14), "TWS");
+
+        // Double Word Score (DWS)
+        premiumTileList.put(new Coordinate(1, 1), "DWS");
+        premiumTileList.put(new Coordinate(1, 13), "DWS");
+        premiumTileList.put(new Coordinate(13, 1), "DWS");
+        premiumTileList.put(new Coordinate(13, 13), "DWS");
+        premiumTileList.put(new Coordinate(3, 0), "DWS");
+        premiumTileList.put(new Coordinate(3, 14), "DWS");
+        premiumTileList.put(new Coordinate(11, 0), "DWS");
+        premiumTileList.put(new Coordinate(11, 14), "DWS");
+        premiumTileList.put(new Coordinate(5, 5), "DWS");
+        premiumTileList.put(new Coordinate(5, 9), "DWS");
+        premiumTileList.put(new Coordinate(9, 5), "DWS");
+        premiumTileList.put(new Coordinate(9, 9), "DWS");
+
+        // Triple Letter Score (TLS)
+        premiumTileList.put(new Coordinate(1, 5), "TLS");
+        premiumTileList.put(new Coordinate(1, 9), "TLS");
+        premiumTileList.put(new Coordinate(5, 1), "TLS");
+        premiumTileList.put(new Coordinate(5, 13), "TLS");
+        premiumTileList.put(new Coordinate(9, 1), "TLS");
+        premiumTileList.put(new Coordinate(9, 13), "TLS");
+        premiumTileList.put(new Coordinate(13, 5), "TLS");
+        premiumTileList.put(new Coordinate(13, 9), "TLS");
+
+        // Double Letter Score (DLS)
+        premiumTileList.put(new Coordinate(0, 3), "DLS");
+        premiumTileList.put(new Coordinate(0, 11), "DLS");
+        premiumTileList.put(new Coordinate(3, 0), "DLS");
+        premiumTileList.put(new Coordinate(3, 14), "DLS");
+        premiumTileList.put(new Coordinate(11, 0), "DLS");
+        premiumTileList.put(new Coordinate(11, 14), "DLS");
+        premiumTileList.put(new Coordinate(14, 3), "DLS");
+        premiumTileList.put(new Coordinate(14, 11), "DLS");
+        premiumTileList.put(new Coordinate(2, 6), "DLS");
+        premiumTileList.put(new Coordinate(2, 8), "DLS");
+        premiumTileList.put(new Coordinate(6, 2), "DLS");
+        premiumTileList.put(new Coordinate(6, 12), "DLS");
+        premiumTileList.put(new Coordinate(8, 2), "DLS");
+        premiumTileList.put(new Coordinate(8, 12), "DLS");
+        premiumTileList.put(new Coordinate(12, 6), "DLS");
+        premiumTileList.put(new Coordinate(12, 8), "DLS");
+
     }
 
     public void display(){
@@ -186,6 +245,7 @@ public class Board {
         ArrayList<String> stringArray = new ArrayList<>();
         StringBuilder vWord = new StringBuilder();
         StringBuilder hWord = new StringBuilder();
+        Coordinate coord = null;
 
         if(placedTileDirection.equals(Direction.HORIZONTAL)){//iterate through horizontal string and calculate all vertical auxillary strings made
 
@@ -203,7 +263,7 @@ public class Board {
             for (int i = horizontalStart; i <= horizontalEnd; i++) {//Iterate across the horizontal word. For each letter, calculate its vertical word
                 hWord.append(board[row][i]);//add current letter to the horizontal word builder
 
-                Coordinate coord = new Coordinate(row, i);
+                coord = new Coordinate(row, i);
                 if(!placedTileList.contains(coord)){//if the tile was not newly placed this turn, don't check if it makes an additional word
                     continue;
                 }
@@ -247,7 +307,7 @@ public class Board {
             for (int i = verticalStart; i <= verticalEnd; i++) {//Iterate down the vertical word. For each letter, calculate its horizontal word
                 vWord.append(board[i][col]);//add current letter to the vertical word builder
 
-                Coordinate coord = new Coordinate(i, col);
+                coord = new Coordinate(i, col);
                 if(!placedTileList.contains(coord)){//if the tile was not newly placed this turn, don't check if it makes an additional word
                     continue;
                 }
@@ -276,15 +336,45 @@ public class Board {
             vWord.setLength(0);//reset for next loop
         }
 
+        int wordPoints = 0;
+        Boolean tripleWord = false;
+        Boolean doubleWord = false;
         for (String word : stringArray) {//for each string in stringArray, make tiles out of the characters and sum up their points
-            //System.out.println(word);
+            tripleWord = false;
+            doubleWord = false;
+            wordPoints = 0;
             char[] charArray = word.toCharArray();
             for (char c : charArray) {
                 Tile tile = new Tile(String.valueOf(c));
-                points += tile.getPoints();
+                if(placedTileList.contains(coord) && premiumTileList.containsKey(coord)){
+                    switch(premiumTileList.get(coord)){
+                        case("TWS"):
+                        tripleWord = true;
+                        break;
+                        case("DWS"):
+                        doubleWord = true;
+                        break;
+                        case("TLS"):
+                        wordPoints += tile.getPoints() * 3;
+                        break;
+                        case("DLS"):
+                        wordPoints += tile.getPoints() * 2;
+                        break;
+                    }
+                }
+                wordPoints += tile.getPoints();
+            }
+            if(tripleWord){
+                points += wordPoints*3;
+            }
+            if(doubleWord){
+                points += wordPoints*2;
+            }
+
+            if(!doubleWord && !tripleWord){
+                points += wordPoints;
             }
         }
-        //System.out.println("points:" + points);
         return points;
     }
     /**
@@ -331,5 +421,9 @@ public class Board {
         for(Coordinate coord: placedTileList){
                 placedTileList.remove(coord);
         }
+    }
+
+    public HashMap<Coordinate, String> getPremiumTileList(){
+        return premiumTileList;
     }
 }
