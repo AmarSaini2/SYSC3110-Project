@@ -46,6 +46,8 @@ public class Board {
         }
     }
 
+    public String[][] getBoard(){return this.board;}
+
     public void display(){
         System.out.print("    ");
         for (int i = 0; i < SIZE; i++){
@@ -83,6 +85,17 @@ public class Board {
         String letter = board[row][col];
         board[row][col] = " ";
         return letter;
+    }
+
+    public boolean isEmptyBoard(){
+        for(int i = 0; i < SIZE; i++){
+            for(int j = 0; j < SIZE; j++){
+                if(!this.board[i][j].equals(" ")){
+                    return false;
+                }
+            }
+            }
+        return true;
     }
 
     public boolean isEmptyLocation(int row, int col){
