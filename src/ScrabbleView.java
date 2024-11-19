@@ -78,6 +78,22 @@ public class ScrabbleView extends JFrame {
                     button = new JButton("");
                 }*/
                 button = new JButton("");
+                if(model.board.getPremiumTileList().containsKey(new Coordinate(row, col))){
+                    switch(model.board.getPremiumTileList().get(new Coordinate(row, col))){
+                        case("TLS"):
+                        button.setText("3TS");
+                        break;
+                        case("DLS"):
+                        button.setText("2TS");
+                        break;
+                        case("TWS"):
+                        button.setText("3WS");
+                        break;
+                        case("DWS"):
+                        button.setText("2WS");
+                        break;
+                    }
+                }
                 button.setEnabled(false);
                 button.setBackground(Color.ORANGE);
                 button.setForeground(Color.white);
@@ -409,7 +425,7 @@ public class ScrabbleView extends JFrame {
         //enabling tiles that are adjacent to word tiles if they are within the index
         for(int row = 1; row<SIZE-1;row++){
             for(int col =1; col<SIZE-1;col++) {
-                if (!board[row][col].getText().equals("")) {
+                if (!board[row][col].getText().equals("") && !model.board.getPremiumTileList().containsKey(new Coordinate(row, col))) {
                     board[row - 1][col].setEnabled(true);
                     board[row - 1][col].setBackground(Color.orange);
                     board[row + 1][col].setEnabled(true);
@@ -424,7 +440,7 @@ public class ScrabbleView extends JFrame {
         //disabling all tiles with words in them in case of overlapping tile
         for(int row = 0; row<SIZE;row++){
             for(int col =0; col<SIZE;col++){
-                if(!board[row][col].getText().equals("")) {
+                if(!board[row][col].getText().equals("")&& !model.board.getPremiumTileList().containsKey(new Coordinate(row, col))) {
                     board[row][col].setEnabled(false);
                     board[row][col].setBackground(Color.pink);
                 }
