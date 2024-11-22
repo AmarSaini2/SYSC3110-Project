@@ -67,10 +67,18 @@ public class Game {
      * added to the list of players.
      * @param name the name of the player to be added
      */
-    public void intializePlayer(String name){
-        Player player = new Player(name);
-        player.setHand(bag);
-        players.add(player);
+    public void intializePlayer(String name, boolean isHuman){
+        if(!isHuman){
+            AiPlayer player = new AiPlayer(name);
+            player.setHand(bag);
+            players.add(player);
+        }
+        else{
+            Player player = new Player(name);
+            player.setHand(bag);
+            players.add(player);
+        }
+
 
     }
     /**
