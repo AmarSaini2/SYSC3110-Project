@@ -11,6 +11,7 @@ import java.util.*;
 public class Board {
     private String[][] board;
     private ArrayList<Coordinate> placedTileList;
+    private HashMap<Coordinate, String> premiumTileList;
     private enum Direction{VERTICAL, HORIZONTAL, INVALID}
     public Direction placedTileDirection;
     private final int SIZE = 15;
@@ -21,6 +22,8 @@ public class Board {
     public Board(){
         this.board = new String[SIZE][SIZE];
         this.placedTileList = new ArrayList<>();
+        this.premiumTileList = new HashMap<>();
+        initializeBoard();
         placedTileDirection = Direction.INVALID;
         for(String[] row: board){
             Arrays.fill(row, " ");
@@ -36,6 +39,7 @@ public class Board {
         this.board = new String[SIZE][SIZE];
         placedTileDirection = inputBoard.placedTileDirection;
         this.placedTileList = new ArrayList<>();
+        this.premiumTileList = inputBoard.getPremiumTileList();
         for(Coordinate coord : inputBoard.placedTileList){
             placedTileList.add(new Coordinate(coord.row, coord.col));
         }
@@ -46,6 +50,60 @@ public class Board {
         }
     }
 
+    public void initializeBoard(){
+        // Triple Word Score (TWS)
+        premiumTileList.put(new Coordinate(0, 0), "TWS");
+        premiumTileList.put(new Coordinate(0, 7), "TWS");
+        premiumTileList.put(new Coordinate(0, 14), "TWS");
+        premiumTileList.put(new Coordinate(7, 0), "TWS");
+        premiumTileList.put(new Coordinate(7, 14), "TWS");
+        premiumTileList.put(new Coordinate(14, 0), "TWS");
+        premiumTileList.put(new Coordinate(14, 7), "TWS");
+        premiumTileList.put(new Coordinate(14, 14), "TWS");
+
+        // Double Word Score (DWS)
+        premiumTileList.put(new Coordinate(1, 1), "DWS");
+        premiumTileList.put(new Coordinate(1, 13), "DWS");
+        premiumTileList.put(new Coordinate(13, 1), "DWS");
+        premiumTileList.put(new Coordinate(13, 13), "DWS");
+        premiumTileList.put(new Coordinate(3, 0), "DWS");
+        premiumTileList.put(new Coordinate(3, 14), "DWS");
+        premiumTileList.put(new Coordinate(11, 0), "DWS");
+        premiumTileList.put(new Coordinate(11, 14), "DWS");
+        premiumTileList.put(new Coordinate(5, 5), "DWS");
+        premiumTileList.put(new Coordinate(5, 9), "DWS");
+        premiumTileList.put(new Coordinate(9, 5), "DWS");
+        premiumTileList.put(new Coordinate(9, 9), "DWS");
+
+        // Triple Letter Score (TLS)
+        premiumTileList.put(new Coordinate(1, 5), "TLS");
+        premiumTileList.put(new Coordinate(1, 9), "TLS");
+        premiumTileList.put(new Coordinate(5, 1), "TLS");
+        premiumTileList.put(new Coordinate(5, 13), "TLS");
+        premiumTileList.put(new Coordinate(9, 1), "TLS");
+        premiumTileList.put(new Coordinate(9, 13), "TLS");
+        premiumTileList.put(new Coordinate(13, 5), "TLS");
+        premiumTileList.put(new Coordinate(13, 9), "TLS");
+
+        // Double Letter Score (DLS)
+        premiumTileList.put(new Coordinate(0, 3), "DLS");
+        premiumTileList.put(new Coordinate(0, 11), "DLS");
+        premiumTileList.put(new Coordinate(3, 0), "DLS");
+        premiumTileList.put(new Coordinate(3, 14), "DLS");
+        premiumTileList.put(new Coordinate(11, 0), "DLS");
+        premiumTileList.put(new Coordinate(11, 14), "DLS");
+        premiumTileList.put(new Coordinate(14, 3), "DLS");
+        premiumTileList.put(new Coordinate(14, 11), "DLS");
+        premiumTileList.put(new Coordinate(2, 6), "DLS");
+        premiumTileList.put(new Coordinate(2, 8), "DLS");
+        premiumTileList.put(new Coordinate(6, 2), "DLS");
+        premiumTileList.put(new Coordinate(6, 12), "DLS");
+        premiumTileList.put(new Coordinate(8, 2), "DLS");
+        premiumTileList.put(new Coordinate(8, 12), "DLS");
+        premiumTileList.put(new Coordinate(12, 6), "DLS");
+        premiumTileList.put(new Coordinate(12, 8), "DLS");
+
+    }
     public String[][] getBoard(){return this.board;}
 
     public void display(){
@@ -54,7 +112,6 @@ public class Board {
             System.out.printf("%2d |", i);//print column numbers
         }
         System.out.println();
-
         for (int i = 0; i < SIZE; i++) {
             System.out.printf("%2d |", i); //row number
             for (int j = 0; j < SIZE; j++){
@@ -72,7 +129,6 @@ public class Board {
      */
     public void placeLetter(int row, int col, String input) {
         board[row][col] = input;
-
     }
     /**
      * Remove a letter from a specified row and column.
@@ -94,7 +150,7 @@ public class Board {
                     return false;
                 }
             }
-            }
+        }
         return true;
     }
 
@@ -112,7 +168,7 @@ public class Board {
                 this.board[i][j] = temp[i][j];
             }
         }
-        }
+    }
     /**
      * Check the validity of a word.
      *
@@ -125,7 +181,6 @@ public class Board {
             System.out.println("No tiles placed");
             return false;
         }
-
         Coordinate start = new Coordinate(SIZE, SIZE);
         Coordinate end = new Coordinate (0,0);
         for(Coordinate coord: placedTileList){
@@ -144,17 +199,15 @@ public class Board {
                 if(coord.row > end.row){
                     end = coord;
                 }
-            }    
+            }
         }
-
         Coordinate delta = new Coordinate(end.row - start.row, end.col - start.col);
-        
+
         if(delta.row == delta.col && placedTileList.size() > 1){
             System.out.println("delta error");
             System.out.println(delta.row + ", " + delta.col);
-            return false;  
+            return false;
         }
-
         for (int row = 0; row < SIZE; row++) {//for every row, check that the words are valid
             StringBuilder rowString = new StringBuilder();
             for (int col = 0; col < SIZE; col++) {
@@ -169,7 +222,6 @@ public class Board {
                     System.out.println("word not found: " + s);
                     return false;
                 }
-
             }
         }
         for (int col = 0; col < SIZE; col++) {//for every column, check that the words are valid
@@ -188,16 +240,10 @@ public class Board {
                 }
             }
         }
-        
-        
+
 
         return true;
     }
-
-
-
-
-
     public int calculatePoints() {
         int row = placedTileList.getLast().row;
         int col = placedTileList.getLast().col;
@@ -207,6 +253,7 @@ public class Board {
         ArrayList<String> stringArray = new ArrayList<>();
         StringBuilder vWord = new StringBuilder();
         StringBuilder hWord = new StringBuilder();
+        Coordinate coord = null;
 
         if(placedTileDirection.equals(Direction.HORIZONTAL)){//iterate through horizontal string and calculate all vertical auxillary strings made
 
@@ -215,7 +262,6 @@ public class Board {
                 horizontalStart = countLeft;
                 countLeft--;
             }
-
             int countRight = col;
             while (countRight < SIZE && !board[row][countRight].equals(" ")) {//find end of horizontal word by checking right from last placed tile
                 horizontalEnd = countRight;
@@ -224,7 +270,8 @@ public class Board {
             for (int i = horizontalStart; i <= horizontalEnd; i++) {//Iterate across the horizontal word. For each letter, calculate its vertical word
                 hWord.append(board[row][i]);//add current letter to the horizontal word builder
 
-                Coordinate coord = new Coordinate(row, i);
+                coord = new Coordinate(row, i);
+                //Coordinate coord = new Coordinate(row, i);
                 if(!placedTileList.contains(coord)){//if the tile was not newly placed this turn, don't check if it makes an additional word
                     continue;
                 }
@@ -233,13 +280,11 @@ public class Board {
                     verticalStart = countUp;
                     countUp--;
                 }
-
                 int countDown = row;
                 while (countDown < SIZE && !board[countDown][i].equals(" ")) {//find end of vertical word by checking downwards from current tile
                     verticalEnd = countDown;
                     countDown++;
                 }
-
                 for (int j = verticalStart; j <= verticalEnd; j++) {//iterate down vertical word and add to string array
                     vWord.append(board[j][i]);
                 }
@@ -250,41 +295,35 @@ public class Board {
             }
             stringArray.add(hWord.toString());
             hWord.setLength(0);//reset for next loop
-
         }else{//iterate through vertical string and calculate all auxillary horizontal strings made
-
             int countUp = row;
             while (countUp >= 0 && !board[countUp][col].equals(" ")) {//find start of vertical word by checking upwards from last placed tile
                 verticalStart = countUp;
                 countUp--;
             }
-
             int countDown = row;
             while (countDown < SIZE && !board[countDown][col].equals(" ")) {//find end of vertical word by checking downwards from last placed tile
                 verticalEnd = countDown;
                 countDown++;
             }
-
             for (int i = verticalStart; i <= verticalEnd; i++) {//Iterate down the vertical word. For each letter, calculate its horizontal word
                 vWord.append(board[i][col]);//add current letter to the vertical word builder
 
-                Coordinate coord = new Coordinate(i, col);
+                coord = new Coordinate(i, col);
+                //Coordinate coord = new Coordinate(i, col);
                 if(!placedTileList.contains(coord)){//if the tile was not newly placed this turn, don't check if it makes an additional word
                     continue;
                 }
-
                 int countLeft = col;
                 while (countLeft >= 0 && !board[i][countLeft].equals(" ")) {//find start of horizontal word by checking left from current tile
                     horizontalStart = countLeft;
                     countLeft--;
                 }
-
                 int countRight = col;
                 while (countRight < SIZE && !board[i][countRight].equals(" ")) {//find end of horizontal word by checking right current tile
                     horizontalEnd = countRight;
                     countRight++;
                 }
-
                 for (int j = horizontalStart; j <= horizontalEnd; j++) {//iterate across horizontal word and add to string array
                     hWord.append(board[i][j]);
                 }
@@ -297,15 +336,55 @@ public class Board {
             vWord.setLength(0);//reset for next loop
         }
 
+        int wordPoints = 0;
+        Boolean tripleWord = false;
+        Boolean doubleWord = false;
         for (String word : stringArray) {//for each string in stringArray, make tiles out of the characters and sum up their points
-            //System.out.println(word);
+            tripleWord = false;
+            doubleWord = false;
+            wordPoints = 0;
+            System.out.println(word);
             char[] charArray = word.toCharArray();
             for (char c : charArray) {
                 Tile tile = new Tile(String.valueOf(c));
-                points += tile.getPoints();
+                for(Coordinate coordinate: placedTileList){
+                    if(board[coordinate.row][coordinate.col].equals(String.valueOf(c)) && premiumTileList.containsKey(coordinate)){
+                        switch(premiumTileList.get(coord)){
+                            case("TWS"):
+                                tripleWord = true;
+                                System.out.println("Triple Word!");
+                                break;
+                            case("DWS"):
+                                doubleWord = true;
+                                System.out.println("Double Word!");
+                                break;
+                            case("TLS"):
+                                wordPoints += tile.getPoints() * 3;
+                                System.out.println("Triple Letter!");
+                                break;
+                            case("DLS"):
+                                wordPoints += tile.getPoints() * 2;
+                                System.out.println("Double Letter!");
+                                break;
+                        }
+                    }
+                }
+                wordPoints += tile.getPoints();
+            }
+            if(tripleWord){
+                points += wordPoints*3;
+            }
+            if(doubleWord){
+                points += wordPoints*2;
+            }
+
+            if(!doubleWord && !tripleWord){
+                points += wordPoints;
+                //points += tile.getPoints();
             }
         }
         //System.out.println("points:" + points);
+        System.out.println("Total points: " + points);
         return points;
     }
     /**
@@ -319,7 +398,6 @@ public class Board {
         Boolean sameCol = true;
         int row = placedTileList.getFirst().row;
         int col = placedTileList.getFirst().col;
-
         for(Coordinate coord: placedTileList){
             if(coord.row != row){
                 sameRow = false;
@@ -328,7 +406,6 @@ public class Board {
                 sameCol = false;
             }
         }
-
         if(sameRow == true && sameCol == false){
             placedTileDirection = Direction.HORIZONTAL;
         }else if(sameCol == true && sameRow == false){
@@ -344,13 +421,16 @@ public class Board {
     public void addCoordinate(Coordinate c){
         placedTileList.add(c);
     }
-     /**
+    /**
      * Clear the placed tile list.
      */
-
     public void clearPlacedTileList(){
         for(Coordinate coord: placedTileList){
-                placedTileList.remove(coord);
+            placedTileList.remove(coord);
         }
+    }
+
+    public HashMap<Coordinate, String> getPremiumTileList(){
+        return premiumTileList;
     }
 }

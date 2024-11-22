@@ -23,8 +23,8 @@ public class GameTest {
 
     @Test
     public void testPlayerInitialization() {
-        game.intializePlayer("Alice");
-        game.intializePlayer("Bob");
+        game.intializePlayer("Alice", true);
+        game.intializePlayer("Bob", true);
 
         assertEquals(2, game.getPlayers().size(), "The game should have 2 players.");
         assertEquals("Alice", game.getPlayers().get(0).getName());
@@ -33,8 +33,8 @@ public class GameTest {
 
     @Test
     public void testPlayersTurn() {
-        game.intializePlayer("Alice");
-        game.intializePlayer("Bob");
+        game.intializePlayer("Alice", true);
+        game.intializePlayer("Bob", true);
 
         assertEquals("Player: Alice \n1. Play a word\n2. Pass your turn\n", game.playersTurn());
         game.handlePlayerChoice(2); // Pass Alice's turn
@@ -44,8 +44,8 @@ public class GameTest {
 
     @Test
     public void testHandlePlayerChoice_PassTurn() {
-        game.intializePlayer("Alice");
-        game.intializePlayer("Bob");
+        game.intializePlayer("Alice", true);
+        game.intializePlayer("Bob", true);
 
         game.handlePlayerChoice(2); // Simulate "Pass turn"
         assertEquals(1, game.getConsecutivePasses(), "Consecutive passes should increment when turn is passed.");
@@ -55,8 +55,8 @@ public class GameTest {
 
     @Test
     public void testSubmitWordAndScore() {
-        game.intializePlayer("Alice");
-        game.intializePlayer("Bob");
+        game.intializePlayer("Alice", true);
+        game.intializePlayer("Bob", true);
         String s = game.playersTurn();
         Player currentPlayer = game.currentPlayerTurn();
 
