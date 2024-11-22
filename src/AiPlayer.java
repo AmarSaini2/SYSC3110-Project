@@ -3,7 +3,7 @@ import java.util.*;
 public class AiPlayer extends Player{
 
     private int points;
-    private ArrayList<Tile> hand;
+
     private String name;
     private int NUM_TILES = 7;
     private final int SIZE = 15;
@@ -11,20 +11,52 @@ public class AiPlayer extends Player{
     public AiPlayer(String name){
         super(name);
     }
+    @Override
+    public boolean isAI(){
+        return true;
+    }
+    @Override
+    public void drawNewTiles(Wordbag tilebag){
+        int replace = NUM_TILES - hand.size();
+        if(tilebag.getBagSize()< replace && tilebag.getBagSize() > 0){
+            //System.out.println("Only had +"+tilebag.getBagSize()+" , these are the remaining tiles.");
+            for(int i =0; i< tilebag.getBagSize();i++){
 
+                hand.add(tilebag.drawTileAI());
+            }
+            return;
+        }else if(tilebag.getBagSize()==0){
+            //System.out.println("All tiles have been drawn.");
+            return;
+        }
+        for(int i =0; i<replace;i++){
+            hand.add(tilebag.drawTileAI());
+        }
+    }
+
+    @Override
+    public void setHand(Wordbag bag){
+        for(int i = 0; i < NUM_TILES; i++){
+            hand.add(bag.drawTileAI());
+        }
+    }
 
     //function to get all valid words given a hand and the letter it must start with
     public static ArrayList<String> findValidWords(String startLetter, List<Character> letters, Trie trie, int direction) {
         //create a set of valid words for this spot so that there are no duplicates
         Set<String> validWords = new HashSet<>();
+        int limit =20;
         //generating the set of words
-        generateWords(startLetter,"", letters, validWords, trie, direction);
+        generateWords(startLetter,"", letters, validWords, trie, direction,limit);
         //returning set as arrayList to index
         return new ArrayList<>(validWords);
     }
 
     //recursive method to generate words
-    private static void generateWords(String startLetter, String current, List<Character> remaining, Set<String> validWords, Trie trie, int direction) {
+    private static void generateWords(String startLetter, String current, List<Character> remaining, Set<String> validWords, Trie trie, int direction, int limit) {
+        if (validWords.size() >= limit) {
+            return;
+        }
         //checking if direction is going up or left and having startLetter be end of word
         if(direction == 1 || direction == 3){
             //check if starting letter plus current combination of letters is a valid word and adding it to valid words set
@@ -47,7 +79,7 @@ public class AiPlayer extends Player{
             //removing the selected character from remaining characters
             char nextChar = nextRemaining.remove(i);
             //add removed character to current string of characters and recursively calling the function
-            generateWords(startLetter,current + nextChar, nextRemaining, validWords, trie, direction);
+            generateWords(startLetter,current + nextChar, nextRemaining, validWords, trie, direction,limit);
         }
     }
 
@@ -132,6 +164,7 @@ public class AiPlayer extends Player{
         Map.Entry<Coordinate, String> wordToPlay = chooseWord(board, trie, direction);
         Coordinate wordCord = wordToPlay.getKey();
         String word = wordToPlay.getValue();
+        System.out.println(word);
 
         //checking what spaces around the letter are valid
         String[][] tempBoard = board.getBoard();
@@ -161,7 +194,7 @@ public class AiPlayer extends Player{
                 //if tile is empty
                 if(tempBoard[wordCord.row + i][wordCord.col].equals(" ")){
                     //setting letter to proper space
-                    tempBoard[wordCord.row + i][wordCord.col] = String.valueOf(word.charAt(word.length() + i));
+                    tempBoard[wordCord.row + i][wordCord.col] = String.valueOf(word.charAt(word.length()));
                 }
                 else{
                     //if tile is already occupied, pass turn
@@ -197,7 +230,7 @@ public class AiPlayer extends Player{
                 //if tile is empty
                 if(tempBoard[wordCord.row][wordCord.col + i].equals(" ")){
                     //setting letter to proper space
-                    tempBoard[wordCord.row][wordCord.col + i] = String.valueOf(word.charAt(word.length() + i));
+                    tempBoard[wordCord.row][wordCord.col + i] = String.valueOf(word.charAt(word.length()));
                 }
                 else{
                     //if tile is already occupied, pass turn

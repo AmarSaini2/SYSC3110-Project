@@ -125,6 +125,18 @@ public class Game {
         sb.append("2. Pass your turn\n");
         return sb.toString();
     }
+    public boolean checkPlayer(){
+        return players.get(currentPlayerIndex).isAI();
+    }
+    public boolean aiTurn(){
+        AiPlayer currentPlayer = (AiPlayer) players.get(currentPlayerIndex);
+        System.out.println(currentPlayer.toString());
+        boolean play = currentPlayer.playWord(board,trie);
+
+        return play;
+
+    }
+
     /**
      * Returns the current players' rack of tiles.
      * @return list of tiles
@@ -246,8 +258,8 @@ public class Game {
         }
         return consecutivePasses >= players.size();
     }
-    public Board getTempBoard(){
-        return tempBoard;
+    public Board getBoard(){
+        return board;
     }
     /**
      * Create a string of the end of game status, specifically the player scores and the winner.
@@ -274,7 +286,7 @@ public class Game {
      * Update the current player index.
      */
     public void updatePlayerIndex(){
-        if(currentPlayerIndex >= players.size()){
+        if(currentPlayerIndex >= players.size() -1){
             currentPlayerIndex = 0;
             return;
         }
@@ -283,5 +295,9 @@ public class Game {
     }
     public int getConsecutivePasses(){
         return consecutivePasses;
+    }
+    public void passTurn(){
+        consecutivePasses++;
+        return;
     }
 }

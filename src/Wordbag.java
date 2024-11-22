@@ -98,4 +98,18 @@ public class Wordbag {
         int randomInt = (int)(Math.random() * tiles.size());
         return tiles.remove(randomInt);
     }
+    public Tile drawTileAI(){
+        if(tiles.isEmpty()){
+            return null;
+        }
+
+        int randomInt = (int)(Math.random() * tiles.size());
+        Tile tile = tiles.get(randomInt);
+        while(tile.getID().equals(" ")){
+            randomInt = (int)(Math.random() * tiles.size());
+        }
+        return tiles.remove(randomInt);
+
+
+    }
 }

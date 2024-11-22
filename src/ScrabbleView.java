@@ -292,18 +292,24 @@ public class ScrabbleView extends JFrame {
             if(name.isEmpty()){
                 name = "Player " + (i+1);
             }
-            int choice = JOptionPane.showOptionDialog(
-                    null,
-                    "Is the player a human or AI?",
-                    "Player Type Selection",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.QUESTION_MESSAGE,
-                    null,
-                    new String[]{"Human", "AI"},
-                    "Human"
-            );
-            boolean isHuman = (choice == JOptionPane.YES_OPTION);
-            model.intializePlayer(name, isHuman);
+            if(i== 0){
+                boolean isHuman = true;
+                model.intializePlayer(name, isHuman);
+            }else{
+                int choice = JOptionPane.showOptionDialog(
+                        null,
+                        "Is the player a human or AI?",
+                        "Player Type Selection",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        new String[]{"Human", "AI"},
+                        "Human");
+                boolean isHuman = (choice == JOptionPane.YES_OPTION);
+                model.intializePlayer(name, isHuman);
+            }
+
+
         }
 
         clearMessageArea();
@@ -315,22 +321,51 @@ public class ScrabbleView extends JFrame {
      * @param section the section to update button status
      */
     public void playerTurn(String section){
-        String play = model.playersTurn();
-        playTurn = new JButton("Play a word");
-        playTurn.setActionCommand("PLAY");
-        playTurn.addActionListener(SC);
-        passTurn = new JButton("Pass Turn");
-        passTurn.setActionCommand("PASS");
-        passTurn.addActionListener(SC);
-        JPanel playPass = new JPanel();
-        playPass.add(playTurn);
-        playPass.add(passTurn);
-        inputPanel.remove(buttonPanel);
-        buttonPanel = new JScrollPane(playPass);
-        inputPanel.add(buttonPanel, BorderLayout.SOUTH);
-        setPlayerRack();
-        updateMessageArea(play);
-        updateButtonVisibility(section);
+
+        if(model.checkPlayer()){
+            boolean canPlay = model.aiTurn();
+            if(canPlay){
+                updateCurrentBoard(model.getBoard());
+                updateMessageArea("Turn Over, Word Successfully Placed");
+                updateMessageArea("Player "+model.getPlayer().getName()+" has "+ model.getPlayer().getPoints()+ " points!");
+                updateMessageArea("Next Player's turn");
+                updatePlayerChart();
+                model.updatePlayerIndex();
+                playerTurn("PLAYERTURN");
+                return;
+
+            }else if(!canPlay){
+                updatePlayerChart();
+                updateButtonVisibility("TURNOVER");
+                model.passTurn();
+                model.updatePlayerIndex();
+                playerTurn("PLAYERTURN");
+                return;
+
+            }else if(model.isGameOver()){
+                updatePlayerChart();
+                endofGameFrame("ENDGAME");
+                return;
+            }
+
+        }else{
+            String play = model.playersTurn();
+            playTurn = new JButton("Play a word");
+            playTurn.setActionCommand("PLAY");
+            playTurn.addActionListener(SC);
+            passTurn = new JButton("Pass Turn");
+            passTurn.setActionCommand("PASS");
+            passTurn.addActionListener(SC);
+            JPanel playPass = new JPanel();
+            playPass.add(playTurn);
+            playPass.add(passTurn);
+            inputPanel.remove(buttonPanel);
+            buttonPanel = new JScrollPane(playPass);
+            inputPanel.add(buttonPanel, BorderLayout.SOUTH);
+            setPlayerRack();
+            updateMessageArea(play);
+            updateButtonVisibility(section);
+        }
     }
     /**
      * Set up the player rack of buttons for the user to interact with.
@@ -488,6 +523,17 @@ public class ScrabbleView extends JFrame {
         board[row][col].setBackground(Color.pink);
         model.updateTempBoard(row,col,letter);
         playerTempBoard.placeLetter(row,col,letter);
+    }
+    public void updateCurrentBoard(Board tempBoard){
+        String[][] update = tempBoard.getBoard();
+        for(int row = 0; row<SIZE;row++){
+            for(int col =0; col<SIZE;col++){
+                if(!update[row][col].equals(" ")){
+                    board[row][col].setText(update[row][col]);
+                }
+
+            }
+        }
     }
     /**
      * Update the board according to the letter and place on the board the player wants it.

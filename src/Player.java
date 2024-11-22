@@ -12,7 +12,7 @@ import javax.swing.plaf.basic.BasicGraphicsUtils;
  */
 public class Player{
     private int points;
-    private ArrayList<Tile> hand;
+    protected ArrayList<Tile> hand;
     private String name;
     private int NUM_TILES = 7;
 
@@ -50,7 +50,7 @@ public class Player{
      * @param bag the current game tile bag
      */
     public void setHand(Wordbag bag){
-        for(int i = 0; i < 7; i++){
+        for(int i = 0; i < NUM_TILES; i++){
             hand.add(bag.get());
         }
     }
@@ -127,6 +127,9 @@ public class Player{
         for(int i =0; i<replace;i++){
             hand.add(tilebag.drawTile());
         }
+    }
+    public boolean isAI(){
+        return false;
     }
 
     @Override
