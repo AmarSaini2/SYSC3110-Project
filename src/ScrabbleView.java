@@ -42,7 +42,7 @@ public class ScrabbleView extends JFrame {
      */
     public ScrabbleView(){
         super("Scrabble");
-        setSize(800,600);
+        setSize(1200,900);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JPanel boardPanel = new JPanel();
         boardPanel.setLayout(new GridLayout(SIZE,SIZE));
