@@ -105,6 +105,14 @@ public class Board {
     public void swapWithTemp(Board temp){
         board = temp.board;
     }
+
+    public void swapWithTemp(String[][] temp){
+        for(int i = 0; i < SIZE; i++){
+            for(int j = 0; j < SIZE; j++){
+                this.board[i][j] = temp[i][j];
+            }
+        }
+        }
     /**
      * Check the validity of a word.
      *

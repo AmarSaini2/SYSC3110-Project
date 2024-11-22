@@ -292,7 +292,18 @@ public class ScrabbleView extends JFrame {
             if(name.isEmpty()){
                 name = "Player " + (i+1);
             }
-            model.intializePlayer(name);
+            int choice = JOptionPane.showOptionDialog(
+                    null,
+                    "Is the player a human or AI?",
+                    "Player Type Selection",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    new String[]{"Human", "AI"},
+                    "Human"
+            );
+            boolean isHuman = (choice == JOptionPane.YES_OPTION);
+            model.intializePlayer(name, isHuman);
         }
 
         clearMessageArea();
