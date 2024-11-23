@@ -3,7 +3,7 @@ import java.util.*;
 public class AiPlayer extends Player{
 
     private int points;
-
+    private ArrayList<Tile> hand;
     private String name;
     private int NUM_TILES = 7;
     private final int SIZE = 15;
@@ -11,52 +11,20 @@ public class AiPlayer extends Player{
     public AiPlayer(String name){
         super(name);
     }
-    @Override
-    public boolean isAI(){
-        return true;
-    }
-    @Override
-    public void drawNewTiles(Wordbag tilebag){
-        int replace = NUM_TILES - hand.size();
-        if(tilebag.getBagSize()< replace && tilebag.getBagSize() > 0){
-            //System.out.println("Only had +"+tilebag.getBagSize()+" , these are the remaining tiles.");
-            for(int i =0; i< tilebag.getBagSize();i++){
 
-                hand.add(tilebag.drawTileAI());
-            }
-            return;
-        }else if(tilebag.getBagSize()==0){
-            //System.out.println("All tiles have been drawn.");
-            return;
-        }
-        for(int i =0; i<replace;i++){
-            hand.add(tilebag.drawTileAI());
-        }
-    }
-
-    @Override
-    public void setHand(Wordbag bag){
-        for(int i = 0; i < NUM_TILES; i++){
-            hand.add(bag.drawTileAI());
-        }
-    }
 
     //function to get all valid words given a hand and the letter it must start with
     public static ArrayList<String> findValidWords(String startLetter, List<Character> letters, Trie trie, int direction) {
         //create a set of valid words for this spot so that there are no duplicates
         Set<String> validWords = new HashSet<>();
-        int limit =20;
         //generating the set of words
-        generateWords(startLetter,"", letters, validWords, trie, direction,limit);
+        generateWords(startLetter,"", letters, validWords, trie, direction);
         //returning set as arrayList to index
         return new ArrayList<>(validWords);
     }
 
     //recursive method to generate words
-    private static void generateWords(String startLetter, String current, List<Character> remaining, Set<String> validWords, Trie trie, int direction, int limit) {
-        if (validWords.size() >= limit) {
-            return;
-        }
+    private static void generateWords(String startLetter, String current, List<Character> remaining, Set<String> validWords, Trie trie, int direction) {
         //checking if direction is going up or left and having startLetter be end of word
         if(direction == 1 || direction == 3){
             //check if starting letter plus current combination of letters is a valid word and adding it to valid words set
@@ -79,7 +47,7 @@ public class AiPlayer extends Player{
             //removing the selected character from remaining characters
             char nextChar = nextRemaining.remove(i);
             //add removed character to current string of characters and recursively calling the function
-            generateWords(startLetter,current + nextChar, nextRemaining, validWords, trie, direction,limit);
+            generateWords(startLetter,current + nextChar, nextRemaining, validWords, trie, direction);
         }
     }
 
@@ -156,99 +124,85 @@ public class AiPlayer extends Player{
         return new AbstractMap.SimpleEntry<>(randomEntry.getKey(), randomWord);
     }
 
-    public boolean playWord(Board board, Trie trie){
-        //getting random number to decide what direction to play
+    public boolean playWord(Board board, Trie trie) {
+        // Getting random number to decide the direction to play
         Random rand = new Random();
-        int direction = rand.nextInt(1,5);
-        //calling chooseWord to get word and cord to play
+        int direction = rand.nextInt(1, 5);
+
+        // Calling chooseWord to get the word and coordinate to play
         Map.Entry<Coordinate, String> wordToPlay = chooseWord(board, trie, direction);
         Coordinate wordCord = wordToPlay.getKey();
         String word = wordToPlay.getValue();
+
         System.out.println(word);
         System.out.println(wordCord.row + " " + wordCord.col);
 
-        //checking what spaces around the letter are valid
+        // Getting the board representation
         String[][] tempBoard = board.getBoard();
 
-        //checking if space above letter is valid
-        if(direction == 1){
-            //looping through spaces to see if there is enough spots to put the word
-            for(int i = 1; i < word.length(); i++){
-                //if tile is empty
-                if(tempBoard[wordCord.row - i][wordCord.col].equals(" ")){
-                    //setting letter to proper space (we go in reverse order because word goes up)
-                    tempBoard[wordCord.row - i][wordCord.col] = String.valueOf(word.charAt(word.length() - i - 1));
-                    this.addPoints(new Tile(String.valueOf(word.charAt(word.length() - i - 1))).getPoints());
-                }
-                else{
-                    //if tile is already occupied, pass turn
+        // Direction 1: Place word upwards
+        if (direction == 1) {
+            for (int i = 0; i < word.length(); i++) {
+                int row = wordCord.row - i;
+                if (row < 0 || !tempBoard[row][wordCord.col].equals(" ")) {
+                    // Out of bounds or occupied tile
                     return false;
                 }
+                tempBoard[row][wordCord.col] = String.valueOf(word.charAt(i));
+                this.addPoints(new Tile(String.valueOf(word.charAt(i))).getPoints());
             }
-            //if entire word gets placed, we swap with temp (overloaded)
             board.swapWithTemp(tempBoard);
             return true;
         }
-        //checking if space below letter is valid
-        else if(direction == 2){
-            //looping through spaces to see if there is enough spots to put the word
-            for(int i = 1; i < word.length(); i++){
-                //if tile is empty
-                if(tempBoard[wordCord.row + i][wordCord.col].equals(" ")){
-                    //setting letter to proper space
-                    tempBoard[wordCord.row + i][wordCord.col] = String.valueOf(word.charAt(i));
-                    this.addPoints(new Tile(String.valueOf(word.charAt(i))).getPoints());
-                }
-                else{
-                    //if tile is already occupied, pass turn
+
+        // Direction 2: Place word downwards
+        else if (direction == 2) {
+            for (int i = 0; i < word.length(); i++) {
+                int row = wordCord.row + i;
+                if (row >= tempBoard.length || !tempBoard[row][wordCord.col].equals(" ")) {
+                    // Out of bounds or occupied tile
                     return false;
                 }
+                tempBoard[row][wordCord.col] = String.valueOf(word.charAt(i));
+                this.addPoints(new Tile(String.valueOf(word.charAt(i))).getPoints());
             }
-            //if entire word gets placed, we swap with temp (overloaded)
             board.swapWithTemp(tempBoard);
             return true;
         }
-        //checking if space left of letter is valid
-        else if(direction == 3){
-            //looping through spaces to see if there is enough spots to put the word
-            for(int i = 1; i < word.length(); i++){
-                //if tile is empty
-                if(tempBoard[wordCord.row][wordCord.col - i].equals(" ")){
-                    //setting letter to proper space (we go in reverse order because word goes left)
-                    tempBoard[wordCord.row][wordCord.col - i] = String.valueOf(word.charAt(word.length() - i - 1));
-                    this.addPoints(new Tile(String.valueOf(word.charAt(word.length() - i - 1))).getPoints());
-                }
-                else{
-                    //if tile is already occupied, pass turn
+
+        // Direction 3: Place word to the left
+        else if (direction == 3) {
+            for (int i = 0; i < word.length(); i++) {
+                int col = wordCord.col - i;
+                if (col < 0 || !tempBoard[wordCord.row][col].equals(" ")) {
+                    // Out of bounds or occupied tile
                     return false;
                 }
+                tempBoard[wordCord.row][col] = String.valueOf(word.charAt(i));
+                this.addPoints(new Tile(String.valueOf(word.charAt(i))).getPoints());
             }
-            //if entire word gets placed, we swap with temp (overloaded)
             board.swapWithTemp(tempBoard);
             return true;
         }
-        //checking if space right of letter is valid
-        else if(direction == 4){
-            //looping through spaces to see if there is enough spots to put the word
-            for(int i = 1; i < word.length(); i++){
-                //if tile is empty
-                if(tempBoard[wordCord.row][wordCord.col + i].equals(" ")){
-                    //setting letter to proper space
-                    tempBoard[wordCord.row][wordCord.col + i] = String.valueOf(word.charAt(i));
-                    this.addPoints(new Tile(String.valueOf(word.charAt(i))).getPoints());
-                }
-                else{
-                    //if tile is already occupied, pass turn
+
+        // Direction 4: Place word to the right
+        else if (direction == 4) {
+            for (int i = 0; i < word.length(); i++) {
+                int col = wordCord.col + i;
+                if (col >= tempBoard[wordCord.row].length || !tempBoard[wordCord.row][col].equals(" ")) {
+                    // Out of bounds or occupied tile
                     return false;
                 }
+                tempBoard[wordCord.row][col] = String.valueOf(word.charAt(i));
+                this.addPoints(new Tile(String.valueOf(word.charAt(i))).getPoints());
             }
-            //if entire word gets placed, we swap with temp (overloaded)
             board.swapWithTemp(tempBoard);
             return true;
         }
-        //never to be reached
-        return true;
-        //adding comment so i can commit my code again
+
+        // If no valid direction, return false
+        return false;
     }
+
 
 }
