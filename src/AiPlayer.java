@@ -102,7 +102,7 @@ public class AiPlayer extends Player{
             //setting letters on board to a blank character (starting character wont affect words you can make)
             lettersOnBoard.add("");
             //setting only coordinate you can play off of is the middle tile
-            WordWSpots.put(new Coordinate(7, 7), new ArrayList<>());
+            WordWSpots.put(new Coordinate(8, 8), new ArrayList<>());
         }
         //if board isn't empty (not first turn)
         else {
@@ -165,6 +165,7 @@ public class AiPlayer extends Player{
         Coordinate wordCord = wordToPlay.getKey();
         String word = wordToPlay.getValue();
         System.out.println(word);
+        System.out.println(wordCord.row + " " + wordCord.col);
 
         //checking what spaces around the letter are valid
         String[][] tempBoard = board.getBoard();
@@ -177,6 +178,7 @@ public class AiPlayer extends Player{
                 if(tempBoard[wordCord.row - i][wordCord.col].equals(" ")){
                     //setting letter to proper space (we go in reverse order because word goes up)
                     tempBoard[wordCord.row - i][wordCord.col] = String.valueOf(word.charAt(word.length() - i - 1));
+                    this.addPoints(new Tile(String.valueOf(word.charAt(word.length() - i - 1))).getPoints());
                 }
                 else{
                     //if tile is already occupied, pass turn
@@ -194,7 +196,8 @@ public class AiPlayer extends Player{
                 //if tile is empty
                 if(tempBoard[wordCord.row + i][wordCord.col].equals(" ")){
                     //setting letter to proper space
-                    tempBoard[wordCord.row + i][wordCord.col] = String.valueOf(word.charAt(word.length()));
+                    tempBoard[wordCord.row + i][wordCord.col] = String.valueOf(word.charAt(i));
+                    this.addPoints(new Tile(String.valueOf(word.charAt(i))).getPoints());
                 }
                 else{
                     //if tile is already occupied, pass turn
@@ -213,6 +216,7 @@ public class AiPlayer extends Player{
                 if(tempBoard[wordCord.row][wordCord.col - i].equals(" ")){
                     //setting letter to proper space (we go in reverse order because word goes left)
                     tempBoard[wordCord.row][wordCord.col - i] = String.valueOf(word.charAt(word.length() - i - 1));
+                    this.addPoints(new Tile(String.valueOf(word.charAt(word.length() - i - 1))).getPoints());
                 }
                 else{
                     //if tile is already occupied, pass turn
@@ -230,7 +234,8 @@ public class AiPlayer extends Player{
                 //if tile is empty
                 if(tempBoard[wordCord.row][wordCord.col + i].equals(" ")){
                     //setting letter to proper space
-                    tempBoard[wordCord.row][wordCord.col + i] = String.valueOf(word.charAt(word.length()));
+                    tempBoard[wordCord.row][wordCord.col + i] = String.valueOf(word.charAt(i));
+                    this.addPoints(new Tile(String.valueOf(word.charAt(i))).getPoints());
                 }
                 else{
                     //if tile is already occupied, pass turn
