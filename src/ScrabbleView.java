@@ -36,6 +36,7 @@ public class ScrabbleView extends JFrame {
     private Board playerTempBoard;
     JPanel rack;
     ArrayList<Tile> playerHand;
+    private boolean firstPlay;
     /**
      * Constructs a new ScrabbleView and initializes the layout, including the game board,
      * tile rack, score display, and other interactive components.
@@ -64,6 +65,7 @@ public class ScrabbleView extends JFrame {
         model = new Game();
         model.addView(this);
         SC = new ScrabbleController(model, this);
+        firstPlay = true;
         setMenu(this,SC);
         JButton button;
         for(int row = 0; row<SIZE;row++){
@@ -333,6 +335,7 @@ public class ScrabbleView extends JFrame {
                 model.updatePlayerIndex();
                 model.resetPasses();
                 playerTurn("PLAYERTURN");
+                firstTile = false;
                 return;
 
             }else if(!canPlay){

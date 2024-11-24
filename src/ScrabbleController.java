@@ -184,6 +184,10 @@ public class ScrabbleController implements ActionListener {
      */
     public void passTurn(ActionEvent e){
         model.handlePlayerChoice(2);
+        boolean check =model.checkNextPlayer();
+        if(play == 0 && model.checkNextPlayer()){
+            firstTurn = false;
+        }
         if (model.isGameOver()){
             currentView.endofGameFrame("ENDGAME");
             return;
@@ -321,6 +325,9 @@ public class ScrabbleController implements ActionListener {
         model.updatePlayerIndex();
         currentView.updateButtonVisibility("TURNOVER");
         currentView.playerTurn("PLAYERTURN");
+        if(model.checkPlayer()){
+            return;
+        }
         model.board.clearPlacedTileList();
         tilePlaced = null;
         hand = new ArrayList<>();

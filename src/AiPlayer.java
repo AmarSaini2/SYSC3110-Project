@@ -174,7 +174,7 @@ public class AiPlayer extends Player{
 
         System.out.println(word);
         System.out.println(wordCord.row + " " + wordCord.col);
-        board.display();
+        //board.display();
         this.board = board;
         // Getting the board representation
         String[][] tempBoard = board.getBoard();
@@ -200,23 +200,7 @@ public class AiPlayer extends Player{
                 int row = wordCord.row + i;
                 if (row >= tempBoard.length || !tempBoard[row][wordCord.col].equals(" ")) {
                     // Out of bounds or occupied tile
-
-                    for (int k = 1; k< word.length(); k++) {
-                        int col = wordCord.col + k;
-                        if (col >= tempBoard[wordCord.row].length || !tempBoard[wordCord.row][col].equals(" ")) {
-                            // Out of bounds or occupied tile
-
-                            return false;
-                        }
-                        tempBoard[wordCord.row][col] = String.valueOf(word.charAt(k));
-                        //System.out.println(tempBoard[wordCord.row][col]);
-                        this.addPoints(new Tile(String.valueOf(word.charAt(k))).getPoints());
-                        tempHand.remove(new Tile(String.valueOf(word.charAt(k))));
-                    }
-                    board.swapWithTemp(tempBoard);
-                    //board.display();
-                    this.swapWithTemp(tempHand);
-                    return true;
+                    return false;
                 }
                 tempBoard[row][wordCord.col] = String.valueOf(word.charAt(i));
                 this.addPoints(new Tile(String.valueOf(word.charAt(i))).getPoints());
@@ -247,23 +231,7 @@ public class AiPlayer extends Player{
                 int col = wordCord.col + i;
                 if (col >= tempBoard[wordCord.row].length || !tempBoard[wordCord.row][col].equals(" ")) {
                     // Out of bounds or occupied tile
-                    for (int j = 1; j < word.length(); j++) {
-                        int row = wordCord.row + j;
-                        if (row >= tempBoard.length || !tempBoard[row][wordCord.col].equals(" ")) {
-                            System.out.println("Fail check "+tempBoard.length+" "+col);
-                            System.out.println(tempBoard[wordCord.row][col]);
-                            // Out of bounds or occupied tile
-                            return false;
-                        }
-                        System.out.println(tempBoard[row][wordCord.col]);
-                        tempBoard[row][wordCord.col] = String.valueOf(word.charAt(j));
-                        this.addPoints(new Tile(String.valueOf(word.charAt(j))).getPoints());
-                        tempHand.remove(new Tile(String.valueOf(word.charAt(j))));
-                    }
-                    board.swapWithTemp(tempBoard);
-                    this.swapWithTemp(tempHand);
-                    return true;
-                }
+                    return false;}
                 tempBoard[wordCord.row][col] = String.valueOf(word.charAt(i));
                 //System.out.println(tempBoard[wordCord.row][col]);
                 this.addPoints(new Tile(String.valueOf(word.charAt(i))).getPoints());

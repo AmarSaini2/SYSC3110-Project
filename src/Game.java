@@ -128,6 +128,13 @@ public class Game {
     public boolean checkPlayer(){
         return players.get(currentPlayerIndex).isAI();
     }
+    public boolean checkNextPlayer(){
+        int next = currentPlayerIndex;
+        if(next == players.size()){
+            next =0;
+        }
+        return players.get(next).isAI();
+    }
     public boolean aiTurn(){
         AiPlayer currentPlayer = (AiPlayer) players.get(currentPlayerIndex);
         System.out.println(currentPlayer.toString());
