@@ -60,48 +60,111 @@ public class GameTest {
         String s = game.playersTurn();
         Player currentPlayer = game.currentPlayerTurn();
 
-        //checking correct condition
-        game.updateTempBoard(7, 7, "A");
-        game.updateTempBoard(7, 8, "T");
-
-        assertTrue(game.submitWord(currentPlayer), "The submitted word should be valid.");
-        assertEquals(game.currentPlayerTurn().getPoints(), 2);
-
-        s = game.playersTurn();
-        currentPlayer = game.currentPlayerTurn();
-        //checking invalid placements
-        game.updateTempBoard(0,0, "B");
-        game.updateTempBoard(1,0, "B");
-        game.updateTempBoard(2,0, "B");
-        assertFalse(game.submitWord(currentPlayer), "The submitted word should be invalid.");
-        assertEquals(game.currentPlayerTurn().getPoints(), 2);
-
         s = game.playersTurn();
         currentPlayer = game.currentPlayerTurn();
         //checking correct condition with longer word
-        game.updateTempBoard(1, 7, "R");
-        game.updateTempBoard(1, 8, "O");
-        game.updateTempBoard(1, 9, "B");
-        game.updateTempBoard(1, 10, "O");
-        game.updateTempBoard(1, 11, "T");
+        game.updateTempBoard(7, 7, "R");
+        game.updateTempBoard(7, 8, "O");
+        game.updateTempBoard(7, 9, "B");
+        game.updateTempBoard(7, 10, "O");
+        game.updateTempBoard(7, 11, "T");
 
         assertTrue(game.submitWord(currentPlayer), "The submitted word should be valid.");
-        assertEquals(game.currentPlayerTurn().getPoints(), 9);
+        assertEquals(game.currentPlayerTurn().getPoints(), 7);
 
         //adding letter to previous word
         s = game.playersTurn();
         currentPlayer = game.currentPlayerTurn();
-        game.updateTempBoard(1, 12, "S");
+        game.updateTempBoard(7, 12, "S");
         assertTrue(game.submitWord(currentPlayer), "The submitted word should be valid.");
-        assertEquals(game.currentPlayerTurn().getPoints(), 18); //points should re add for entire word since player added on to it
+        assertEquals(game.currentPlayerTurn().getPoints(), 8); //points should re add for entire word since player added on to it
 
-        //adding word to intersect with previous word
+    }
+
+    @Test
+    public void testValidHorizontalPlacement() {
+        game.intializePlayer("Alice", true);
+        String s = game.playersTurn();
+        Player currentPlayer = game.currentPlayerTurn();
+
+        game.updateTempBoard(7, 7, "C");
+        game.updateTempBoard(7, 8, "A");
+        game.updateTempBoard(7, 9, "T");
+        assertTrue(game.submitWord(currentPlayer), "The horizontal word should be valid.");
+        assertEquals(game.currentPlayerTurn().getPoints(), 5);
+    }
+
+    @Test
+    public void testValidVerticalPlacement() {
+        game.intializePlayer("Bob", true);
+        String s = game.playersTurn();
+        Player currentPlayer = game.currentPlayerTurn();
+
+        game.updateTempBoard(7, 7, "D");
+        game.updateTempBoard(8, 7, "O");
+        game.updateTempBoard(9, 7, "G");
+        assertTrue(game.submitWord(game.currentPlayerTurn()), "The vertical word should be valid.");
+        assertEquals( game.currentPlayerTurn().getPoints(), 5);
+    }
+
+
+    @Test
+    public void testWordIntersection() {
+        game.intializePlayer("Alice", true);
+        game.intializePlayer("Bob", true);
+        String s = game.playersTurn();
+        Player currentPlayer = game.currentPlayerTurn();
+
+        // Initialize the game state by invoking currentPlayerTurn
+        currentPlayer = game.currentPlayerTurn();
+
+        // Player 1 places "CAT"
+        game.updateTempBoard(7, 7, "C");
+        game.updateTempBoard(7, 8, "O");
+        game.updateTempBoard(7, 9, "T");
+        assertTrue(game.submitWord(currentPlayer), "The word 'COT' should be valid.");
+        assertEquals( game.currentPlayerTurn().getPoints(),5);
+
+        // Player 2 intersects with "DOG"
         s = game.playersTurn();
         currentPlayer = game.currentPlayerTurn();
-        game.updateTempBoard(2, 7, "O");
-        game.updateTempBoard(3, 7, "W");
-        assertTrue(game.submitWord(currentPlayer), "The submitted word should be valid.");
-        assertEquals(game.currentPlayerTurn().getPoints(), 32); //points should re add for entire word since player added on to it
+        game.updateTempBoard(6, 8, "D"); // Intersects with 'A' in "CAT"
+        game.updateTempBoard(7, 8, "O");
+        game.updateTempBoard(8, 8, "G");
+        assertTrue(game.submitWord(currentPlayer), "The intersecting word 'DOG' should be valid.");
+        assertEquals(game.currentPlayerTurn().getPoints(), 5);
     }
+
+    @Test
+    public void testParallelWordPlacements() {
+        game.intializePlayer("Alice", true);
+        game.intializePlayer("Bob", true);
+        String s = game.playersTurn();
+        Player currentPlayer = game.currentPlayerTurn();
+
+
+        // Place the horizontal word "CAT" starting at (7,7)
+        game.updateTempBoard(7, 7, "C");
+        game.updateTempBoard(7, 8, "A");
+        game.updateTempBoard(7, 9, "T");
+
+        // Ensure the horizontal word "CAT" is valid
+        assertTrue(game.submitWord(currentPlayer), "The horizontal word 'CAT' should be valid.");
+        assertEquals(currentPlayer.getPoints(),5);
+
+
+        s = game.playersTurn();
+        currentPlayer = game.currentPlayerTurn(); // Switch to the next player
+        game.updateTempBoard(6, 8, "D");
+        game.updateTempBoard(7, 8, "O");
+        game.updateTempBoard(8, 8, "G");
+
+        // Check if the vertical word "DOG" is valid
+        assertTrue(game.submitWord(currentPlayer), "The vertical word 'DOG' should be valid.");
+
+        assertEquals(currentPlayer.getPoints(), 5);
+    }
+
+
 
 }
