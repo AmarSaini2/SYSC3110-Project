@@ -132,7 +132,9 @@ public class Game {
         AiPlayer currentPlayer = (AiPlayer) players.get(currentPlayerIndex);
         System.out.println(currentPlayer.toString());
         boolean play = currentPlayer.playWord(board,trie);
-
+        if(play){
+            currentPlayer.drawNewTiles(bag);
+        }
         return play;
 
     }
