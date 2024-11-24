@@ -7,6 +7,7 @@ public class AiPlayer extends Player{
     private String name;
     private int NUM_TILES = 7;
     private final int SIZE = 15;
+    private Board board;
 
     public AiPlayer(String name){
         super(name);
@@ -161,7 +162,9 @@ public class AiPlayer extends Player{
     public boolean playWord(Board board, Trie trie) {
         // Getting random number to decide the direction to play
         Random rand = new Random();
-        int direction = rand.nextInt(1, 5);
+
+        int direction = rand.nextBoolean() ? 2:4;
+        //int direction = 4;
         tempHand = hand;
 
         // Calling chooseWord to get the word and coordinate to play
@@ -171,7 +174,8 @@ public class AiPlayer extends Player{
 
         System.out.println(word);
         System.out.println(wordCord.row + " " + wordCord.col);
-
+        board.display();
+        this.board = board;
         // Getting the board representation
         String[][] tempBoard = board.getBoard();
 
@@ -185,21 +189,34 @@ public class AiPlayer extends Player{
                 }
                 tempBoard[row][wordCord.col] = String.valueOf(word.charAt(i));
                 this.addPoints(new Tile(String.valueOf(word.charAt(i))).getPoints());
-                tempHand.remove(new Tile(String.valueOf(word.charAt(i))));
             }
             board.swapWithTemp(tempBoard);
-            this.swapWithTemp(tempHand);
-
             return true;
         }
 
         // Direction 2: Place word downwards
-        else if (direction == 2) {
+         if (direction == 2) {
             for (int i = 0; i < word.length(); i++) {
                 int row = wordCord.row + i;
                 if (row >= tempBoard.length || !tempBoard[row][wordCord.col].equals(" ")) {
                     // Out of bounds or occupied tile
-                    return false;
+
+                    for (int k = 1; k< word.length(); k++) {
+                        int col = wordCord.col + k;
+                        if (col >= tempBoard[wordCord.row].length || !tempBoard[wordCord.row][col].equals(" ")) {
+                            // Out of bounds or occupied tile
+
+                            return false;
+                        }
+                        tempBoard[wordCord.row][col] = String.valueOf(word.charAt(k));
+                        //System.out.println(tempBoard[wordCord.row][col]);
+                        this.addPoints(new Tile(String.valueOf(word.charAt(k))).getPoints());
+                        tempHand.remove(new Tile(String.valueOf(word.charAt(k))));
+                    }
+                    board.swapWithTemp(tempBoard);
+                    //board.display();
+                    this.swapWithTemp(tempHand);
+                    return true;
                 }
                 tempBoard[row][wordCord.col] = String.valueOf(word.charAt(i));
                 this.addPoints(new Tile(String.valueOf(word.charAt(i))).getPoints());
@@ -209,23 +226,20 @@ public class AiPlayer extends Player{
             this.swapWithTemp(tempHand);
             return true;
         }
+         else if (direction == 3) {
+             for (int i = 0; i < word.length(); i++) {
+                 int col = wordCord.col - i;
+                 if (col < 0 || !tempBoard[wordCord.row][col].equals(" ")) {
+                     // Out of bounds or occupied tile
+                     return false;
+                 }
+                 tempBoard[wordCord.row][col] = String.valueOf(word.charAt(i));
+                 this.addPoints(new Tile(String.valueOf(word.charAt(i))).getPoints());
+             }
+             board.swapWithTemp(tempBoard);
+             return true;
+         }
 
-        // Direction 3: Place word to the left
-        else if (direction == 3) {
-            for (int i = 0; i < word.length(); i++) {
-                int col = wordCord.col - i;
-                if (col < 0 || !tempBoard[wordCord.row][col].equals(" ")) {
-                    // Out of bounds or occupied tile
-                    return false;
-                }
-                tempBoard[wordCord.row][col] = String.valueOf(word.charAt(i));
-                this.addPoints(new Tile(String.valueOf(word.charAt(i))).getPoints());
-                tempHand.remove(new Tile(String.valueOf(word.charAt(i))));
-            }
-            board.swapWithTemp(tempBoard);
-            this.swapWithTemp(tempHand);
-            return true;
-        }
 
         // Direction 4: Place word to the right
         else if (direction == 4) {
@@ -233,13 +247,30 @@ public class AiPlayer extends Player{
                 int col = wordCord.col + i;
                 if (col >= tempBoard[wordCord.row].length || !tempBoard[wordCord.row][col].equals(" ")) {
                     // Out of bounds or occupied tile
-                    return false;
+                    for (int j = 1; j < word.length(); j++) {
+                        int row = wordCord.row + j;
+                        if (row >= tempBoard.length || !tempBoard[row][wordCord.col].equals(" ")) {
+                            System.out.println("Fail check "+tempBoard.length+" "+col);
+                            System.out.println(tempBoard[wordCord.row][col]);
+                            // Out of bounds or occupied tile
+                            return false;
+                        }
+                        System.out.println(tempBoard[row][wordCord.col]);
+                        tempBoard[row][wordCord.col] = String.valueOf(word.charAt(j));
+                        this.addPoints(new Tile(String.valueOf(word.charAt(j))).getPoints());
+                        tempHand.remove(new Tile(String.valueOf(word.charAt(j))));
+                    }
+                    board.swapWithTemp(tempBoard);
+                    this.swapWithTemp(tempHand);
+                    return true;
                 }
                 tempBoard[wordCord.row][col] = String.valueOf(word.charAt(i));
+                //System.out.println(tempBoard[wordCord.row][col]);
                 this.addPoints(new Tile(String.valueOf(word.charAt(i))).getPoints());
                 tempHand.remove(new Tile(String.valueOf(word.charAt(i))));
             }
             board.swapWithTemp(tempBoard);
+            //board.display();
             this.swapWithTemp(tempHand);
             return true;
         }

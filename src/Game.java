@@ -160,7 +160,10 @@ public class Game {
             view.playTurn();
             consecutivePasses = 0;
         }else if(choice == 2){
-            currentPlayerIndex =(currentPlayerIndex+1)%players.size();
+            currentPlayerIndex++;
+            if(currentPlayerIndex == players.size()){
+                currentPlayerIndex =0;
+            }
             consecutivePasses++;
 
         }}
@@ -297,6 +300,9 @@ public class Game {
     }
     public int getConsecutivePasses(){
         return consecutivePasses;
+    }
+    public void resetPasses(){
+        consecutivePasses =0;
     }
     public void passTurn(){
         consecutivePasses++;
