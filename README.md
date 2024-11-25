@@ -9,7 +9,7 @@ A third iteration of a simple Scrabble game in Java with a graphical user interf
 - **Player Rack:** Each player has a personal rack of tiles, displayed visually, from which they can choose tiles to play. It also provides a "Submit Word", "Reset Rack" and "Pass" option during a player's turn.
 - **Error Handling:** Provides error messages and feedback like invalid words, and other game-related issues, which are shown on the GUI.
 - **Game Menu:** Gives user menu options on creating a new game, and exiting the current game.
-- **BlankTiles:** Players can use blank tiles to represent any letter. These tiles are placed on the board and are counted as zero points but allow players to form valid words.
+- **Blank Tiles:** Players can use blank tiles to represent any letter. These tiles are placed on the board and are counted as zero points but allow players to form valid words.
 - **Premium Squares:** Premium squares (Double Letter, Triple Letter, Double Word, Triple Word) are now part of the game. When a tile is placed on these squares, the score is modified accordingly (e.g., double the letter score or word score).
 - **AI Player:** AI Player can be added to the game to make it more interesting.The AI evaluates all possible valid moves and selects the highest scoring word from those options. The AI follows basic logic and does not require user interaction.
 - **Scoring Fixes:** Scoring correctly accounts for the use of premium squares and blank tiles. Words are scored based on tile values, and premium squares (when utilized) affect both letter and word scores.
@@ -51,6 +51,8 @@ A third iteration of a simple Scrabble game in Java with a graphical user interf
 ## Known Issues
 - Player points are not being calculated correctly based on based on the premium squares and blank tiles. This will be fixed in the next iteration.
 - Clicking on a board tile outside the horizontal or vertical alignment of the word being placed still allows placement, which should be restricted.
+- The AI player may not play even if possible due to placement and coordinate problem.
+- Human Player turn might return invalid when playing against AI.
 - The end-of-game logic is still being worked on and only currently checks for if players have remaining valid words  to play or if all players have consecutively passed their turns for the game to end.
 - The AI player plays based on a basic strategy of selecting the highest scoring move. More detailed AI logic will be explored and possibly implemented in the next iteration.
 
@@ -59,10 +61,10 @@ A third iteration of a simple Scrabble game in Java with a graphical user interf
 - Additional Features: Allow customization of the Scrabble board, including alternate placements of premium squares (e.g., Double Word, Triple Word) on a user-defined layout.
 
 ## Authors 
-- **Amar Saini:** Responsible for Game Logic integration into GUI
-- **Kaiya Sparks:** Responsible for README file and GUI Implementation
-- **Riya Rawat:** Responsible for GUI Implementation and UML diagram
-- **Tyler Doherty:** Responsible for Testing Gameplay Mechanics and Identify Bugs and Inconsistencies
+- **Amar Saini:** Responsible for Blank tiles and Premium tile implementation
+- **Kaiya Sparks:** Responsible for README file, Ai GUI integration and Bug Testing
+- **Riya Rawat:** Responsible for Updating Test class, UML and README
+- **Tyler Doherty:** Responsible for AI player implementation
 ## License
 This project is licensed under the [MIT License]
 
