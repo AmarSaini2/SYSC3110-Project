@@ -1,9 +1,6 @@
 # Scrabble Game
 
-A second iteration of a simple Scrabble game in Java with graphical user interface (GUI), allowing players to select the number of players and pick and place letters from a rack onto a 2D board.
-The GUI enables players to interact with the board through clickable tiles. 
-The game ensures all words placed are valid, that new words placed intersect with existing words and validates the formed words.
-The interface also provides feedback on the player's actions, such as whether a word is valid or not, and displays the current game status, including the player's score.
+A third iteration of a simple Scrabble game in Java with a graphical user interface (GUI). Players can select the number of players, place letters from their racks onto a 2D board, and interact with the game through an intuitive GUI. This version adds advanced features such as blank tiles, premium squares, and AI players, while also ensuring that the game mechanics are functioning as expected.
 
 ## Features 
 - **Board:** A visually interactive 2D grid where players can click to place tiles and form words.
@@ -11,7 +8,11 @@ The interface also provides feedback on the player's actions, such as whether a 
 - **Word Validation:** Checks whether the placed word intersects with existing words and if all formed words are valid.
 - **Player Rack:** Each player has a personal rack of tiles, displayed visually, from which they can choose tiles to play. It also provides a "Submit Word", "Reset Rack" and "Pass" option during a player's turn.
 - **Error Handling:** Provides error messages and feedback like invalid words, and other game-related issues, which are shown on the GUI.
-- **Game Menu:** Gives user menu options on creating a new game, and exiting the current game. 
+- **Game Menu:** Gives user menu options on creating a new game, and exiting the current game.
+- **BlankTiles:** Players can use blank tiles to represent any letter. These tiles are placed on the board and are counted as zero points but allow players to form valid words.
+- **Premium Squares:** Premium squares (Double Letter, Triple Letter, Double Word, Triple Word) are now part of the game. When a tile is placed on these squares, the score is modified accordingly (e.g., double the letter score or word score).
+- **AI Player:** AI Player can be added to the game to make it more interesting.The AI evaluates all possible valid moves and selects the highest scoring word from those options. The AI follows basic logic and does not require user interaction.
+- **Scoring Fixes:** Scoring correctly accounts for the use of premium squares and blank tiles. Words are scored based on tile values, and premium squares (when utilized) affect both letter and word scores.
 
 ## Prequisites 
 - **Java 8+**
@@ -24,6 +25,10 @@ The interface also provides feedback on the player's actions, such as whether a 
 - If a player chooses to pass, their turn is forfeited, and the next player is prompted to take their turn.
 - Words must be placed horizontally or vertically and must intersect with at least one existing word on the board.
 - Scoring is based on the letter values of the tiles used in the words formed, and scores are displayed on the GUI in real-time.
+- If AI Players are initialized, they will automatically select the best possible word to play and complete their turn.
+- Words must be placed either horizontally or vertically and should intersect with existing words on the board.
+- Blank tiles are available for use but do not contribute to the score.
+- When tiles re placed on premium squares (Double Letter, Triple Letter, Double Word, Triple Word), the corresponding score modifiers are applied.
 
 ## Example Game Flow
 1. Player 1 selects tiles from their rack and places the word "FIRE" on the board.
@@ -44,15 +49,14 @@ The interface also provides feedback on the player's actions, such as whether a 
 - The game ends when there are no more valid words to play, or if all players pass their turn in a row, and the player with the highest score wins.
 
 ## Known Issues
-- Player points are not being calculated correctly based on game rules. Currently each player will gain points for all words placed on the board even if they did not play it.
+- Player points are not being calculated correctly based on based on the premium squares and blank tiles. This will be fixed in the next iteration.
 - Clicking on a board tile outside the horizontal or vertical alignment of the word being placed still allows placement, which should be restricted.
 - The end-of-game logic is still being worked on and only currently checks for if players have remaining valid words  to play or if all players have consecutively passed their turns for the game to end.
-- The game does not utilize blank tiles or premium squares yet.
-- Resetting the rack works, but previous letter might remain on the rack when playing.
+- The AI player plays based on a basic strategy of selecting the highest scoring move. More detailed AI logic will be explored and possibly implemented in the next iteration.
 
 ## Roadmap
-- Next Iteration: Further improve error handling, ensuring that invalid word placements, incorrect tile selections and other errors can no longer occur without proper handling.  
-- Additional Features: Implementing the use of blank tiles, premium squares onto the game board which will affect player scoring and implementing AI players with basic logic for a user to play against.
+- Next Iteration: Correct the scoring algorithm, especially for premium squares and blank tiles. Enhance the AI logic to consider more complex strategies. Implement an undo/redo system that supports multipple levels. Adding features like Save/Load to the game using Java Serialisation. 
+- Additional Features: Allow customization of the Scrabble board, including alternate placements of premium squares (e.g., Double Word, Triple Word) on a user-defined layout.
 
 ## Authors 
 - **Amar Saini:** Responsible for Game Logic integration into GUI
