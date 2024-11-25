@@ -49,6 +49,7 @@ A third iteration of a simple Scrabble game in Java with a graphical user interf
 - The game ends when there are no more valid words to play, or if all players pass their turn in a row, and the player with the highest score wins.
 
 ## Known Issues
+- The AI player works sometimes and the game has to be run twice for it to start.
 - Player points are not being calculated correctly based on based on the premium squares and blank tiles. This will be fixed in the next iteration.
 - Clicking on a board tile outside the horizontal or vertical alignment of the word being placed still allows placement, which should be restricted.
 - The AI player may not play even if possible due to placement and coordinate problem.
