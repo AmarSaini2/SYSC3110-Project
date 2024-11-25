@@ -55,7 +55,7 @@ A third iteration of a simple Scrabble game in Java with a graphical user interf
 - The AI player may not play even if possible due to placement and coordinate problem.
 - Human Player turn might return invalid when playing against AI.
 - The end-of-game logic is still being worked on and only currently checks for if players have remaining valid words  to play or if all players have consecutively passed their turns for the game to end.
-- The AI player plays based on a basic strategy of selecting the highest scoring move. More detailed AI logic will be explored and possibly implemented in the next iteration.
+- The AI player plays based on a basic strategy of selecting a subset of words it can play then selecting a word from that set. More detailed AI logic will be explored and possibly implemented in the next iteration.
 
 ## Roadmap
 - Next Iteration: Correct the scoring algorithm, especially for premium squares and blank tiles. Enhance the AI logic to consider more complex strategies. Implement an undo/redo system that supports multipple levels. Adding features like Save/Load to the game using Java Serialisation. 
