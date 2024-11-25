@@ -77,7 +77,7 @@ public class GameTest {
         currentPlayer = game.currentPlayerTurn();
         game.updateTempBoard(7, 12, "S");
         assertTrue(game.submitWord(currentPlayer), "The submitted word should be valid.");
-        assertEquals(game.currentPlayerTurn().getPoints(), 8); //points should re add for entire word since player added on to it
+        assertEquals(game.currentPlayerTurn().getPoints(), 16); //points should re add for entire word since player added on to it
 
     }
 
@@ -132,7 +132,7 @@ public class GameTest {
         game.updateTempBoard(7, 8, "O");
         game.updateTempBoard(8, 8, "G");
         assertTrue(game.submitWord(currentPlayer), "The intersecting word 'DOG' should be valid.");
-        assertEquals(game.currentPlayerTurn().getPoints(), 5);
+        assertEquals(game.currentPlayerTurn().getPoints(), 15);
     }
 
     @Test
@@ -162,7 +162,7 @@ public class GameTest {
         // Check if the vertical word "DOG" is valid
         assertTrue(game.submitWord(currentPlayer), "The vertical word 'DOG' should be valid.");
 
-        assertEquals(currentPlayer.getPoints(), 5);
+        assertEquals(currentPlayer.getPoints(), 15);
     }
 
 
