@@ -18,11 +18,11 @@ public class Game implements Serializable {
     private ArrayList<Player> players;
     Wordbag bag;
     Board board;
-    Trie trie;
+    transient Trie trie;
     private int consecutivePasses;
     private int currentPlayerIndex;
     private boolean gameOver;
-    private transient ScrabbleView view;
+    transient private ScrabbleView view;
     private int numPlayers;
     private Tile tile;
     int row;
@@ -366,11 +366,9 @@ public class Game implements Serializable {
                 this.players = loader.players;
                 this.bag = loader.bag;
                 this.board = loader.board;
-                this.trie = loader.trie;
                 this.consecutivePasses = loader.consecutivePasses;
                 this.currentPlayerIndex = loader.consecutivePasses;
                 this.gameOver = loader.gameOver;
-                this.view = loader.view;
                 this.numPlayers = loader.numPlayers;
                 this.tile = loader.tile;
                 this.row = loader.row;
@@ -390,26 +388,18 @@ public class Game implements Serializable {
     }
 
     public boolean saveGame() {
-        //creating jfilechooser to get file to load from
-        JFileChooser fileChooser = new JFileChooser();
 
-        //creating open dialog for file
-        int result = fileChooser.showOpenDialog(null);
-
-        //checking if they selected a file
-        if (result == JFileChooser.APPROVE_OPTION) {
-            //get the file they selected
-            File selectedFile = fileChooser.getSelectedFile();
-            try (FileOutputStream fos = new FileOutputStream(selectedFile)) {
-                ObjectOutputStream oos = new ObjectOutputStream(fos);
-                //writing instance of game to this
-                oos.writeObject(this);
-                oos.close();
-                System.out.println("saved successfully");
-                return true;
-            } catch (IOException e) {
-                System.out.println(e.toString());
-            }
+        //get the file they selected
+        String selectedFile = JOptionPane.showInputDialog(null, "Please enter the name of the file to save to");
+        try (FileOutputStream fos = new FileOutputStream(selectedFile)) {
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            //writing instance of game to this
+            oos.writeObject(this);
+            oos.close();
+            System.out.println("saved successfully");
+            return true;
+        } catch (IOException e) {
+            System.out.println(e.toString());
         }
         return false;
     }

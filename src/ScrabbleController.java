@@ -174,6 +174,9 @@ public class ScrabbleController implements ActionListener {
     public void loadGame(ActionEvent e){
         if(model.loadGame()){
             JOptionPane.showMessageDialog(null, "Game successfully loaded");
+            currentView.updateMessageArea("Game loaded");
+            currentView.updateCurrentBoard(model.getBoard());
+            currentView.updateButtonVisibility("PLAYERTURN");
         }
         else{
             JOptionPane.showMessageDialog(null, "An error occured: could not load game");

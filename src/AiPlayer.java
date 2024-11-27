@@ -1,7 +1,7 @@
 import java.io.Serializable;
 import java.util.*;
 
-public class AiPlayer extends Player implements Serializable {
+public class AiPlayer extends Player {
 
     private int points;
     private ArrayList<Tile> tempHand;

@@ -11,7 +11,7 @@ import javax.swing.plaf.basic.BasicGraphicsUtils;
  * such as their name and current score.
  *
  */
-public class Player{
+public class Player implements Serializable{
     private int points;
     protected ArrayList<Tile> hand;
     private String name;

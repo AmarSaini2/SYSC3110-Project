@@ -1,5 +1,4 @@
 import java.io.Serializable;
-
 public class Coordinate implements Serializable {
     public int row;
     public int col;

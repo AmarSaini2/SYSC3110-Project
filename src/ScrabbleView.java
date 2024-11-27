@@ -542,10 +542,7 @@ public class ScrabbleView extends JFrame {
         String[][] update = tempBoard.getBoard();
         for(int row = 0; row<SIZE;row++){
             for(int col =0; col<SIZE;col++){
-                if(!update[row][col].equals(" ")){
-                    board[row-1][col-1].setText(update[row][col]);
-                }
-
+                board[row][col].setText(update[row][col]);
             }
         }
     }

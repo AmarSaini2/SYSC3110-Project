@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.util.*;
 
-public class Trie implements Serializable {
+public class Trie{
 
     private Node root;
     private Node current;
@@ -67,7 +67,7 @@ public class Trie implements Serializable {
     }
 
 
-        private static class Node implements Serializable {
+        private static class Node {
             private boolean isTerminal;
             private char c;
             private HashMap<Character, Node> children = new HashMap<>();
