@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.nio.charset.CharacterCodingException;
 import java.util.*;
 import java.util.logging.Handler;

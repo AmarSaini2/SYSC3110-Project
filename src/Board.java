@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.*;
 /**
  * The Board class represents the Scrabble game board where players place tiles to form words.
@@ -8,7 +9,7 @@ import java.util.*;
  * This class is responsible for validating that placed words intersect with existing words and adhere to Scrabble rules.
  *
  */
-public class Board {
+public class Board implements Serializable {
     private String[][] board;
     private ArrayList<Coordinate> placedTileList;
     private HashMap<Coordinate, String> premiumTileList;

@@ -74,6 +74,12 @@ public class ScrabbleController implements ActionListener {
                 case "EXIT":
                     exitGame(e);
                     break;
+                case "SAVE":
+                    saveGame(e);
+                    break;
+                case "LOAD":
+                    loadGame(e);
+                    break;
                 case "Players2":
                     handleNumPlayers(e,2);
                     break;
@@ -154,6 +160,29 @@ public class ScrabbleController implements ActionListener {
     public void exitGame(ActionEvent e){
         System.exit(0);
     }
+
+
+    public void saveGame(ActionEvent e){
+        if(model.saveGame()){
+            JOptionPane.showMessageDialog(null, "Game properly saved");
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "An error occured: could not save");
+        }
+    }
+
+    public void loadGame(ActionEvent e){
+        if(model.loadGame()){
+            JOptionPane.showMessageDialog(null, "Game successfully loaded");
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "An error occured: could not load game");
+        }
+
+    }
+
+
+
     /**
      * Handles the number of players inputted and updates the view to prompt for names.
      *

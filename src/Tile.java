@@ -1,3 +1,5 @@
+import java.io.Serializable;
+
 /**
  * The Tile class represents a letter tile in a Scrabble game.
  * Each tile has an associated letter and a point value, which contributes to the player's score
@@ -7,7 +9,7 @@
  * It is a fundamental element in the Scrabble game as it is used to build words, score points
  * and interact with other components like the board and player rack.
  */
-public class Tile {
+public class Tile implements Serializable {
     private String letter;
     private int points;
     /**

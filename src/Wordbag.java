@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.*;
 /**
  * The Wordbag class represents the tile bag in a Scrabble game.
@@ -9,7 +10,7 @@ import java.util.*;
  * At the beginning of the game, the bag is filled with a standard set of tiles according to Scrabble rules,
  * with each letter having a specific count and point value.
  */
-public class Wordbag {
+public class Wordbag implements Serializable {
     private List<Tile> tiles;
     /**
      * Constructs a new Wordbag and fills it with the standard set of Scrabble tiles.

@@ -1,3 +1,5 @@
+import javax.swing.*;
+import java.io.*;
 import java.util.*;
 /**
  * The Game class represents the main logic for a Scrabble game.
@@ -9,7 +11,7 @@ import java.util.*;
  *
  *
  */
-public class Game {
+public class Game implements Serializable {
     static Scanner in = new Scanner(System.in);
 
 
@@ -20,7 +22,7 @@ public class Game {
     private int consecutivePasses;
     private int currentPlayerIndex;
     private boolean gameOver;
-    private ScrabbleView view;
+    private transient ScrabbleView view;
     private int numPlayers;
     private Tile tile;
     int row;
@@ -29,51 +31,55 @@ public class Game {
     private ArrayList<String> usedWords;
     private boolean startofTurn;
     ArrayList<Tile> tempHand;
-     /**
+
+    /**
      * Constructs a new game.
      * It initializes a tile bag, a board, trie structure, players list and gameOver status.
-     * 
      */
-    public Game(){
+    public Game() {
 
         this.bag = new Wordbag();
         this.board = new Board();
         trie = new Trie();
-        players= new ArrayList<>();
+        players = new ArrayList<>();
         gameOver = false;
         usedWords = new ArrayList<>();
 
     }
-    public ArrayList<Player> getPlayers(){
+
+    public ArrayList<Player> getPlayers() {
         return players;
     }
-    public void addView(ScrabbleView view){
+
+    public void addView(ScrabbleView view) {
         this.view = view;
     }
+
     /**
      * Print the start of game message to players.
      *
      * @return starting game message
      */
-    public String startGame(){
+    public String startGame() {
         StringBuilder sb = new StringBuilder();
 
         sb.append("Welcome to the game of scrabble!\n");
         sb.append("To start, select a number of players: (2-4)");
         return sb.toString();
     }
+
     /**
      * Create a player based on the name given. Player's hand will be given seven tiles and
      * added to the list of players.
+     *
      * @param name the name of the player to be added
      */
-    public void intializePlayer(String name, boolean isHuman){
-        if(!isHuman){
+    public void intializePlayer(String name, boolean isHuman) {
+        if (!isHuman) {
             AiPlayer player = new AiPlayer(name);
             player.setHand(bag);
             players.add(player);
-        }
-        else{
+        } else {
             Player player = new Player(name);
             player.setHand(bag);
             players.add(player);
@@ -81,14 +87,16 @@ public class Game {
 
 
     }
+
     /**
      * Create a string for the end of game status.
+     *
      * @return end of game summary
      */
 
-    public String handleEndOfGame(){
+    public String handleEndOfGame() {
         StringBuilder sb = new StringBuilder();
-        if(isGameOver()){
+        if (isGameOver()) {
             gameOver = true;
             sb.append("The game is over.\n");
             sb.append(endGameSummary());
@@ -99,7 +107,7 @@ public class Game {
     }
 
 
-    public static String getPlayerName(){
+    public static String getPlayerName() {
         while (true) {
             try {
                 return in.next();
@@ -109,37 +117,42 @@ public class Game {
             }
         }
     }
+
     /**
      * Create a string for the current players game options.
+     *
      * @return current player turn options
      */
-    public String playersTurn(){
+    public String playersTurn() {
         StringBuilder sb = new StringBuilder();
-        if(currentPlayerIndex >= players.size()){
+        if (currentPlayerIndex >= players.size()) {
             currentPlayerIndex = 0;
         }
         Player currentPlayer = players.get(currentPlayerIndex);
         startofTurn = true;
-        sb.append("Player: "+ currentPlayer.getName()+" \n");
+        sb.append("Player: " + currentPlayer.getName() + " \n");
         sb.append("1. Play a word\n");
         sb.append("2. Pass your turn\n");
         return sb.toString();
     }
-    public boolean checkPlayer(){
+
+    public boolean checkPlayer() {
         return players.get(currentPlayerIndex).isAI();
     }
-    public boolean checkNextPlayer(){
+
+    public boolean checkNextPlayer() {
         int next = currentPlayerIndex;
-        if(next == players.size()){
-            next =0;
+        if (next == players.size()) {
+            next = 0;
         }
         return players.get(next).isAI();
     }
-    public boolean aiTurn(){
+
+    public boolean aiTurn() {
         AiPlayer currentPlayer = (AiPlayer) players.get(currentPlayerIndex);
         System.out.println(currentPlayer.toString());
-        boolean play = currentPlayer.playWord(board,trie);
-        if(play){
+        boolean play = currentPlayer.playWord(board, trie);
+        if (play) {
             currentPlayer.drawNewTiles(bag);
         }
         return play;
@@ -148,62 +161,64 @@ public class Game {
 
     /**
      * Returns the current players' rack of tiles.
+     *
      * @return list of tiles
      */
-    public ArrayList<Tile> playerRack(){
+    public ArrayList<Tile> playerRack() {
         Player currentPlayer = players.get(currentPlayerIndex);
         //System.out.println(currentPlayer.getName());
         return currentPlayer.getHand();
     }
+
     /**
      * Executes the current player's choice for their turn. If choice 1, the player will begin playing.
      * If choice 2, the player's turn will be passed.
      *
      * @param choice The player's choice of passing or playing
      */
-    public void handlePlayerChoice(int choice){
+    public void handlePlayerChoice(int choice) {
         Player currentPlayer = players.get(currentPlayerIndex);
-        if(choice == 1){
+        if (choice == 1) {
             view.playTurn();
             consecutivePasses = 0;
-        }else if(choice == 2){
+        } else if (choice == 2) {
             currentPlayerIndex++;
-            if(currentPlayerIndex == players.size()){
-                currentPlayerIndex =0;
+            if (currentPlayerIndex == players.size()) {
+                currentPlayerIndex = 0;
             }
             consecutivePasses++;
 
-        }}
+        }
+    }
+
     /**
      * Returns the current player whose turn it is. Initializes a player with a new hand and tempboard
      * for their turn.
+     *
      * @return current player
      */
-    public Player currentPlayerTurn(){
+    public Player currentPlayerTurn() {
         Player currentPlayer = players.get(currentPlayerIndex);
-        if(startofTurn){
+        if (startofTurn) {
             tempHand = new ArrayList<Tile>(currentPlayer.getHand());
             tempBoard = new Board(board);
             tempBoard.clearPlacedTileList();
             startofTurn = false;
         }
 
-        for(Tile tile:tempHand){
+        for (Tile tile : tempHand) {
             //System.out.println(tile.getID());
         }
         return currentPlayer;
     }
-    public boolean playerTurn(Player currentPlayer){
+
+    public boolean playerTurn(Player currentPlayer) {
         //player turn order: pick horizontal or vertical, place tiles until either submit is entered or hand is empty, submit turn for review -> GOTO submit();
         //A temp copy of the board is made to display as the player places tiles before submitting. A temp copy of the hand will be used for the same purpose
 
 
-
-
-
-
         Tile pickedTile = tile;
-        if(row == 7 && col == 7 ){
+        if (row == 7 && col == 7) {
             tempBoard.placeLetter(row, col, tile.getID());
         }
         //System.out.println(tile.getID());
@@ -211,48 +226,52 @@ public class Game {
 
         return true;
     }
+
     /**
      * Tile placed on the board is set and beginning of player turn conditions are set.
      *
      * @param tile tile to be placed onto the temp board.
      */
-    public void tilePlaced(Tile tile){
-        this.tile =  tile;
+    public void tilePlaced(Tile tile) {
+        this.tile = tile;
         Player currentPlayer = null;
-        if(startofTurn){
+        if (startofTurn) {
             currentPlayer = currentPlayerTurn();
         }
         playerTurn(currentPlayer);
     }
 
-    public void setRowCol(int row, int col){
+    public void setRowCol(int row, int col) {
         this.row = row;
         this.col = col;
     }
+
     /**
      * Updates the temporary board that documents the current players moves.
      *
-     * @param row row of tile to be placed
-     * @param col column of tile to be placed
+     * @param row    row of tile to be placed
+     * @param col    column of tile to be placed
      * @param letter letter for the tile to be placed
      */
-    public void updateTempBoard(int row, int col, String letter){
-        tempBoard.placeLetter(row,col,letter);
+    public void updateTempBoard(int row, int col, String letter) {
+        tempBoard.placeLetter(row, col, letter);
         tempBoard.addCoordinate(new Coordinate(row, col));
     }
+
     /**
      * When a player is done placing their word, it will handle if the word is valid
      * or not and return either true or false. It also handles drawing new tiles if the word
      * is valid.
+     *
      * @param currentPlayer current player that submitted the word.
      * @return true if word is valid, false if word is invalid
      */
-    public boolean submitWord(Player currentPlayer){
+    public boolean submitWord(Player currentPlayer) {
         //check whether tempBoard is valid, update board, update hand, update points, goto next player's turn
-        if(tempBoard.checkValidity(trie)){
+        if (tempBoard.checkValidity(trie)) {
             currentPlayer.addPoints(tempBoard.calculatePoints());
             board.swapWithTemp(tempBoard);//swap temp board in for main board
-            currentPlayer.swapWithTemp(tempHand,bag);//swap temp hand for main hand, refresh hand to 7 tiles
+            currentPlayer.swapWithTemp(tempHand, bag);//swap temp hand for main hand, refresh hand to 7 tiles
 
             currentPlayer.drawNewTiles(bag);
             return true;
@@ -260,59 +279,138 @@ public class Game {
 
         return false;
     }
-    public boolean isGameOver(){
-        if(bag.isEmpty()){
-            for(Player player:players){
-                if(player.getHand().isEmpty()){
+
+    public boolean isGameOver() {
+        if (bag.isEmpty()) {
+            for (Player player : players) {
+                if (player.getHand().isEmpty()) {
                     return true;
                 }
             }
         }
         return consecutivePasses >= players.size();
     }
-    public Board getBoard(){
+
+    public Board getBoard() {
         return board;
     }
+
     /**
      * Create a string of the end of game status, specifically the player scores and the winner.
+     *
      * @return the string of end of game summary
      */
-    private String endGameSummary(){
+    private String endGameSummary() {
         StringBuilder sb = new StringBuilder();
         sb.append("Final Scores: \n");
-        for(Player player: players){
-            sb.append(player.getName() + " - Final Score: "+ player.getPoints()+"\n");
+        for (Player player : players) {
+            sb.append(player.getName() + " - Final Score: " + player.getPoints() + "\n");
         }
         Player winner = Collections.max(players, Comparator.comparing(Player::getPoints));
-        sb.append(new StringBuilder().append("The winner is: ").append(winner.getName()).append(" with a score of ").append(winner.getPoints()).toString()+"\n");
+        sb.append(new StringBuilder().append("The winner is: ").append(winner.getName()).append(" with a score of ").append(winner.getPoints()).toString() + "\n");
         return sb.toString();
     }
+
     /**
      * Return the current player.
+     *
      * @return current player
      */
-    public Player getPlayer(){
+    public Player getPlayer() {
         return players.get(currentPlayerIndex);
     }
+
     /**
      * Update the current player index.
      */
-    public void updatePlayerIndex(){
-        if(currentPlayerIndex >= players.size() -1){
+    public void updatePlayerIndex() {
+        if (currentPlayerIndex >= players.size() - 1) {
             currentPlayerIndex = 0;
             return;
         }
         currentPlayerIndex++;
 
     }
-    public int getConsecutivePasses(){
+
+    public int getConsecutivePasses() {
         return consecutivePasses;
     }
-    public void resetPasses(){
-        consecutivePasses =0;
+
+    public void resetPasses() {
+        consecutivePasses = 0;
     }
-    public void passTurn(){
+
+    public void passTurn() {
         consecutivePasses++;
         return;
+    }
+
+    public boolean loadGame() {
+        //creating jfilechooser to get file to load from
+        JFileChooser fileChooser = new JFileChooser();
+
+        //creating open dialog for file
+        int result = fileChooser.showOpenDialog(null);
+
+        //checking if they selected a file
+        if (result == JFileChooser.APPROVE_OPTION) {
+            //get the file they selected
+            File selectedFile = fileChooser.getSelectedFile();
+
+            try (FileInputStream fis = new FileInputStream(selectedFile)) {
+                ObjectInputStream ois = new ObjectInputStream(fis);
+                Game loader = (Game)ois.readObject();
+                ois.close();
+
+                //assigning each of the instance variables to loaded game equivalent
+                this.players = loader.players;
+                this.bag = loader.bag;
+                this.board = loader.board;
+                this.trie = loader.trie;
+                this.consecutivePasses = loader.consecutivePasses;
+                this.currentPlayerIndex = loader.consecutivePasses;
+                this.gameOver = loader.gameOver;
+                this.view = loader.view;
+                this.numPlayers = loader.numPlayers;
+                this.tile = loader.tile;
+                this.row = loader.row;
+                this.col = loader.col;
+                this.tempBoard = loader.tempBoard;
+                this.usedWords = loader.usedWords;
+                this.startofTurn = loader.startofTurn;
+                this.tempHand = loader.tempHand;
+                return true;
+            } catch (IOException e) {
+                System.out.println("An error occurred.");
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return false;
+    }
+
+    public boolean saveGame() {
+        //creating jfilechooser to get file to load from
+        JFileChooser fileChooser = new JFileChooser();
+
+        //creating open dialog for file
+        int result = fileChooser.showOpenDialog(null);
+
+        //checking if they selected a file
+        if (result == JFileChooser.APPROVE_OPTION) {
+            //get the file they selected
+            File selectedFile = fileChooser.getSelectedFile();
+            try (FileOutputStream fos = new FileOutputStream(selectedFile)) {
+                ObjectOutputStream oos = new ObjectOutputStream(fos);
+                //writing instance of game to this
+                oos.writeObject(this);
+                oos.close();
+                System.out.println("saved successfully");
+                return true;
+            } catch (IOException e) {
+                System.out.println(e.toString());
+            }
+        }
+        return false;
     }
 }

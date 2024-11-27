@@ -1,9 +1,10 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.*;
 
-public class Trie {
+public class Trie implements Serializable {
 
     private Node root;
     private Node current;
@@ -66,7 +67,7 @@ public class Trie {
     }
 
 
-        private static class Node {
+        private static class Node implements Serializable {
             private boolean isTerminal;
             private char c;
             private HashMap<Character, Node> children = new HashMap<>();

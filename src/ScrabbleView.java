@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -159,6 +160,15 @@ public class ScrabbleView extends JFrame {
         exitGame.setActionCommand("EXIT");
         exitGame.addActionListener(control);
         fileMenu.add(exitGame);
+        JMenuItem save = new JMenuItem("Save");
+        save.setActionCommand("SAVE");
+        save.addActionListener(control);
+        fileMenu.add(save);
+        JMenuItem load = new JMenuItem("Load");
+        load.setActionCommand("LOAD");
+        load.addActionListener(control);
+        fileMenu.add(load);
+
 
 
     }
