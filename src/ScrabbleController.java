@@ -80,6 +80,12 @@ public class ScrabbleController implements ActionListener {
                 case "LOAD":
                     loadGame(e);
                     break;
+                case "UNDO":
+                    undo(e);
+                    break;
+                case "REDO":
+                    redo(e);
+                    break;
                 case "Players2":
                     handleNumPlayers(e,2);
                     break;
@@ -161,7 +167,11 @@ public class ScrabbleController implements ActionListener {
         System.exit(0);
     }
 
-
+    /**
+     * When a user presses the menu option to save the game, it will serialize the current game.
+     *
+     * @param e the event to be processed
+     */
     public void saveGame(ActionEvent e){
         if(model.saveGame()){
             JOptionPane.showMessageDialog(null, "Game properly saved");
@@ -171,6 +181,11 @@ public class ScrabbleController implements ActionListener {
         }
     }
 
+    /**
+     * When a user presses the menu option to load the game, it will load the chosen game over the current game and update the gui.
+     *
+     * @param e the event to be processed
+     */
     public void loadGame(ActionEvent e){
         if(model.loadGame()){
             //trying to update the gui for loading the game
@@ -179,6 +194,29 @@ public class ScrabbleController implements ActionListener {
         }
         else{
             JOptionPane.showMessageDialog(null, "An error occured: could not load game");
+        }
+
+    }
+
+    /**
+     * When a user presses the menu option to undo a move, the tiles placed on that move will be removed.
+     *
+     * @param e the event to be processed
+     */
+    public void undo(ActionEvent e){
+        if(!model.undo()){
+            JOptionPane.showMessageDialog(null, "no moves made to undo");
+        }
+    }
+
+    /**
+     * When a user presses the menu option to redo a move, it will close the cu.
+     *
+     * @param e the event to be processed
+     */
+    public void redo(ActionEvent e){
+        if(!model.redo()){
+            JOptionPane.showMessageDialog(null, "no moves undone to redo");
         }
 
     }

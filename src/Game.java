@@ -31,6 +31,8 @@ public class Game implements Serializable {
     private ArrayList<String> usedWords;
     private boolean startofTurn;
     ArrayList<Tile> tempHand;
+    private Stack<Move> moves;
+    private Stack<Move> undos;
 
     /**
      * Constructs a new game.
@@ -44,7 +46,8 @@ public class Game implements Serializable {
         players = new ArrayList<>();
         gameOver = false;
         usedWords = new ArrayList<>();
-
+        moves = new Stack<>();
+        undos = new Stack<>();
     }
 
     public ArrayList<Player> getPlayers() {
@@ -274,6 +277,15 @@ public class Game implements Serializable {
             currentPlayer.swapWithTemp(tempHand, bag);//swap temp hand for main hand, refresh hand to 7 tiles
 
             currentPlayer.drawNewTiles(bag);
+
+            //saving the current state of the game before it moves on to the next turn
+            Move currentMove = new Move(this.board, getPlayer(), this.bag, this.usedWords, getPlayer().getHand(), tempBoard.calculatePoints());
+
+            //adding the played move to the moves stack
+            moves.push(currentMove);
+            //clearing the undo stack since a new move had been played
+            undos.clear();
+
             return true;
         }
 
@@ -377,6 +389,8 @@ public class Game implements Serializable {
                 this.usedWords = loader.usedWords;
                 this.startofTurn = loader.startofTurn;
                 this.tempHand = loader.tempHand;
+                this.moves = loader.moves;
+                this.undos = loader.undos;
                 return true;
             } catch (IOException e) {
                 System.out.println("An error occurred.");
@@ -403,4 +417,77 @@ public class Game implements Serializable {
         }
         return false;
     }
+
+    public boolean undo(){
+        //if nothing is on the board there is nothing to undo
+        if(board.isEmptyBoard()){
+            return false;
+        }
+        //move current move from moves stack to undos stack
+        Move undone = moves.pop();
+        undos.push(undone);
+
+        //update values to reflect the undo
+
+        //taking away points
+        undone.player.removePoints(undone.points);
+
+        //resetting rack
+        undone.player.swapWithTemp(undone.hand, undone.bag);
+
+        //resetting wordBag
+        this.bag = undone.bag;
+
+        //resetting board
+        this.board = undone.board;
+
+        //resetting used words
+        this.usedWords = undone.usedWords;
+
+        //setting current player
+        //TO BE IMPLMENTED
+
+        //update gui to reflect what current move we are on
+
+
+        return true;
+    }
+
+    public boolean redo(){
+        //if undo stack is empty, there is nothing to redo
+        if(undos.isEmpty()){
+            return false;
+        }
+        //move current move from undos stack to moves stack
+        Move redone = undos.pop();
+        moves.push(redone);
+
+        //update values to reflect the redo
+
+
+        //taking away points
+        redone.player.addPoints(redone.points);
+
+        //resetting rack
+        redone.player.swapWithTemp(redone.hand, redone.bag);
+
+        //resetting wordBag
+        this.bag = redone.bag;
+
+        //resetting board
+        this.board = redone.board;
+
+        //resetting used words
+        this.usedWords = redone.usedWords;
+
+        //resetting current player's turn
+        //TO BE IMPLEMENTED
+
+        //update gui to reflect what current move we are on
+        // TO BE IMPLEMENTED
+
+
+        return true;
+    }
+
 }

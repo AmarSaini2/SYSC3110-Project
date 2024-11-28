@@ -170,6 +170,14 @@ public class ScrabbleView extends JFrame {
         load.setActionCommand("LOAD");
         load.addActionListener(control);
         fileMenu.add(load);
+        JMenuItem undo = new JMenuItem("Undo");
+        undo.setActionCommand("UNDO");
+        undo.addActionListener(control);
+        fileMenu.add(undo);
+        JMenuItem redo = new JMenuItem("Redo");
+        redo.setActionCommand("REDO");
+        redo.addActionListener(control);
+        fileMenu.add(redo);
 
 
 

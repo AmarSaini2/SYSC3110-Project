@@ -104,6 +104,15 @@ public class Player implements Serializable{
         this.points += points;
     }
 
+    /**
+     * removes the points of tiles played to player's score.
+     *
+     * @param points tile points to be removed
+     */
+    public void removePoints(int points){
+        this.points -= points;
+    }
+
     public int getPoints(){
         return this.points;
     }
