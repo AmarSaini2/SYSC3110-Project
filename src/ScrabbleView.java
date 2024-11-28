@@ -140,6 +140,8 @@ public class ScrabbleView extends JFrame {
         setVisible(true);
 
     }
+
+
     /**
      * Create menu bar, menu and menu items for game options.
      * Two options: Create new game and Exit game.
@@ -381,6 +383,52 @@ public class ScrabbleView extends JFrame {
             updateButtonVisibility(section);
         }
     }
+
+    //method to update gui after loading
+    public void updateGUIAfterLoad(Game loadModel) {
+        //properly updates message area: works
+        updateMessageArea("Game loaded");
+
+        //adds the played words onto the board but does not add the premium tiles
+        if (!model.getBoard().isEmptyBoard()) {
+            firstTile = false;
+        }
+        updateCurrentBoard(model.getBoard());
+
+        for (int row = 0; row < SIZE; row++) {
+            for (int col = 0; col < SIZE; col++) {
+                if(!board[row][col].getText().equals(" ")) continue;
+                if (model.board.getPremiumTileList().containsKey(new Coordinate(row, col))) {
+                    switch (model.board.getPremiumTileList().get(new Coordinate(row, col))) {
+                        case ("TLS"):
+                            board[row][col].setText("3TS");
+                            break;
+                        case ("DLS"):
+                            board[row][col].setText("2TS");
+                            break;
+                        case ("TWS"):
+                            board[row][col].setText("3WS");
+                            break;
+                        case ("DWS"):
+                            board[row][col].setText("2WS");
+                            break;
+                    }
+                }
+            }
+        }
+
+            //updates player score chart: works
+            updatePlayerChart();
+
+            //does not play turn properly (stuck on choosing number of players and throws an error)
+            playTurn();
+            setPlayerRack();
+
+            //other things to update: w
+
+    }
+
+
     /**
      * Set up the player rack of buttons for the user to interact with.
      */
