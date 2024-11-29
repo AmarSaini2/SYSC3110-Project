@@ -403,9 +403,42 @@ public class ScrabbleView extends JFrame {
             updateButtonVisibility(section);
         }
     }
+    public void updateGUIAfterUndoRedo(){
+        updateCurrentBoard(model.getBoard());
+
+        for (int row = 0; row < SIZE; row++) {
+            for (int col = 0; col < SIZE; col++) {
+                if(!board[row][col].getText().equals(" ")) continue;
+                if (model.board.getPremiumTileList().containsKey(new Coordinate(row, col))) {
+                    switch (model.board.getPremiumTileList().get(new Coordinate(row, col))) {
+                        case ("TLS"):
+                            board[row][col].setText("3TS");
+                            break;
+                        case ("DLS"):
+                            board[row][col].setText("2TS");
+                            break;
+                        case ("TWS"):
+                            board[row][col].setText("3WS");
+                            break;
+                        case ("DWS"):
+                            board[row][col].setText("2WS");
+                            break;
+                    }
+                }
+            }
+        }
+
+        //updates player score chart: works
+        updatePlayerChart();
+
+        //does not play turn properly (stuck on choosing number of players and throws an error)
+        updateButtonVisibility("NAMEINPUT");
+
+        playerTurn("RETURN");
+    }
 
     //method to update gui after loading
-    public void updateGUIAfterLoad(Game loadModel) {
+    public void updateGUIAfterLoad() {
         //properly updates message area: works
         updateMessageArea("Game loaded");
 
@@ -436,7 +469,6 @@ public class ScrabbleView extends JFrame {
                 }
             }
         }
-
             //updates player score chart: works
             updatePlayerChart();
 
@@ -444,9 +476,6 @@ public class ScrabbleView extends JFrame {
             updateButtonVisibility("NAMEINPUT");
 
             playerTurn("RETURN");
-
-
-            //other things to update: w
 
     }
 

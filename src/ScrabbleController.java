@@ -193,7 +193,7 @@ public class ScrabbleController implements ActionListener {
             //trying to update the gui for loading the game
             JOptionPane.showMessageDialog(null, "Game successfully loaded");
             load = true;
-            currentView.updateGUIAfterLoad(model);
+            currentView.updateGUIAfterLoad();
 
         }
         else{
@@ -210,8 +210,9 @@ public class ScrabbleController implements ActionListener {
     public void undo(ActionEvent e){
         if(!model.undo()){
             JOptionPane.showMessageDialog(null, "no moves made to undo");
+            return;
         }
-
+        currentView.updateGUIAfterUndoRedo();
     }
 
     /**
@@ -222,8 +223,9 @@ public class ScrabbleController implements ActionListener {
     public void redo(ActionEvent e){
         if(!model.redo()){
             JOptionPane.showMessageDialog(null, "no moves undone to redo");
+            return;
         }
-
+        currentView.updateGUIAfterUndoRedo();
     }
 
 

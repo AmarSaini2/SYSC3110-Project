@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 import java.io.*;
 import java.util.*;
 /**
@@ -33,6 +34,7 @@ public class Game implements Serializable {
     ArrayList<Tile> tempHand;
     private Stack<Move> moves;
     private Stack<Move> undos;
+    static int tracker;
 
     /**
      * Constructs a new game.
@@ -272,21 +274,34 @@ public class Game implements Serializable {
     public boolean submitWord(Player currentPlayer) {
         //check whether tempBoard is valid, update board, update hand, update points, goto next player's turn
         if (tempBoard.checkValidity(trie)) {
-            currentPlayer.addPoints(tempBoard.calculatePoints());
-            board.swapWithTemp(tempBoard);//swap temp board in for main board
-            currentPlayer.swapWithTemp(tempHand, bag);//swap temp hand for main hand, refresh hand to 7 tiles
-
-            currentPlayer.drawNewTiles(bag);
-
             //saving the current state of the game before it moves on to the next turn
-            Move currentMove = new Move(this.board, getPlayer(), this.bag, this.usedWords, getPlayer().getHand(), tempBoard.calculatePoints());
-
+            //creating board replica because why not nothing else is working
+            Board tempoBoard = new Board(this.board);
+            Move currentMove = new Move(tempoBoard, getPlayer(), this.bag, this.usedWords, getPlayer().getHand(), tempBoard.calculatePoints());
             //adding the played move to the moves stack
             moves.push(currentMove);
             //clearing the undo stack since a new move had been played
             undos.clear();
 
+            currentPlayer.addPoints(tempBoard.calculatePoints());
+            board.swapWithTemp(tempBoard);//swap temp board in for main board
+
+            currentPlayer.swapWithTemp(tempHand, bag);//swap temp hand for main hand, refresh hand to 7 tiles
+
+            currentPlayer.drawNewTiles(bag);
+
+            //fixing redo
+            Board tempaBoard = new Board(tempBoard);
+            Move redoMove = new Move(tempaBoard, getPlayer(), this.bag, this.usedWords, getPlayer().getHand(), tempBoard.calculatePoints());
+            undos.push(redoMove);
+            for(int row = 0; row<15;row++) {
+                for (int col = 0; col < 15; col++) {
+                    System.out.print(board.getBoard()[row][col] + "-");
+                }
+                System.out.println();
+            }
             return true;
+
         }
 
         return false;
@@ -393,7 +408,7 @@ public class Game implements Serializable {
                 this.undos = loader.undos;
                 return true;
             } catch (IOException e) {
-                System.out.println("An error occurred.");
+                System.out.println("An error occurred. " + e.toString());
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
@@ -420,12 +435,13 @@ public class Game implements Serializable {
 
     public boolean undo(){
         //if nothing is on the board there is nothing to undo
-        if(board.isEmptyBoard()){
+        if(board.isEmptyBoard() || moves.isEmpty()){
+            tracker = 1;
             return false;
         }
         //move current move from moves stack to undos stack
         Move undone = moves.pop();
-        undos.push(undone);
+
 
         //update values to reflect the undo
 
@@ -439,20 +455,21 @@ public class Game implements Serializable {
         this.bag = undone.bag;
 
         //resetting board
-        this.board = undone.board;
+        board.swapWithTemp(undone.board.getBoard());
 
         //resetting used words
         this.usedWords = undone.usedWords;
 
         //setting current player
-        //TO BE IMPLMENTED
         currentPlayerIndex --;
         if(currentPlayerIndex < 0){
             currentPlayerIndex= players.size() - 1;
         }
-        //update gui to reflect what current move we are on
-
-
+        if(tracker == 0) {
+            tracker = 1;
+            return true;
+        }
+        undos.push(undone);
         return true;
     }
 
@@ -478,16 +495,13 @@ public class Game implements Serializable {
         this.bag = redone.bag;
 
         //resetting board
-        this.board = redone.board;
+        board.swapWithTemp(redone.board.getBoard());
 
         //resetting used words
         this.usedWords = redone.usedWords;
 
         //resetting current player's turn
-        //TO BE IMPLEMENTED
-
-        //update gui to reflect what current move we are on
-        // TO BE IMPLEMENTED
+        currentPlayerIndex = currentPlayerIndex + 1 % players.size();
 
 
         return true;
