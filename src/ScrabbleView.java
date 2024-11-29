@@ -255,6 +255,17 @@ public class ScrabbleView extends JFrame {
                 }
                 
                 break;
+            case "RETURN":
+                playTurn.setVisible(true);
+                passTurn.setVisible(true);
+                for(JButton button: playerRack){
+                    button.setEnabled(false);
+                    button.setVisible(true);
+                }
+                submit.setVisible(false);
+                resetRack.setVisible(false);
+                passWord.setVisible(false);
+                break;
             case "TURNOVER":
                 for(int row = 0; row<SIZE;row++){
                     for(int col =0; col<SIZE;col++){
@@ -373,6 +384,7 @@ public class ScrabbleView extends JFrame {
             }
 
         }else{
+            playerTempBoard = new Board();
             String play = model.playersTurn();
             playTurn = new JButton("Play a word");
             playTurn.setActionCommand("PLAY");
@@ -429,8 +441,10 @@ public class ScrabbleView extends JFrame {
             updatePlayerChart();
 
             //does not play turn properly (stuck on choosing number of players and throws an error)
-            playTurn();
-            setPlayerRack();
+            updateButtonVisibility("NAMEINPUT");
+
+            playerTurn("RETURN");
+
 
             //other things to update: w
 
@@ -511,7 +525,7 @@ public class ScrabbleView extends JFrame {
     public void playTurn(){
 
 
-        playerTempBoard = new Board();
+
 
         updateMessageArea("\n" + model.getPlayer().getName() + "'s turn:\n");
         updateMessageArea("Choose a letter to place:");
@@ -663,6 +677,7 @@ public class ScrabbleView extends JFrame {
             }
         }
     }
+
     /**
      * The end of game frame to be displayed.
      *

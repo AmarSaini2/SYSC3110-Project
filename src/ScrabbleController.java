@@ -22,6 +22,7 @@ public class ScrabbleController implements ActionListener {
     private int playerPoints;
     private int play;
     private ArrayList<JButton> selectedButtons;
+    private boolean load;
     /**
      * Constructs a new ScrabbleController with the specified model and view.
      *
@@ -32,6 +33,7 @@ public class ScrabbleController implements ActionListener {
         this.model = model;
         currentView = view;
         play = 0;
+        load = false;
 
     }
     /**
@@ -190,7 +192,9 @@ public class ScrabbleController implements ActionListener {
         if(model.loadGame()){
             //trying to update the gui for loading the game
             JOptionPane.showMessageDialog(null, "Game successfully loaded");
+            load = true;
             currentView.updateGUIAfterLoad(model);
+
         }
         else{
             JOptionPane.showMessageDialog(null, "An error occured: could not load game");
@@ -207,6 +211,7 @@ public class ScrabbleController implements ActionListener {
         if(!model.undo()){
             JOptionPane.showMessageDialog(null, "no moves made to undo");
         }
+
     }
 
     /**
@@ -241,8 +246,16 @@ public class ScrabbleController implements ActionListener {
      */
     public void playTurn(ActionEvent e){
         model.handlePlayerChoice(1);
+        if(!load){
+            currentView.playTurn();
+        }
+
         hand = new ArrayList<>();
         selectedButtons = new ArrayList<>();
+        if(load == true){
+            currentView.updateButtonVisibility("PLAYTURN");
+            load = false;
+        }
         
     }
     /**
@@ -342,7 +355,7 @@ public class ScrabbleController implements ActionListener {
         JButton submit = (JButton) e.getSource();
         submit.setEnabled(false);
         submit.setBackground(Color.pink);
-        play++;
+
 
         if((hand.size() > 1)&& firstTurn){
             if(model.submitWord(model.getPlayer())){
@@ -358,12 +371,15 @@ public class ScrabbleController implements ActionListener {
             }
         }else if (!firstTurn){
             if(model.submitWord(model.getPlayer())){
-
+                play++;
                 currentView.updateMessageArea("Turn Over, Word Successfully Placed");
                 currentView.updateMessageArea("Player "+model.getPlayer().getName()+" has "+ model.getPlayer().getPoints()+ " points!");
                 currentView.updateMessageArea("Next Player's turn");
                 playerPoints= 0;
             }else{
+                if(play !=0){
+                    play++;
+                }
                 restartTurn();
                 return;
             }
@@ -392,6 +408,9 @@ public class ScrabbleController implements ActionListener {
     public void restartTurn(){
         currentView.resetBoard(hand, play);
         model.updatePlayerIndex();
+        if(play == 0){
+            firstTurn = true;
+        }
         currentView.updateButtonVisibility("TURNOVER");
         currentView.playerTurn("PLAYERTURN");
         if(model.checkPlayer()){

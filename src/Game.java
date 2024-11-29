@@ -182,7 +182,7 @@ public class Game implements Serializable {
     public void handlePlayerChoice(int choice) {
         Player currentPlayer = players.get(currentPlayerIndex);
         if (choice == 1) {
-            view.playTurn();
+
             consecutivePasses = 0;
         } else if (choice == 2) {
             currentPlayerIndex++;
@@ -446,7 +446,10 @@ public class Game implements Serializable {
 
         //setting current player
         //TO BE IMPLMENTED
-
+        currentPlayerIndex --;
+        if(currentPlayerIndex < 0){
+            currentPlayerIndex= players.size() - 1;
+        }
         //update gui to reflect what current move we are on
 
 
