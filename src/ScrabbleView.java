@@ -98,7 +98,7 @@ public class ScrabbleView extends JFrame {
                     }
                 }
                 button.setEnabled(false);
-                button.setBackground(Color.ORANGE);
+                button.setBackground(new Color(232, 220, 202));
                 button.setForeground(Color.white);
                 button.setActionCommand(row+" "+col);
                 button.addActionListener(SC);
@@ -270,7 +270,7 @@ public class ScrabbleView extends JFrame {
                 for(int row = 0; row<SIZE;row++){
                     for(int col =0; col<SIZE;col++){
                         board[row][col].setEnabled(false);
-                        board[row][col].setBackground(Color.pink);
+                        board[row][col].setBackground(new Color(213, 186, 182));
                     }
                 }
                 break;
@@ -578,7 +578,7 @@ public class ScrabbleView extends JFrame {
         for(int row = 0; row<SIZE;row++){
             for(int col =0; col<SIZE;col++){
                 board[row][col].setEnabled(false);
-                board[row][col].setBackground(Color.pink);
+                board[row][col].setBackground(new Color(213, 186, 182));
             }
         }
         //enabling tiles that are adjacent to word tiles if they are within the index
@@ -586,13 +586,13 @@ public class ScrabbleView extends JFrame {
             for(int col =1; col<SIZE-1;col++) {
                 if (!board[row][col].getText().equals("") && !model.board.getPremiumTileList().containsKey(new Coordinate(row, col))) {
                     board[row - 1][col].setEnabled(true);
-                    board[row - 1][col].setBackground(Color.orange);
+                    board[row - 1][col].setBackground(new Color(232, 220, 202));
                     board[row + 1][col].setEnabled(true);
-                    board[row + 1][col].setBackground(Color.orange);
+                    board[row + 1][col].setBackground(new Color(232, 220, 202));
                     board[row][col - 1].setEnabled(true);
-                    board[row][col - 1].setBackground(Color.orange);
+                    board[row][col - 1].setBackground(new Color(232, 220, 202));
                     board[row][col + 1].setEnabled(true);
-                    board[row][col + 1].setBackground(Color.orange);
+                    board[row][col + 1].setBackground(new Color(232, 220, 202));
                 }
             }
             }
@@ -601,7 +601,7 @@ public class ScrabbleView extends JFrame {
             for(int col =0; col<SIZE;col++){
                 if(!board[row][col].getText().equals("")&& !model.board.getPremiumTileList().containsKey(new Coordinate(row, col))) {
                     board[row][col].setEnabled(false);
-                    board[row][col].setBackground(Color.pink);
+                    board[row][col].setBackground(new Color(213, 186, 182));
                 }
             }
         }
@@ -614,7 +614,7 @@ public class ScrabbleView extends JFrame {
     public void placeStartLetter(String letter){
         board[CENTER][CENTER].setEnabled(false);
         board[CENTER][CENTER].setText(letter);
-        board[CENTER][CENTER].setBackground(Color.pink);
+        board[CENTER][CENTER].setBackground(new Color(213, 186, 182));
         //model.setRowCol(CENTER,CENTER);
         model.updateTempBoard(CENTER,CENTER,letter);
         playerTempBoard.placeLetter(CENTER,CENTER,letter);
@@ -633,7 +633,7 @@ public class ScrabbleView extends JFrame {
 
         board[row][col].setEnabled(false);
         board[row][col].setText(letter);
-        board[row][col].setBackground(Color.pink);
+        board[row][col].setBackground(new Color(213, 186, 182));
         model.updateTempBoard(row,col,letter);
         playerTempBoard.placeLetter(row,col,letter);
     }
@@ -697,7 +697,7 @@ public class ScrabbleView extends JFrame {
                     if(removeTileId.equals(tile.getID())){
                         board[row][col].setText("");
                         board[row][col].setEnabled(true);
-                        board[row][col].setBackground(Color.ORANGE);
+                        board[row][col].setBackground(new Color(232, 220, 202));
 
                     }
                 }
