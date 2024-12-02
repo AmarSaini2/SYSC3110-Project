@@ -423,10 +423,10 @@ public class ScrabbleView extends JFrame {
                 if (model.board.getPremiumTileList().containsKey(new Coordinate(row, col))) {
                     switch (model.board.getPremiumTileList().get(new Coordinate(row, col))) {
                         case ("3LS"):
-                            board[row][col].setText("3TS");
+                            board[row][col].setText("3LS");
                             break;
                         case ("2LS"):
-                            board[row][col].setText("2TS");
+                            board[row][col].setText("2LS");
                             break;
                         case ("3WS"):
                             board[row][col].setText("3WS");
@@ -445,7 +445,7 @@ public class ScrabbleView extends JFrame {
         //does not play turn properly (stuck on choosing number of players and throws an error)
         updateButtonVisibility("NAMEINPUT");
 
-        playerTurn("RETURN");
+        playerTurn("PLAYERTURN");
     }
 
     //method to update gui after loading
@@ -465,10 +465,10 @@ public class ScrabbleView extends JFrame {
                 if (model.board.getPremiumTileList().containsKey(new Coordinate(row, col))) {
                     switch (model.board.getPremiumTileList().get(new Coordinate(row, col))) {
                         case ("3LS"):
-                            board[row][col].setText("3TS");
+                            board[row][col].setText("3LS");
                             break;
                         case ("2LS"):
-                            board[row][col].setText("2TS");
+                            board[row][col].setText("2LS");
                             break;
                         case ("3WS"):
                             board[row][col].setText("3WS");
@@ -689,7 +689,7 @@ public class ScrabbleView extends JFrame {
             removeTileFromBoard(tile);
         }
         if(board[CENTER][CENTER].getText().equals("") && numberofplays ==0){
-            board[CENTER][CENTER].setText("");
+            //board[CENTER][CENTER].setText("");
             firstTile = true;
         }
         playerTempBoard = new Board();
@@ -709,30 +709,30 @@ public class ScrabbleView extends JFrame {
                     String removeTileId = playerTempBoard.removeLetter(row,col);
                     if(removeTileId.equals(tile.getID())){
                         board[row][col].setText("");
-                        board[row][col].setEnabled(true);
+
                         board[row][col].setBackground(new Color(232, 220, 202));
-                        switch(model.board.getPremiumTileList().get(new Coordinate(row, col))){
-                            case("3LS"):
-                                board[row][col].setText("3LS");
-                                board[row][col].setBackground(new Color(4, 7, 189));
-                                break;
-                            case("2LS"):
-                                board[row][col].setText("2LS");
-                                board[row][col].setBackground(new Color(4, 112, 189, 255));
-                                break;
-                            case("3WS"):
-                                board[row][col].setText("3WS");
-                                board[row][col].setBackground(new Color(205, 23, 23));
-                                break;
-                            case("2WS"):
-                                board[row][col].setText("2WS");
-                                board[row][col].setBackground(new Color(205, 23, 50));
-                                break;
+                        if(model.board.getPremiumTileList().containsKey(new Coordinate(row, col))){
+                            switch(model.board.getPremiumTileList().get(new Coordinate(row, col))){
+                                case("3LS"):
+                                    board[row][col].setText("3LS");
+                                    board[row][col].setBackground(new Color(4, 7, 189));
+                                    break;
+                                case("2LS"):
+                                    board[row][col].setText("2LS");
+                                    board[row][col].setBackground(new Color(4, 112, 189, 255));
+                                    break;
+                                case("3WS"):
+                                    board[row][col].setText("3WS");
+                                    board[row][col].setBackground(new Color(205, 23, 23));
+                                    break;
+                                case("2WS"):
+                                    board[row][col].setText("2WS");
+                                    board[row][col].setBackground(new Color(205, 23, 50));
+                                    break;
+                            }
                         }
                     }
                 }
-
-
             }
         }
     }

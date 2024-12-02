@@ -321,9 +321,14 @@ public class ScrabbleController implements ActionListener {
      */
     public void passTurnIn(ActionEvent e){
         model.handlePlayerChoice(2);
+        JButton button = (JButton) e.getSource();
+        button.setEnabled(false);
         if (model.isGameOver()){
             currentView.endofGameFrame("ENDGAME");
             return;
+        }
+        if(play == 0){
+            firstTurn = true;
         }
         currentView.resetBoard(hand, play);
         hand = new ArrayList<>();
@@ -387,9 +392,9 @@ public class ScrabbleController implements ActionListener {
         submit.setBackground(Color.pink);
 
 
-        if((hand.size() > 1)&& firstTurn){
+        if((hand.size() > 1)&& play == 0){
             if(model.submitWord(model.getPlayer())){
-
+                play++;
                 model.getPlayer().addPoints(model.board.calculatePoints());
                 currentView.updateMessageArea("Turn Over, Word Successfully Placed");
                 currentView.updateMessageArea("Player "+model.getPlayer().getName()+" has "+ model.getPlayer().getPoints()+ " points!");
@@ -399,7 +404,7 @@ public class ScrabbleController implements ActionListener {
                 restartTurn();
                 return;
             }
-        }else if (!firstTurn){
+        }else if (play > 0){
             if(model.submitWord(model.getPlayer())){
                 play++;
                 currentView.updateMessageArea("Turn Over, Word Successfully Placed");
