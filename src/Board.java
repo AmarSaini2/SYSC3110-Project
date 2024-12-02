@@ -52,57 +52,57 @@ public class Board implements Serializable {
     }
 
     public void initializeBoard(){
-        // Triple Word Score (TWS)
-        premiumTileList.put(new Coordinate(0, 0), "TWS");
-        premiumTileList.put(new Coordinate(0, 7), "TWS");
-        premiumTileList.put(new Coordinate(0, 14), "TWS");
-        premiumTileList.put(new Coordinate(7, 0), "TWS");
-        premiumTileList.put(new Coordinate(7, 14), "TWS");
-        premiumTileList.put(new Coordinate(14, 0), "TWS");
-        premiumTileList.put(new Coordinate(14, 7), "TWS");
-        premiumTileList.put(new Coordinate(14, 14), "TWS");
+        // Triple Word Score (3WS)
+        premiumTileList.put(new Coordinate(0, 0), "3WS");
+        premiumTileList.put(new Coordinate(0, 7), "3WS");
+        premiumTileList.put(new Coordinate(0, 14), "3WS");
+        premiumTileList.put(new Coordinate(7, 0), "3WS");
+        premiumTileList.put(new Coordinate(7, 14), "3WS");
+        premiumTileList.put(new Coordinate(14, 0), "3WS");
+        premiumTileList.put(new Coordinate(14, 7), "3WS");
+        premiumTileList.put(new Coordinate(14, 14), "3WS");
 
-        // Double Word Score (DWS)
-        premiumTileList.put(new Coordinate(1, 1), "DWS");
-        premiumTileList.put(new Coordinate(1, 13), "DWS");
-        premiumTileList.put(new Coordinate(13, 1), "DWS");
-        premiumTileList.put(new Coordinate(13, 13), "DWS");
-        premiumTileList.put(new Coordinate(3, 0), "DWS");
-        premiumTileList.put(new Coordinate(3, 14), "DWS");
-        premiumTileList.put(new Coordinate(11, 0), "DWS");
-        premiumTileList.put(new Coordinate(11, 14), "DWS");
-        premiumTileList.put(new Coordinate(5, 5), "DWS");
-        premiumTileList.put(new Coordinate(5, 9), "DWS");
-        premiumTileList.put(new Coordinate(9, 5), "DWS");
-        premiumTileList.put(new Coordinate(9, 9), "DWS");
+        // Double Word Score (2WS)
+        premiumTileList.put(new Coordinate(1, 1), "2WS");
+        premiumTileList.put(new Coordinate(1, 13), "2WS");
+        premiumTileList.put(new Coordinate(13, 1), "2WS");
+        premiumTileList.put(new Coordinate(13, 13), "2WS");
+        premiumTileList.put(new Coordinate(3, 0), "2WS");
+        premiumTileList.put(new Coordinate(3, 14), "2WS");
+        premiumTileList.put(new Coordinate(11, 0), "2WS");
+        premiumTileList.put(new Coordinate(11, 14), "2WS");
+        premiumTileList.put(new Coordinate(5, 5), "2WS");
+        premiumTileList.put(new Coordinate(5, 9), "2WS");
+        premiumTileList.put(new Coordinate(9, 5), "2WS");
+        premiumTileList.put(new Coordinate(9, 9), "2WS");
 
-        // Triple Letter Score (TLS)
-        premiumTileList.put(new Coordinate(1, 5), "TLS");
-        premiumTileList.put(new Coordinate(1, 9), "TLS");
-        premiumTileList.put(new Coordinate(5, 1), "TLS");
-        premiumTileList.put(new Coordinate(5, 13), "TLS");
-        premiumTileList.put(new Coordinate(9, 1), "TLS");
-        premiumTileList.put(new Coordinate(9, 13), "TLS");
-        premiumTileList.put(new Coordinate(13, 5), "TLS");
-        premiumTileList.put(new Coordinate(13, 9), "TLS");
+        // Triple Letter Score (3LS)
+        premiumTileList.put(new Coordinate(1, 5), "3LS");
+        premiumTileList.put(new Coordinate(1, 9), "3LS");
+        premiumTileList.put(new Coordinate(5, 1), "3LS");
+        premiumTileList.put(new Coordinate(5, 13), "3LS");
+        premiumTileList.put(new Coordinate(9, 1), "3LS");
+        premiumTileList.put(new Coordinate(9, 13), "3LS");
+        premiumTileList.put(new Coordinate(13, 5), "3LS");
+        premiumTileList.put(new Coordinate(13, 9), "3LS");
 
-        // Double Letter Score (DLS)
-        premiumTileList.put(new Coordinate(0, 3), "DLS");
-        premiumTileList.put(new Coordinate(0, 11), "DLS");
-        premiumTileList.put(new Coordinate(3, 0), "DLS");
-        premiumTileList.put(new Coordinate(3, 14), "DLS");
-        premiumTileList.put(new Coordinate(11, 0), "DLS");
-        premiumTileList.put(new Coordinate(11, 14), "DLS");
-        premiumTileList.put(new Coordinate(14, 3), "DLS");
-        premiumTileList.put(new Coordinate(14, 11), "DLS");
-        premiumTileList.put(new Coordinate(2, 6), "DLS");
-        premiumTileList.put(new Coordinate(2, 8), "DLS");
-        premiumTileList.put(new Coordinate(6, 2), "DLS");
-        premiumTileList.put(new Coordinate(6, 12), "DLS");
-        premiumTileList.put(new Coordinate(8, 2), "DLS");
-        premiumTileList.put(new Coordinate(8, 12), "DLS");
-        premiumTileList.put(new Coordinate(12, 6), "DLS");
-        premiumTileList.put(new Coordinate(12, 8), "DLS");
+        // Double Letter Score (2LS)
+        premiumTileList.put(new Coordinate(0, 3), "2LS");
+        premiumTileList.put(new Coordinate(0, 11), "2LS");
+        premiumTileList.put(new Coordinate(3, 0), "2LS");
+        premiumTileList.put(new Coordinate(3, 14), "2LS");
+        premiumTileList.put(new Coordinate(11, 0), "2LS");
+        premiumTileList.put(new Coordinate(11, 14), "2LS");
+        premiumTileList.put(new Coordinate(14, 3), "2LS");
+        premiumTileList.put(new Coordinate(14, 11), "2LS");
+        premiumTileList.put(new Coordinate(2, 6), "2LS");
+        premiumTileList.put(new Coordinate(2, 8), "2LS");
+        premiumTileList.put(new Coordinate(6, 2), "2LS");
+        premiumTileList.put(new Coordinate(6, 12), "2LS");
+        premiumTileList.put(new Coordinate(8, 2), "2LS");
+        premiumTileList.put(new Coordinate(8, 12), "2LS");
+        premiumTileList.put(new Coordinate(12, 6), "2LS");
+        premiumTileList.put(new Coordinate(12, 8), "2LS");
 
     }
     public String[][] getBoard(){return this.board;}
@@ -351,19 +351,19 @@ public class Board implements Serializable {
                 for(Coordinate coordinate: placedTileList){
                     if(board[coordinate.row][coordinate.col].equals(String.valueOf(c)) && premiumTileList.containsKey(coordinate)){
                         switch(premiumTileList.get(coord)){
-                            case("TWS"):
+                            case("3WS"):
                                 tripleWord = true;
                                 System.out.println("Triple Word!");
                                 break;
-                            case("DWS"):
+                            case("2WS"):
                                 doubleWord = true;
                                 System.out.println("Double Word!");
                                 break;
-                            case("TLS"):
+                            case("3LS"):
                                 wordPoints += tile.getPoints() * 3;
                                 System.out.println("Triple Letter!");
                                 break;
-                            case("DLS"):
+                            case("2LS"):
                                 wordPoints += tile.getPoints() * 2;
                                 System.out.println("Double Letter!");
                                 break;
@@ -428,6 +428,27 @@ public class Board implements Serializable {
     public void clearPlacedTileList(){
         for(Coordinate coord: placedTileList){
             placedTileList.remove(coord);
+        }
+    }
+
+    public void clearPremiumTileList(){
+        premiumTileList.clear();
+    }
+
+    public void updatePremiumTileList(int row, int col, String tileType){
+        switch(tileType){
+            case("Triple Tile"):
+                premiumTileList.put(new Coordinate(row, col), "3LS");
+                break;
+            case("Double Tile"):
+                premiumTileList.put(new Coordinate(row, col), "2LS");
+                break;
+            case("Triple Word"):
+                premiumTileList.put(new Coordinate(row, col), "3WS");
+                break;
+            case("Double Word"):
+                premiumTileList.put(new Coordinate(row, col), "2WS");
+                break;
         }
     }
 

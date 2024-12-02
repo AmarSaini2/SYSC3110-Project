@@ -1,6 +1,9 @@
 import java.awt.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Map;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 /**
@@ -38,6 +41,10 @@ public class ScrabbleView extends JFrame {
     JPanel rack;
     ArrayList<Tile> playerHand;
     private boolean firstPlay;
+
+    private JDialog customTileSelect;
+
+    private JButton[][] customTileButtons;
     /**
      * Constructs a new ScrabbleView and initializes the layout, including the game board,
      * tile rack, score display, and other interactive components.
@@ -83,16 +90,16 @@ public class ScrabbleView extends JFrame {
                 button = new JButton("");
                 if(model.board.getPremiumTileList().containsKey(new Coordinate(row, col))){
                     switch(model.board.getPremiumTileList().get(new Coordinate(row, col))){
-                        case("TLS"):
+                        case("3LS"):
                         button.setText("3TS");
                         break;
-                        case("DLS"):
+                        case("2LS"):
                         button.setText("2TS");
                         break;
-                        case("TWS"):
+                        case("3WS"):
                         button.setText("3WS");
                         break;
-                        case("DWS"):
+                        case("2WS"):
                         button.setText("2WS");
                         break;
                     }
@@ -411,16 +418,16 @@ public class ScrabbleView extends JFrame {
                 if(!board[row][col].getText().equals(" ")) continue;
                 if (model.board.getPremiumTileList().containsKey(new Coordinate(row, col))) {
                     switch (model.board.getPremiumTileList().get(new Coordinate(row, col))) {
-                        case ("TLS"):
+                        case ("3LS"):
                             board[row][col].setText("3TS");
                             break;
-                        case ("DLS"):
+                        case ("2LS"):
                             board[row][col].setText("2TS");
                             break;
-                        case ("TWS"):
+                        case ("3WS"):
                             board[row][col].setText("3WS");
                             break;
-                        case ("DWS"):
+                        case ("2WS"):
                             board[row][col].setText("2WS");
                             break;
                     }
@@ -453,16 +460,16 @@ public class ScrabbleView extends JFrame {
                 if(!board[row][col].getText().equals(" ")) continue;
                 if (model.board.getPremiumTileList().containsKey(new Coordinate(row, col))) {
                     switch (model.board.getPremiumTileList().get(new Coordinate(row, col))) {
-                        case ("TLS"):
+                        case ("3LS"):
                             board[row][col].setText("3TS");
                             break;
-                        case ("DLS"):
+                        case ("2LS"):
                             board[row][col].setText("2TS");
                             break;
-                        case ("TWS"):
+                        case ("3WS"):
                             board[row][col].setText("3WS");
                             break;
-                        case ("DWS"):
+                        case ("2WS"):
                             board[row][col].setText("2WS");
                             break;
                     }
@@ -574,6 +581,7 @@ public class ScrabbleView extends JFrame {
      * Disable tiles that cannot be clicked during a player's turn when placing word on the board.
      */
     public void disableAppropriateTile(){
+        ArrayList<String> premiumTileNames = new ArrayList<>(Arrays.asList("2TS", "3TS", "2WS", "3WS"));
         //disabling all tile
         for(int row = 0; row<SIZE;row++){
             for(int col =0; col<SIZE;col++){
@@ -584,7 +592,7 @@ public class ScrabbleView extends JFrame {
         //enabling tiles that are adjacent to word tiles if they are within the index
         for(int row = 1; row<SIZE-1;row++){
             for(int col =1; col<SIZE-1;col++) {
-                if (!board[row][col].getText().equals("") && !model.board.getPremiumTileList().containsKey(new Coordinate(row, col))) {
+                if (!board[row][col].getText().isEmpty() && !premiumTileNames.contains(board[row][col].getText())) {
                     board[row - 1][col].setEnabled(true);
                     board[row - 1][col].setBackground(Color.orange);
                     board[row + 1][col].setEnabled(true);
@@ -595,11 +603,12 @@ public class ScrabbleView extends JFrame {
                     board[row][col + 1].setBackground(Color.orange);
                 }
             }
-            }
+        }
         //disabling all tiles with words in them in case of overlapping tile
+        //!model.board.getPremiumTileList().containsKey(new Coordinate(row, col))
         for(int row = 0; row<SIZE;row++){
             for(int col =0; col<SIZE;col++){
-                if(!board[row][col].getText().equals("")&& !model.board.getPremiumTileList().containsKey(new Coordinate(row, col))) {
+                if(!board[row][col].getText().isEmpty() && !premiumTileNames.contains(board[row][col].getText())) {
                     board[row][col].setEnabled(false);
                     board[row][col].setBackground(Color.pink);
                 }
@@ -745,6 +754,94 @@ public class ScrabbleView extends JFrame {
         tableModel.setRowCount(0);
         for(Player player: players){
             tableModel.addRow(new Object[]{player.getName(),player.getPoints()});
+        }
+    }
+
+    public void customTileSelect(ScrabbleController controller) {
+        customTileSelect = new JDialog(this, "Custom Tile Select", true);
+        customTileSelect.setSize(1200,900);
+        customTileSelect.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        JPanel boardPanel = new JPanel();
+        boardPanel.setLayout(new GridLayout(SIZE,SIZE));
+        customTileButtons = new JButton[SIZE][SIZE];
+
+        JPanel rowLabel = new JPanel();
+        rowLabel.setLayout(new GridLayout(SIZE,1));
+        for(int row = 1; row <= SIZE; row++){
+            rowLabel.add(new JLabel(String.valueOf(row)));
+        }
+        JPanel colLabel = new JPanel();
+        colLabel.setLayout(new GridLayout(1,SIZE+1));
+        colLabel.add(new JLabel(""));
+        for(int col = 1; col <= SIZE; col++){
+            colLabel.add(new JLabel(String.valueOf(col)));
+        }
+
+
+        //model = new Game();
+        //model.addView(this);
+        //SC = new ScrabbleController(model, this);
+        //firstPlay = true;
+        //setMenu(this,SC);
+        JButton button;
+        for(int row = 0; row<SIZE;row++){
+            for(int col = 0;col < SIZE; col++){
+                /*if(row == CENTER && col == CENTER){
+                    ImageIcon icon = new ImageIcon("star.png");
+                    Image img = icon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+                    icon = new ImageIcon(img);
+                    button = new JButton(icon);
+
+                }else{
+                    button = new JButton("");
+                }*/
+                button = new JButton("");
+                button.setEnabled(true);
+                button.setBackground(Color.ORANGE);
+                button.setForeground(Color.white);
+                button.setActionCommand("CUSTOM " + row + " " + col);
+                button.addActionListener(controller);
+                customTileButtons[row][col]= button;
+                customTileButtons[row][col].setPreferredSize(new Dimension(40, 40));
+                boardPanel.add(button);
+            }
+        }
+
+
+
+        mainPanel = new JPanel(new BorderLayout());
+        mainPanel.add(colLabel, BorderLayout.NORTH);
+        mainPanel.add(boardPanel,BorderLayout.CENTER);
+        mainPanel.add(rowLabel,BorderLayout.WEST);
+
+        customTileSelect.add(mainPanel, BorderLayout.CENTER);
+        customTileSelect.setVisible(true);
+        customTileSelect.requestFocus();
+    }
+
+    public void updateCustomTileSelect(){
+        if(customTileSelect == null){
+            return;
+        }
+        for(int row = 0; row < SIZE; row++){
+            for(int col = 0; col < SIZE; col++){
+                if(model.board.getPremiumTileList().containsKey(new Coordinate(row, col))){
+                    switch(model.board.getPremiumTileList().get(new Coordinate(row, col))){
+                        case("3LS"):
+                            customTileButtons[row][col].setText("3LS");
+                            break;
+                        case("2LS"):
+                            customTileButtons[row][col].setText("2LS");
+                            break;
+                        case("3WS"):
+                            customTileButtons[row][col].setText("3WS");
+                            break;
+                        case("2WS"):
+                            customTileButtons[row][col].setText("2WS");
+                            break;
+                    }
+                }
+            }
         }
     }
 

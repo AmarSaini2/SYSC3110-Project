@@ -34,6 +34,13 @@ public class ScrabbleController implements ActionListener {
         currentView = view;
         play = 0;
         load = false;
+        int setCustomPremiumTiles = JOptionPane.showOptionDialog(null, "Would you like to set custom premium tiles?", "Premium Tiles Prompt", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+        if(setCustomPremiumTiles == 0){//user clicked yes
+            model.board.clearPremiumTileList();
+            currentView.customTileSelect(this);
+        }else{
+            //do nothing? implement a default premium tile list
+        }
 
     }
     /**
@@ -62,6 +69,10 @@ public class ScrabbleController implements ActionListener {
         String command = e.getActionCommand();
         String[] parts = command.split(" ");
 
+        if(parts.length == 3 && parts[0].equals("CUSTOM")){
+            savePremiumTile(e);
+            return;
+        }
         if(parts.length == 2 && isNumeric(parts[0])){
             handleLetterPlace(e);
             return;
@@ -150,6 +161,24 @@ public class ScrabbleController implements ActionListener {
         }
 
     }
+
+    public void savePremiumTile(ActionEvent e){
+        JButton clicked = (JButton) e.getSource();
+        String[] parts = e.getActionCommand().split(" ");
+        String[] tileTypes = {"Triple Tile", "Double Tile", "Triple Word", "Double Word"};
+        int tileType = JOptionPane.showOptionDialog(
+                null,
+                "Which premium tile would you like to place here?",
+                "Premium Tiles Prompt",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.INFORMATION_MESSAGE,
+                null,
+                tileTypes,
+                null);
+        model.board.updatePremiumTileList(Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), tileTypes[tileType]);
+        currentView.updateCustomTileSelect();
+    }
+
     /**
      * When a user presses the menu option to start a new game, a new view is made.
      *
@@ -158,7 +187,6 @@ public class ScrabbleController implements ActionListener {
     public void startNewGame(ActionEvent e){
         currentView.dispose();
         currentView = new ScrabbleView();
-
     }
     /**
      * When a user presses the menu option to exit the game, it will close the current game.
