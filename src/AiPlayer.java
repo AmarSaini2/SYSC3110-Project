@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.io.Serializable;
 import java.util.*;
 
@@ -95,18 +96,12 @@ public class AiPlayer extends Player {
         for(Tile tile: this.hand){
             lettersInHand.add(tile.getID().charAt(0));
         }
-
-        //initializing lists
-        ArrayList<String> lettersOnBoard = new ArrayList<String>();
-        Hashtable<Coordinate, ArrayList<String>> WordWSpots = new Hashtable<>();
+        Hashtable<Coordinate, String> lettersWCords = new Hashtable<>();
 
         //checking if board is empty (i.e, first turn)
         String[][] currentBoard = board.getBoard();
         if(board.isEmptyBoard()){
-            //setting letters on board to a blank character (starting character wont affect words you can make)
-            lettersOnBoard.add("");
-            //setting only coordinate you can play off of is the middle tile
-            WordWSpots.put(new Coordinate(8, 8), new ArrayList<>());
+            lettersWCords.put(new Coordinate(8, 8), "");
         }
         //if board isn't empty (not first turn)
         else {
@@ -114,50 +109,54 @@ public class AiPlayer extends Player {
             for(int i = 0; i < SIZE; i++){
                 for(int j = 0; j < SIZE; j++){
                     if(!currentBoard[i][j].equals(" ")){
-                        //add letter to lettersOnBoard
-                        lettersOnBoard.add(currentBoard[i][j]);
                         //creating a new dictionary entry for this coordinate and creating empty arraylist to
                         //put valid words at that coordinate later
-                        WordWSpots.put(new Coordinate(i, j), new ArrayList<>());
+                        lettersWCords.put(new Coordinate(i + 1, j + 1), currentBoard[i][j]);
                     }
                 }
             }
         }
+        //creating list for coordinates
+        List<Coordinate> coordinates = new ArrayList<>(lettersWCords.keySet());
 
-        //parsing through keys so that we can iterate the dictionary and give each coordinate its list of valid words
-        Enumeration<Coordinate> keys = WordWSpots.keys();
-        //setting an index so that we can keep track of what letter is at each coordinate
-        int i = 0;
-        while(keys.hasMoreElements()){
-            //get the coordinate for the current key
-            Coordinate key = keys.nextElement();
-            //get the letter that would be at the same index of the coordinate and pass it to the find valid words
-            //then put that list of valid words into the dictionary at the specific coordinate that letter is associated to
-            WordWSpots.put(key, findValidWords(lettersOnBoard.get(i),lettersInHand,trie, direction));
-            //increment i to get next letterOnBoard
-            i++;
+
+        //creating loop to see all valid coordinates and their equivalent letters
+        System.out.println("all valid coordinates and their corresponding letters");
+        for(Coordinate c: coordinates){
+            System.out.println(c.row + " " + c.col + ": " + lettersWCords.get(c));
         }
 
-        //now we have a dictionary whose keys are coordinates with lists of valid words at those coordinates
+        //we have a random coordinate to look at
+        Random rand = new Random();
+        Coordinate randCord = coordinates.get(rand.nextInt(coordinates.size()));
 
-        //creating arrayList of map entries so that we cna get a random coordinate/arrayList pair
-        ArrayList<Map.Entry<Coordinate, ArrayList<String>>> entryList = new ArrayList<>(WordWSpots.entrySet());
+        //map entry containing the random coordinate and its associated word
+        Map.Entry<Coordinate, String> entry = Map.entry(randCord, lettersWCords.get(randCord));
+        //printing result
 
-        // Generate a random index
-        Random random = new Random();
-        int randomIndex = random.nextInt(entryList.size());
+        System.out.println("Randomly selected coordinate and letter: " + randCord.row + " " + randCord.col + ": " + entry.getValue());
 
-        //assign randomly indexed map entry to variable
-        Map.Entry<Coordinate, ArrayList<String>> randomEntry = entryList.get(randomIndex);
+        //getting possible words to play on that tile
+        ArrayList<String> validWords = findValidWords(entry.getValue(), lettersInHand, trie, direction);
 
-        //get new random index for ArrayList of words
-        randomIndex = random.nextInt(randomEntry.getValue().size());
+        //checking if any valid words were found
+        if(validWords.isEmpty()){
+            return Map.entry(entry.getKey()," ");
+        }
 
-        //getting a random Word
-        String randomWord = randomEntry.getValue().get(randomIndex);
+        System.out.println("valid words:");
+        for(String v: validWords){
+            System.out.println(v);
+        }
+        //getting selected word
+        String randomWord = validWords.get(rand.nextInt(0, validWords.size()));
 
-        //returning map entry with coording and random word
-        return new AbstractMap.SimpleEntry<>(randomEntry.getKey(), randomWord);
+        //printing selected word
+        System.out.println("selected word: " + randomWord);
+
+
+        //returning map entry with coordinate and random word
+        return Map.entry(entry.getKey(),randomWord);
     }
 
     public boolean playWord(Board board, Trie trie) {
@@ -165,45 +164,35 @@ public class AiPlayer extends Player {
         Random rand = new Random();
 
         int direction = rand.nextBoolean() ? 2:4;
-        //int direction = 4;
+        direction = 2;
+
         tempHand = hand;
 
         // Calling chooseWord to get the word and coordinate to play
         Map.Entry<Coordinate, String> wordToPlay = chooseWord(board, trie, direction);
+        if(wordToPlay.getValue().equals(" ")){
+            JOptionPane.showMessageDialog(null, "Ai player decided to skip");
+            return false;
+        }
         Coordinate wordCord = wordToPlay.getKey();
         String word = wordToPlay.getValue();
 
         System.out.println(word);
         System.out.println(wordCord.row + " " + wordCord.col);
-        //board.display();
-        this.board = board;
+
         // Getting the board representation
         String[][] tempBoard = board.getBoard();
 
-        // Direction 1: Place word upwards
-        if (direction == 1) {
-            for (int i = 0; i < word.length(); i++) {
-                int row = wordCord.row - i;
-                if (row < 0 || !tempBoard[row][wordCord.col].equals(" ")) {
-                    // Out of bounds or occupied tile
-                    return false;
-                }
-                tempBoard[row][wordCord.col] = String.valueOf(word.charAt(i));
-                this.addPoints(new Tile(String.valueOf(word.charAt(i))).getPoints());
-            }
-            board.swapWithTemp(tempBoard);
-            return true;
-        }
-
         // Direction 2: Place word downwards
          if (direction == 2) {
-            for (int i = 0; i < word.length(); i++) {
+            for (int i = 1; i < word.length(); i++) {
                 int row = wordCord.row + i;
                 if (row >= tempBoard.length || !tempBoard[row][wordCord.col].equals(" ")) {
                     // Out of bounds or occupied tile
+                    JOptionPane.showMessageDialog(null, "Ai player decided to skip");
                     return false;
                 }
-                tempBoard[row][wordCord.col] = String.valueOf(word.charAt(i));
+                tempBoard[row - 1][wordCord.col - 1] = String.valueOf(word.charAt(i));
                 this.addPoints(new Tile(String.valueOf(word.charAt(i))).getPoints());
                 tempHand.remove(new Tile(String.valueOf(word.charAt(i))));
             }
@@ -211,35 +200,21 @@ public class AiPlayer extends Player {
             this.swapWithTemp(tempHand);
             return true;
         }
-         else if (direction == 3) {
-             for (int i = 0; i < word.length(); i++) {
-                 int col = wordCord.col - i;
-                 if (col < 0 || !tempBoard[wordCord.row][col].equals(" ")) {
-                     // Out of bounds or occupied tile
-                     return false;
-                 }
-                 tempBoard[wordCord.row][col] = String.valueOf(word.charAt(i));
-                 this.addPoints(new Tile(String.valueOf(word.charAt(i))).getPoints());
-             }
-             board.swapWithTemp(tempBoard);
-             return true;
-         }
-
 
         // Direction 4: Place word to the right
         else if (direction == 4) {
-            for (int i = 0; i < word.length(); i++) {
+            for (int i = 1; i < word.length(); i++) {
                 int col = wordCord.col + i;
                 if (col >= tempBoard[wordCord.row].length || !tempBoard[wordCord.row][col].equals(" ")) {
                     // Out of bounds or occupied tile
-                    return false;}
-                tempBoard[wordCord.row][col] = String.valueOf(word.charAt(i));
-                //System.out.println(tempBoard[wordCord.row][col]);
+                    JOptionPane.showMessageDialog(null, "Ai player decided to skip");
+                    return false;
+                }
+                tempBoard[wordCord.row - 1][col - 1] = String.valueOf(word.charAt(i));
                 this.addPoints(new Tile(String.valueOf(word.charAt(i))).getPoints());
                 tempHand.remove(new Tile(String.valueOf(word.charAt(i))));
             }
             board.swapWithTemp(tempBoard);
-            //board.display();
             this.swapWithTemp(tempHand);
             return true;
         }
@@ -247,6 +222,5 @@ public class AiPlayer extends Player {
         // If no valid direction, return false
         return false;
     }
-
 
 }
