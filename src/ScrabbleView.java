@@ -88,24 +88,28 @@ public class ScrabbleView extends JFrame {
                     button = new JButton("");
                 }*/
                 button = new JButton("");
+                button.setBackground(new Color(232, 220, 202));
                 if(model.board.getPremiumTileList().containsKey(new Coordinate(row, col))){
                     switch(model.board.getPremiumTileList().get(new Coordinate(row, col))){
                         case("3LS"):
                         button.setText("3LS");
+                        button.setBackground(new Color(4, 7, 189));
                         break;
                         case("2LS"):
                         button.setText("2LS");
+                        button.setBackground(new Color(4, 112, 189, 255));
                         break;
                         case("3WS"):
                         button.setText("3WS");
+                        button.setBackground(new Color(205, 23, 23));
                         break;
                         case("2WS"):
                         button.setText("2WS");
+                        button.setBackground(new Color(205, 23, 50));
                         break;
                     }
                 }
                 button.setEnabled(false);
-                button.setBackground(new Color(232, 220, 202));
                 button.setForeground(Color.white);
                 button.setActionCommand(row+" "+col);
                 button.addActionListener(SC);
@@ -581,7 +585,7 @@ public class ScrabbleView extends JFrame {
      * Disable tiles that cannot be clicked during a player's turn when placing word on the board.
      */
     public void disableAppropriateTile(){
-        ArrayList<String> premiumTileNames = new ArrayList<>(Arrays.asList("2TS", "3TS", "2WS", "3WS"));
+        ArrayList<String> premiumTileNames = new ArrayList<>(Arrays.asList("2LS", "3LS", "2WS", "3WS"));
         //disabling all tile
         for(int row = 0; row<SIZE;row++){
             for(int col =0; col<SIZE;col++){
@@ -707,7 +711,24 @@ public class ScrabbleView extends JFrame {
                         board[row][col].setText("");
                         board[row][col].setEnabled(true);
                         board[row][col].setBackground(new Color(232, 220, 202));
-
+                        switch(model.board.getPremiumTileList().get(new Coordinate(row, col))){
+                            case("3LS"):
+                                board[row][col].setText("3LS");
+                                board[row][col].setBackground(new Color(4, 7, 189));
+                                break;
+                            case("2LS"):
+                                board[row][col].setText("2LS");
+                                board[row][col].setBackground(new Color(4, 112, 189, 255));
+                                break;
+                            case("3WS"):
+                                board[row][col].setText("3WS");
+                                board[row][col].setBackground(new Color(205, 23, 23));
+                                break;
+                            case("2WS"):
+                                board[row][col].setText("2WS");
+                                board[row][col].setBackground(new Color(205, 23, 50));
+                                break;
+                        }
                     }
                 }
 
@@ -829,15 +850,19 @@ public class ScrabbleView extends JFrame {
                     switch(model.board.getPremiumTileList().get(new Coordinate(row, col))){
                         case("3LS"):
                             customTileButtons[row][col].setText("3LS");
+                            customTileButtons[row][col].setBackground(new Color(4, 7, 189));
                             break;
                         case("2LS"):
                             customTileButtons[row][col].setText("2LS");
+                            customTileButtons[row][col].setBackground(new Color(4, 112, 189, 255));
                             break;
                         case("3WS"):
                             customTileButtons[row][col].setText("3WS");
+                            customTileButtons[row][col].setBackground(new Color(205, 23, 23));
                             break;
                         case("2WS"):
                             customTileButtons[row][col].setText("2WS");
+                            customTileButtons[row][col].setBackground(new Color(205, 23, 50));
                             break;
                     }
                 }
