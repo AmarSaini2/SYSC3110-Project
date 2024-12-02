@@ -91,10 +91,10 @@ public class ScrabbleView extends JFrame {
                 if(model.board.getPremiumTileList().containsKey(new Coordinate(row, col))){
                     switch(model.board.getPremiumTileList().get(new Coordinate(row, col))){
                         case("3LS"):
-                        button.setText("3TS");
+                        button.setText("3LS");
                         break;
                         case("2LS"):
-                        button.setText("2TS");
+                        button.setText("2LS");
                         break;
                         case("3WS"):
                         button.setText("3WS");
@@ -797,7 +797,7 @@ public class ScrabbleView extends JFrame {
                 }*/
                 button = new JButton("");
                 button.setEnabled(true);
-                button.setBackground(Color.ORANGE);
+                button.setBackground(new Color(232, 220, 202));
                 button.setForeground(Color.white);
                 button.setActionCommand("CUSTOM " + row + " " + col);
                 button.addActionListener(controller);
