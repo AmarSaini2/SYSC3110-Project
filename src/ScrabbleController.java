@@ -395,7 +395,7 @@ public class ScrabbleController implements ActionListener {
         if((hand.size() > 1)&& play == 0){
             if(model.submitWord(model.getPlayer())){
                 play++;
-                model.getPlayer().addPoints(model.board.calculatePoints());
+                //model.getPlayer().addPoints(model.board.calculatePoints());
                 currentView.updateMessageArea("Turn Over, Word Successfully Placed");
                 currentView.updateMessageArea("Player "+model.getPlayer().getName()+" has "+ model.getPlayer().getPoints()+ " points!");
                 currentView.updateMessageArea("Next Player's turn");

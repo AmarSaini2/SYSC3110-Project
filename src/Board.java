@@ -344,13 +344,12 @@ public class Board implements Serializable {
             tripleWord = false;
             doubleWord = false;
             wordPoints = 0;
-            System.out.println(word);
             char[] charArray = word.toCharArray();
             for (char c : charArray) {
                 Tile tile = new Tile(String.valueOf(c));
                 for(Coordinate coordinate: placedTileList){
                     if(board[coordinate.row][coordinate.col].equals(String.valueOf(c)) && premiumTileList.containsKey(coordinate)){
-                        switch(premiumTileList.get(coord)){
+                        switch(premiumTileList.get(coordinate)){
                             case("3WS"):
                                 tripleWord = true;
                                 System.out.println("Triple Word!");
