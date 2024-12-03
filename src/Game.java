@@ -455,7 +455,7 @@ public class Game implements Serializable {
         this.bag = undone.bag;
 
         //resetting board
-        board.swapWithTemp(undone.board.getBoard());
+        board.swapWithTemp(undone.board);
 
         //resetting used words
         this.usedWords = undone.usedWords;
@@ -495,7 +495,7 @@ public class Game implements Serializable {
         this.bag = redone.bag;
 
         //resetting board
-        board.swapWithTemp(redone.board.getBoard());
+        board.swapWithTemp(redone.board);
 
         //resetting used words
         this.usedWords = redone.usedWords;

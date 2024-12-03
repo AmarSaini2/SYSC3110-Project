@@ -181,42 +181,58 @@ public class AiPlayer extends Player {
         System.out.println(wordCord.row + " " + wordCord.col);
 
         // Getting the board representation
-        String[][] tempBoard = board.getBoard();
-
+        Board tempBoard = new Board(board);
         // Direction 2: Place word downwards
          if (direction == 2) {
+             System.out.println("Trying to print vertically");
             for (int i = 1; i < word.length(); i++) {
                 int row = wordCord.row + i;
-                if (row >= tempBoard.length || !tempBoard[row][wordCord.col].equals(" ")) {
+                if (row >= tempBoard.getBoard().length || !tempBoard.getBoard()[row][wordCord.col].equals(" ")) {
                     // Out of bounds or occupied tile
                     JOptionPane.showMessageDialog(null, "Ai player decided to skip");
                     return false;
                 }
-                tempBoard[row - 1][wordCord.col - 1] = String.valueOf(word.charAt(i));
-                this.addPoints(new Tile(String.valueOf(word.charAt(i))).getPoints());
+                tempBoard.placeLetter(row-1, wordCord.col-1, String.valueOf(word.charAt(i)));
+                tempBoard.addCoordinate(new Coordinate(row-1, wordCord.col-1));
+                //tempBoard.getBoard()[row - 1][wordCord.col - 1] = String.valueOf(word.charAt(i));
+                //this.addPoints(new Tile(String.valueOf(word.charAt(i))).getPoints());
                 tempHand.remove(new Tile(String.valueOf(word.charAt(i))));
             }
-            board.swapWithTemp(tempBoard);
-            this.swapWithTemp(tempHand);
-            return true;
+            if(tempBoard.checkValidity(trie)){
+                this.addPoints(tempBoard.calculatePoints());
+                board.swapWithTemp(tempBoard);
+                this.swapWithTemp(tempHand);
+                return true;
+            }else{
+                System.out.println("Vertical placement failed");
+                direction = 4;
+            }
         }
 
         // Direction 4: Place word to the right
-        else if (direction == 4) {
+        if (direction == 4) {
+             System.out.println("Trying to print horizontally");
             for (int i = 1; i < word.length(); i++) {
                 int col = wordCord.col + i;
-                if (col >= tempBoard[wordCord.row].length || !tempBoard[wordCord.row][col].equals(" ")) {
+                if (col >= tempBoard.getBoard()[wordCord.row].length || !tempBoard.getBoard()[wordCord.row][col].equals(" ")) {
                     // Out of bounds or occupied tile
                     JOptionPane.showMessageDialog(null, "Ai player decided to skip");
                     return false;
                 }
-                tempBoard[wordCord.row - 1][col - 1] = String.valueOf(word.charAt(i));
-                this.addPoints(new Tile(String.valueOf(word.charAt(i))).getPoints());
+                tempBoard.placeLetter(wordCord.row-1, col-1, String.valueOf(word.charAt(i)));
+                tempBoard.addCoordinate(new Coordinate(wordCord.row-1, col-1));
+                //tempBoard.getBoard()[wordCord.row - 1][col - 1] = String.valueOf(word.charAt(i));
+                //this.addPoints(new Tile(String.valueOf(word.charAt(i))).getPoints());
                 tempHand.remove(new Tile(String.valueOf(word.charAt(i))));
             }
-            board.swapWithTemp(tempBoard);
-            this.swapWithTemp(tempHand);
-            return true;
+            if(tempBoard.checkValidity(trie)){
+                this.addPoints(tempBoard.calculatePoints());
+                board.swapWithTemp(tempBoard);
+                this.swapWithTemp(tempHand);
+                return true;
+            }else{
+                System.out.println("vertical placement failed");
+            }
         }
 
         // If no valid direction, return false
