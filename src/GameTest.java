@@ -231,7 +231,7 @@ public class GameTest {
     @Test
     public void testAiInitialization() {
         game.intializePlayer("AI Player", false);
-        Player aiPlayer = game.getPlayers().get(0);
+        Player aiPlayer = game.getPlayers().getFirst();
 
         assertTrue(aiPlayer.isAI(), "The player should be recognized as an AI.");
         assertEquals(7, aiPlayer.getHand().size(), "The AI player should start with 7 tiles.");
@@ -240,7 +240,7 @@ public class GameTest {
     @Test
     public void testAiDrawNewTiles() {
         game.intializePlayer("AI Player", false);
-        AiPlayer aiPlayer = (AiPlayer) game.getPlayers().get(0);
+        AiPlayer aiPlayer = (AiPlayer) game.getPlayers().getFirst();
 
         // Simulate the AI having fewer tiles in hand
         aiPlayer.getHand().removeFirst(); // Remove one tile
