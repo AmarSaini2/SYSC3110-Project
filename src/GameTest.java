@@ -243,7 +243,7 @@ public class GameTest {
         AiPlayer aiPlayer = (AiPlayer) game.getPlayers().getFirst();
 
         // Simulate the AI having fewer tiles in hand
-        aiPlayer.getHand().removeFirst(); // Remove one tile
+        aiPlayer.getHand().removeFirst();
         aiPlayer.drawNewTiles(game.bag);
 
         assertEquals(7, aiPlayer.getHand().size(), "The AI player's hand should be refilled to 7 tiles.");
