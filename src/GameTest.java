@@ -1,7 +1,9 @@
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.util.ArrayList;
+
+import javax.swing.*;
+
 
 public class GameTest {
     private Game game;
@@ -163,6 +165,88 @@ public class GameTest {
         assertTrue(game.submitWord(currentPlayer), "The vertical word 'DOG' should be valid.");
 
         assertEquals(currentPlayer.getPoints(), 15);
+    }
+
+    @Test
+    public void testSaveGame() {
+        game.intializePlayer("Alice", true);
+        game.intializePlayer("Bob", true);
+        String s = game.playersTurn();
+        Player currentPlayer = game.currentPlayerTurn();
+
+        // Simulate some gameplay
+        game.updateTempBoard(7, 7, "C");
+        game.updateTempBoard(7, 8, "A");
+        game.updateTempBoard(7, 9, "T");
+        assertTrue(game.submitWord(currentPlayer), "The word 'CAT' should be valid.");
+
+        String saveFileName = "test_save_game.ser";
+        // Mock a dialog input to provide the save file name
+        JOptionPane.showInputDialog(null, saveFileName);
+
+        // Save the game state
+        assertTrue(game.saveGame(), "The game state should be saved successfully.");
+    }
+    @Test
+    public void testUndoRedo() {
+        // Initialize the game and players
+        game.intializePlayer("Alice", true);
+        game.intializePlayer("Bob", true);
+
+        // Get the current player
+        String s = game.playersTurn();
+        Player currentPlayer = game.currentPlayerTurn();
+
+        // Simulate a move: Player places "CAT" on the board
+        game.updateTempBoard(7, 7, "C");
+        game.updateTempBoard(7, 8, "A");
+        game.updateTempBoard(7, 9, "T");
+        assertTrue(game.submitWord(currentPlayer), "The word 'CAT' should be valid.");
+        int aliceScore = currentPlayer.getPoints();
+
+        // Verify that the move stack is not empty
+        assertFalse(game.moves.isEmpty(), "The moves stack should not be empty after a valid move.");
+
+        // Perform an undo
+        assertTrue(game.undo(), "Undo should succeed.");
+        assertEquals(0, currentPlayer.getPoints(), "Alice's score should revert to 0 after undo.");
+
+        // Verify the undo stack
+        assertEquals(1, game.undos.size(), "Undo stack should contain one move after undo.");
+
+        // Verify the move stack is now empty after the undo
+        assertTrue(game.moves.isEmpty(), "Moves stack should be empty after undo.");
+
+        // Perform a redo
+        assertTrue(game.redo(), "Redo should succeed.");
+        assertEquals(aliceScore, currentPlayer.getPoints(), "Alice's score should return after redo.");
+
+        // Verify the undo stack is empty after redo
+        assertTrue(game.undos.isEmpty(), "Undo stack should be empty after redo.");
+
+        // Verify the move stack is back to containing the redone move
+        assertEquals(1, game.moves.size(), "Moves stack should contain one move after redo.");
+    }
+
+    @Test
+    public void testAiInitialization() {
+        game.intializePlayer("AI Player", false);
+        Player aiPlayer = game.getPlayers().get(0);
+
+        assertTrue(aiPlayer.isAI(), "The player should be recognized as an AI.");
+        assertEquals(7, aiPlayer.getHand().size(), "The AI player should start with 7 tiles.");
+    }
+
+    @Test
+    public void testAiDrawNewTiles() {
+        game.intializePlayer("AI Player", false);
+        AiPlayer aiPlayer = (AiPlayer) game.getPlayers().get(0);
+
+        // Simulate the AI having fewer tiles in hand
+        aiPlayer.getHand().removeFirst(); // Remove one tile
+        aiPlayer.drawNewTiles(game.bag);
+
+        assertEquals(7, aiPlayer.getHand().size(), "The AI player's hand should be refilled to 7 tiles.");
     }
 
 

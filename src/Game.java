@@ -32,8 +32,8 @@ public class Game implements Serializable {
     private ArrayList<String> usedWords;
     private boolean startofTurn;
     ArrayList<Tile> tempHand;
-    private Stack<Move> moves;
-    private Stack<Move> undos;
+    Stack<Move> moves;
+    Stack<Move> undos;
     static int tracker;
 
     /**
