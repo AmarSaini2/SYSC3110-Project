@@ -596,7 +596,7 @@ public class ScrabbleView extends JFrame {
         //enabling tiles that are adjacent to word tiles if they are within the index
         for(int row = 1; row<SIZE-1;row++){
             for(int col =1; col<SIZE-1;col++) {
-                if (!board[row][col].getText().isEmpty() && !premiumTileNames.contains(board[row][col].getText())) {
+                if (!board[row][col].getText().isEmpty() && !board[row][col].getText().equals(" ")&& !premiumTileNames.contains(board[row][col].getText())) {
                     board[row - 1][col].setEnabled(true);
                     board[row - 1][col].setBackground(new Color(232, 220, 202));
                     board[row + 1][col].setEnabled(true);
@@ -612,7 +612,7 @@ public class ScrabbleView extends JFrame {
         //!model.board.getPremiumTileList().containsKey(new Coordinate(row, col))
         for(int row = 0; row<SIZE;row++){
             for(int col =0; col<SIZE;col++){
-                if(!board[row][col].getText().isEmpty() && !premiumTileNames.contains(board[row][col].getText())) {
+                if(!board[row][col].getText().isEmpty()&& !board[row][col].getText().equals(" ") && !premiumTileNames.contains(board[row][col].getText())) {
                     board[row][col].setEnabled(false);
                     board[row][col].setBackground(new Color(213, 186, 182));
                 }
@@ -666,7 +666,9 @@ public class ScrabbleView extends JFrame {
      * @param letter the letter to be placed
      */
     public void updateBoard(int row, int col,String letter){
-
+        if(row == 16 && col ==16){
+            firstTile=true;
+        }
 
 
         if(firstTile){

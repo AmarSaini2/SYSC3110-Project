@@ -240,6 +240,9 @@ public class ScrabbleController implements ActionListener {
             JOptionPane.showMessageDialog(null, "no moves made to undo");
             return;
         }
+        if(play==1){
+            firstTurn = true;
+        }
         currentView.updateGUIAfterUndoRedo();
     }
 
@@ -364,9 +367,11 @@ public class ScrabbleController implements ActionListener {
         model.tilePlaced(tilePlaced);
         hand.add(tilePlaced);
         if(firstTurn){
-
+            if(play == 1){
+                play = 0;
+            }
             tilePlaced = null;
-            currentView.updateBoard(0,0,lastClicked.getText());
+            currentView.updateBoard(16,16,lastClicked.getText());
             selectedButtons.add(tile);
             firstTurn = false;
 
