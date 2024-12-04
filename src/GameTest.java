@@ -197,7 +197,7 @@ public class GameTest {
         String s = game.playersTurn();
         Player currentPlayer = game.currentPlayerTurn();
 
-        // Simulate a move: Player places "CAT" on the board
+
         game.updateTempBoard(7, 7, "C");
         game.updateTempBoard(7, 8, "A");
         game.updateTempBoard(7, 9, "T");
