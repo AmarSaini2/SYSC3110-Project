@@ -242,7 +242,6 @@ public class GameTest {
         game.intializePlayer("AI Player", false);
         AiPlayer aiPlayer = (AiPlayer) game.getPlayers().getFirst();
 
-        // Simulate the AI having fewer tiles in hand
         aiPlayer.getHand().removeFirst();
         aiPlayer.drawNewTiles(game.bag);
 
