@@ -163,15 +163,13 @@ public class AiPlayer extends Player {
         // Getting random number to decide the direction to play
         Random rand = new Random();
 
-        int direction = rand.nextBoolean() ? 2:4;
-        direction = 2;
-
+        int direction = 2;
         tempHand = hand;
 
         // Calling chooseWord to get the word and coordinate to play
         Map.Entry<Coordinate, String> wordToPlay = chooseWord(board, trie, direction);
         if(wordToPlay.getValue().equals(" ")){
-            JOptionPane.showMessageDialog(null, "Ai player decided to skip");
+            //JOptionPane.showMessageDialog(null, "Ai player decided to skip");
             return false;
         }
         Coordinate wordCord = wordToPlay.getKey();
@@ -189,8 +187,10 @@ public class AiPlayer extends Player {
                 int row = wordCord.row + i;
                 if (row >= tempBoard.getBoard().length || !tempBoard.getBoard()[row][wordCord.col].equals(" ")) {
                     // Out of bounds or occupied tile
-                    JOptionPane.showMessageDialog(null, "Ai player decided to skip");
-                    return false;
+                    //JOptionPane.showMessageDialog(null, "Ai player decided to skip");
+                    //return false;
+                    direction = 4;
+                    break;
                 }
                 tempBoard.placeLetter(row-1, wordCord.col-1, String.valueOf(word.charAt(i)));
                 tempBoard.addCoordinate(new Coordinate(row-1, wordCord.col-1));
@@ -216,7 +216,7 @@ public class AiPlayer extends Player {
                 int col = wordCord.col + i;
                 if (col >= tempBoard.getBoard()[wordCord.row].length || !tempBoard.getBoard()[wordCord.row][col].equals(" ")) {
                     // Out of bounds or occupied tile
-                    JOptionPane.showMessageDialog(null, "Ai player decided to skip");
+                    //JOptionPane.showMessageDialog(null, "Ai player decided to skip");
                     return false;
                 }
                 tempBoard.placeLetter(wordCord.row-1, col-1, String.valueOf(word.charAt(i)));
@@ -231,7 +231,7 @@ public class AiPlayer extends Player {
                 this.swapWithTemp(tempHand);
                 return true;
             }else{
-                System.out.println("vertical placement failed");
+                System.out.println("horizontal placement failed");
             }
         }
 

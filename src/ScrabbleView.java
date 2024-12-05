@@ -566,7 +566,7 @@ public class ScrabbleView extends JFrame {
 
 
 
-
+        disableAppropriateTile();
         updateMessageArea("\n" + model.getPlayer().getName() + "'s turn:\n");
         updateMessageArea("Choose a letter to place:");
         updateButtonVisibility("PLAYTURN");
@@ -654,7 +654,9 @@ public class ScrabbleView extends JFrame {
         String[][] update = tempBoard.getBoard();
         for(int row = 0; row<SIZE;row++){
             for(int col =0; col<SIZE;col++){
-                board[row][col].setText(update[row][col]);
+                if(board[row][col].getText().equals("")){
+                    board[row][col].setText(update[row][col]);
+                }
             }
         }
     }
