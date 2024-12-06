@@ -1,6 +1,6 @@
 # Scrabble Game
 
-A third iteration of a simple Scrabble game in Java with a graphical user interface (GUI). Players can select the number of players, place letters from their racks onto a 2D board, and interact with the game through an intuitive GUI. This version adds advanced features such as blank tiles, premium squares, and AI players, while also ensuring that the game mechanics are functioning as expected.
+the final iteration of a simple Scrabble game in Java with a graphical user interface (GUI). Players can select the number of players, place letters from their racks onto a 2D board, and interact with the game through an intuitive GUI. This version adds advanced features such as blank tiles, premium squares, and AI players, while also ensuring that the game mechanics are functioning as expected.
 
 ## Features 
 - **Board:** A visually interactive 2D grid where players can click to place tiles and form words.
@@ -13,6 +13,7 @@ A third iteration of a simple Scrabble game in Java with a graphical user interf
 - **Premium Squares:** Premium squares (Double Letter, Triple Letter, Double Word, Triple Word) are now part of the game. When a tile is placed on these squares, the score is modified accordingly (e.g., double the letter score or word score).
 - **AI Player:** AI Player can be added to the game to make it more interesting.The AI evaluates all possible valid moves and selects the highest scoring word from those options. The AI follows basic logic and does not require user interaction.
 - **Scoring Fixes:** Scoring correctly accounts for the use of premium squares and blank tiles. Words are scored based on tile values, and premium squares (when utilized) affect both letter and word scores.
+- **Confetti Animation:** added a small animation when the game finishes, displaying the winner and playing a small confetti animation.
 
 ## Prequisites 
 - **Java 8+**
@@ -46,26 +47,17 @@ A third iteration of a simple Scrabble game in Java with a graphical user interf
 - The game will automatically check if your move forms valid words and intersects correctly.
 
 ## Winning the game:
-- The game ends when there are no more valid words to play, or if all players pass their turn in a row, and the player with the highest score wins.
-
-## Known Issues
-- The AI player works sometimes and the game has to be run twice for it to start.
-- Player points are not being calculated correctly based on based on the premium squares and blank tiles. This will be fixed in the next iteration.
-- Clicking on a board tile outside the horizontal or vertical alignment of the word being placed still allows placement, which should be restricted.
-- The AI player may not play even if possible due to placement and coordinate problem.
-- Human Player turn might return invalid when playing against AI.
-- The end-of-game logic is still being worked on and only currently checks for if players have remaining valid words  to play or if all players have consecutively passed their turns for the game to end.
-- The AI player plays based on a basic strategy of selecting a subset of words it can play then selecting a word from that set. More detailed AI logic will be explored and possibly implemented in the next iteration.
+- The game ends when there are no more valid words to play, or if all players pass their turn in a row, and the player with the highest score wins and a small victory animation displaying the name of the winner plays.
 
 ## Roadmap
 - Next Iteration: Correct the scoring algorithm, especially for premium squares and blank tiles. Enhance the AI logic to consider more complex strategies. Implement an undo/redo system that supports multipple levels. Adding features like Save/Load to the game using Java Serialisation. 
 - Additional Features: Allow customization of the Scrabble board, including alternate placements of premium squares (e.g., Double Word, Triple Word) on a user-defined layout.
 
 ## Authors 
-- **Amar Saini:** Responsible for Blank tiles and Premium tile implementation
-- **Kaiya Sparks:** Responsible for README file, Ai GUI integration and Bug Testing
-- **Riya Rawat:** Responsible for Updating Test class, UML and README
-- **Tyler Doherty:** Responsible for AI player implementation
+- **Amar Saini:** Responsible for debugging and ensuring submission is correct
+- **Kaiya Sparks:** Responsible for Updating README file
+- **Riya Rawat:** Responsible for Updating Test class, and UML
+- **Tyler Doherty:** Responsible for design and implementation of victory animation
 ## License
 This project is licensed under the [MIT License]
 
