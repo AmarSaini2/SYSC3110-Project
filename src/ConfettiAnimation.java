@@ -9,12 +9,13 @@ public class ConfettiAnimation extends JPanel {
     private final ArrayList<Confetti> confettiList;
     private final Timer timer; // Timer to control the animation
     private long startTime;
-    private int num;
+    private String name;
 
-    public ConfettiAnimation(int num) {
+    public ConfettiAnimation(String name) {
         confettiList = new ArrayList<>();
         Random rand = new Random();
-        this.num = num;
+        this.name = name;
+
         for (int i = 0; i < CONFETTI_COUNT; i++) {
             confettiList.add(new Confetti(rand.nextInt(800), rand.nextInt(600), rand));
         }
@@ -40,7 +41,7 @@ public class ConfettiAnimation extends JPanel {
         g2d.setFont(new Font("Serif", Font.BOLD, 100));
         g2d.setColor(Color.green);
         FontMetrics fm = g2d.getFontMetrics();
-        String winText = "P" + num + " WIN";
+        String winText = name + " WINS";
         int x = (getWidth() - fm.stringWidth(winText)) / 2;
         int y = (getHeight() / 2) + (fm.getAscent() / 4);
         g2d.drawString(winText, x, y);
@@ -78,9 +79,9 @@ public class ConfettiAnimation extends JPanel {
         }
     }
 
-    public static void main(String[] args) {
+    public static void doAnimation(String name) {
         JFrame frame = new JFrame("Confetti Animation");
-        ConfettiAnimation confettiPanel = new ConfettiAnimation(1);
+        ConfettiAnimation confettiPanel = new ConfettiAnimation(name);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
