@@ -1,6 +1,6 @@
 # Scrabble Game
 
-the final iteration of a simple Scrabble game in Java with a graphical user interface (GUI). Players can select the number of players, place letters from their racks onto a 2D board, and interact with the game through an intuitive GUI. This version adds advanced features such as blank tiles, premium squares, and AI players, while also ensuring that the game mechanics are functioning as expected.
+The final iteration of a simple Scrabble game in Java with a graphical user interface (GUI). Players can select the number of players, place letters from their racks onto a 2D board, and interact with the game through an intuitive GUI. This version adds advanced feature of a celebration animation for the winning player, while also ensuring that the game mechanics are functioning as expected.
 
 ## Features 
 - **Board:** A visually interactive 2D grid where players can click to place tiles and form words.
